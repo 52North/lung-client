@@ -252,13 +252,13 @@ export class StaApiCustomConnector extends StaApiV1Connector {
       const filterList: string[] = [];
       if (params.phenomenon) {
         debugger;
-        filterList.push(`ObservedProperty/id eq ${params.phenomenon}`);
+        filterList.push(`ObservedProperty/id eq '${params.phenomenon}'`);
       }
       if (params.feature) {
-        filterList.push(`Thing/Locations/id eq ${params.feature}`);
+        filterList.push(`Thing/Locations/id eq '${params.feature}'`);
       }
       if (params.procedure) {
-        filterList.push(`Sensor/id eq ${params.procedure}`);
+        filterList.push(`Sensor/id eq '${params.procedure}'`);
       }
       return this.createFilter(filterList);
     }
@@ -309,7 +309,7 @@ export class StaApiCustomConnector extends StaApiV1Connector {
         );
       }
       if (params.procedure) {
-        filterList.push(`Datastreams/Sensor/id eq ${params.procedure}`);
+        filterList.push(`Datastreams/Sensor/id eq '${params.procedure}'`);
       }
       return this.createFilter(filterList);
     }
@@ -323,16 +323,16 @@ export class StaApiCustomConnector extends StaApiV1Connector {
     if (params) {
       const filterList: string[] = ['properties/hidden ne true'];
       if (params.phenomenon) {
-        filterList.push(`ObservedProperty/id eq ${params.phenomenon}`);
+        filterList.push(`ObservedProperty/id eq '${params.phenomenon}'`);
       }
       if (params.category) {
         filterList.push(`indexof(properties/tags,'${params.category}') ge 1`);
       }
       if (params.procedure) {
-        filterList.push(`Sensor/id eq ${params.procedure}`);
+        filterList.push(`Sensor/id eq '${params.procedure}'`);
       }
       if (params.feature) {
-        filterList.push(`Thing/Locations/id eq ${params.feature}`);
+        filterList.push(`Thing/Locations/id eq '${params.feature}'`);
       }
       filter = this.createFilter(filterList);
     }
@@ -351,11 +351,11 @@ export class StaApiCustomConnector extends StaApiV1Connector {
         );
       }
       if (params.feature) {
-        filterList.push(`Datastreams/Thing/Locations/id eq ${params.feature}`);
+        filterList.push(`Datastreams/Thing/Locations/id eq '${params.feature}'`);
       }
       if (params.phenomenon) {
         filterList.push(
-          `Datastreams/ObservedProperty/id eq ${params.phenomenon}`,
+          `Datastreams/ObservedProperty/id eq '${params.phenomenon}'`,
         );
       }
       return this.createFilter(filterList);
@@ -375,11 +375,11 @@ export class StaApiCustomConnector extends StaApiV1Connector {
       }
       if (params.phenomenon) {
         filterList.push(
-          `Things/Datastreams/ObservedProperty/id eq ${params.phenomenon}`,
+          `Things/Datastreams/ObservedProperty/id eq '${params.phenomenon}'`,
         );
       }
       if (params.procedure) {
-        filterList.push(`Things/Datastreams/Sensor/id eq ${params.procedure}`);
+        filterList.push(`Things/Datastreams/Sensor/id eq '${params.procedure}'`);
       }
       return this.createFilter(filterList);
     }
