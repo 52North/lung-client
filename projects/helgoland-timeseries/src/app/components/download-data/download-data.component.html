@@ -1,0 +1,15 @@
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="menu"
+  aria-label="Datenexport"
+  matTooltip="Datenexport"
+>
+  <mat-icon>download</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="exportCSV()">Daten als CSV exportieren</button>
+  <button mat-menu-item (click)="exportXSLX()">
+    Daten als XSLX exportieren
+  </button>
+</mat-menu>

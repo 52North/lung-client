@@ -94,6 +94,10 @@
             </button>
           }
           <div style="flex: 1"></div>
+          <helgoland-download-data
+            [datasets]="graphDatasetsSrvc.datasets"
+            [timespan]="graphDatasetsSrvc.timespan"
+          ></helgoland-download-data>
           @if (graphDatasetsSrvc.datasets.length) {
             <button
               mat-icon-button

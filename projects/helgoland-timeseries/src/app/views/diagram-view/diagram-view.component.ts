@@ -32,6 +32,7 @@ import {
 
 import { DataTableComponent } from '../../components/data-table/data-table.component';
 import { DatasetLegendEntryComponent } from '../../components/dataset-legend-entry/dataset-legend-entry.component';
+import { DownloadDataComponent } from '../../components/download-data/download-data.component';
 import { ModalFavoriteListButtonComponent } from '../../components/favorites/modal-favorite-list-button/modal-favorite-list-button.component';
 import {
   DiagramConfig,
@@ -53,7 +54,9 @@ type MainContentType = 'diagram' | 'table';
   styleUrls: ['./diagram-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [
+    DataTableComponent,
     DatasetLegendEntryComponent,
+    DownloadDataComponent,
     GeneralTimeSelectionComponent,
     HelgolandD3Module,
     LoadingOverlayProgressBarComponent,
@@ -70,7 +73,6 @@ type MainContentType = 'diagram' | 'table';
     ModalMainConfigButtonComponent,
     ShareButtonComponent,
     TranslateModule,
-    DataTableComponent,
   ],
 })
 export class DiagramViewComponent implements OnInit {
