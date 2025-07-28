@@ -18,7 +18,12 @@ import {
   HelgolandServicesConnector,
   Phenomenon,
 } from '@helgoland/core';
-import { HelgolandMapSelectorModule, MapCache } from '@helgoland/map';
+import {
+  HelgolandMapSelectorModule,
+  LayerCreator,
+  LayerOptions,
+  MapCache,
+} from '@helgoland/map';
 import { MultiServiceFilter } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -33,6 +38,7 @@ import {
   ConfigurationService,
 } from '../../services/configuration.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
+import { LayersControlComponent } from '../layers-control/layers-control.component';
 import { ModalDatasetByStationSelectorComponent } from '../modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
 import {
   MapConfig,
@@ -58,6 +64,7 @@ interface MapSelectionAppConfig extends AppConfig {
     MatTooltipModule,
     ParameterListSelectorComponent,
     TranslateModule,
+    LayersControlComponent,
   ],
 })
 export class MapSelectionComponent implements OnInit, AfterViewInit {
@@ -74,6 +81,8 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
   readonly drawer = viewChild<MatDrawer>('drawer');
 
   mapId = 'timeseries';
+
+  baseMaps: Map<string, LayerOptions> = new Map<string, LayerOptions>();
 
   stationFilter: HelgolandParameterFilter | undefined;
 
@@ -115,6 +124,13 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
     }
     this.clusterConfig =
       this.configSrvc.configuration.mapSelectionClusterConfig;
+
+    this.configSrvc.configuration.baseLayers.forEach((conf) =>
+      this.baseMaps.set(
+        conf.label,
+        new LayerCreator().createLayerOptions(conf),
+      ),
+    );
   }
 
   phenomenonToggled() {

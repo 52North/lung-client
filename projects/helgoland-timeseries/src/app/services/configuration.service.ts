@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Settings, SettingsService } from '@helgoland/core';
+import { LayerConfiguration } from '@helgoland/map';
 import { lastValueFrom, tap } from 'rxjs';
 
 export interface AppConfig extends Settings {
   supportTimeseriesSymbols: boolean;
   daysForOldTimespanCheck: number;
+  baseLayers: LayerConfiguration[];
 }
 
 @Injectable({

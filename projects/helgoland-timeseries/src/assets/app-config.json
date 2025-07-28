@@ -1,7 +1,7 @@
 {
     "defaultService": {
         "serviceId": "1",
-            "apiUrl": "https://mdpu-lung.docker.srv.int.52north.org/FROST-Server/v1.1/"
+        "apiUrl": "https://mdpu-lung.docker.srv.int.52north.org/FROST-Server/v1.1/"
     },
     "datasetApis": [
         {
@@ -23,5 +23,38 @@
     "mapSelectionClusterConfig": {
         "maxClusterRadius": 60
     },
-    "daysForOldTimespanCheck": 31
+    "daysForOldTimespanCheck": 31,
+    "baseLayers": [
+        {
+            "label": "OSM",
+            "visible": true,
+            "type": "tilelayer",
+            "urlTemplate": "https://maps.omniscale.net/v2/fluggs-d9227d46/style.default/{z}/{x}/{y}.png",
+            "options": {
+                "maxZoom": 18
+            }
+        },
+        {
+            "label": "Gebäude 2D",
+            "visible": false,
+            "type": "wms",
+            "url": "https://www.geodaten-mv.de/dienste/gebaeude_wms?",
+            "options": {
+                "layers": "gebaeude",
+                "format": "image/png",
+                "transparent": true
+            }
+        },
+        {
+            "label": "Badewasserqualität M-V",
+            "visible": false,
+            "type": "wms",
+            "url": "https://www.geodaten-mv.de/dienste/badewassermv_wms?",
+            "options": {
+                "layers": "badewassermv_wms",
+                "format": "image/png",
+                "transparent": true
+            }
+        }
+    ]
 }
