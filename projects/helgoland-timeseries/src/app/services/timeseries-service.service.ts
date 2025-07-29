@@ -335,6 +335,7 @@ export class TimeseriesServiceImpl
           featureLabel: ts.parameters.feature?.label,
           firstValue: ts.firstValue,
           lastValue: ts.lastValue,
+          additional: ts.parameters.additional,
         },
       );
       this.setState(dataset.id, style, yaxis, selected, visible);

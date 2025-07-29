@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import moment from 'moment';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -622,6 +622,9 @@ export class StaApiV1Connector implements HelgolandServiceConnector {
       parameters.phenomenon = this.createPhenomenon(ds.ObservedProperty);
     if (ds.ObservedProperty)
       parameters.category = [this.createCategory(ds.ObservedProperty)];
+    if (thing.properties) {
+      parameters.additional = thing.properties;
+    }
     return parameters;
   }
 

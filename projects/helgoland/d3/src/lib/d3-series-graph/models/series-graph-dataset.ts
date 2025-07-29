@@ -125,6 +125,7 @@ export interface DatasetDescription {
   serviceLabel?: string;
   firstValue?: FirstLastValue;
   lastValue?: FirstLastValue;
+  additional?: { [key: string]: any };
 }
 
 export class DatasetChild {
@@ -209,6 +210,7 @@ export class SeriesGraphDataset<T extends DatasetStyle = DatasetStyle> {
         platformLabel: this.description.platformLabel,
         procedureLabel: this.description.procedureLabel,
         uom: this.description.uom,
+        additional: this.description.additional,
       },
     );
   }

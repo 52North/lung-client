@@ -12,6 +12,7 @@ import { HelgolandLabelMapperModule } from '@helgoland/depiction';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoadingOverlayProgressBarComponent } from 'helgoland-common';
 
+import { DatasetMetadataComponent } from '../dataset-metadata/dataset-metadata.component';
 import { FavoriteToggleButtonComponent } from '../favorites/favorite-toggle-button/favorite-toggle-button.component';
 import { ModalEditTimeseriesOptionsComponent } from '../modal-edit-timeseries-options/modal-edit-timeseries-options.component';
 import { TimeseriesEntrySymbolComponent } from '../timeseries-entry-symbol/timeseries-entry-symbol.component';
@@ -33,6 +34,7 @@ import { TimeseriesEntrySymbolComponent } from '../timeseries-entry-symbol/times
     MatTooltipModule,
     TimeseriesEntrySymbolComponent,
     TranslateModule,
+    DatasetMetadataComponent,
   ],
 })
 export class DatasetLegendEntryComponent {
