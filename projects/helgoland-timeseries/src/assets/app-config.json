@@ -56,5 +56,6 @@
                 "transparent": true
             }
         }
-    ]
+    ],
+    "dataTableVisible": true
 }
