@@ -8,6 +8,7 @@ export interface AppConfig extends Settings {
   supportTimeseriesSymbols: boolean;
   daysForOldTimespanCheck: number;
   baseLayers: LayerConfiguration[];
+  dataTableVisible: boolean;
 }
 
 @Injectable({
