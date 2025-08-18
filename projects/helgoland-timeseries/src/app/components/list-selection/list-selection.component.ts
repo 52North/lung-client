@@ -12,15 +12,13 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import {
   ErrorHandlerService,
-  FilterLabelComponent,
   ParameterListEntry,
-  ParameterListSelectorComponent,
-  ParameterType,
+  ParameterType
 } from 'helgoland-common';
 
 import { AppRouterService } from '../../services/app-router.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
-import { TimeseriesListSelectorComponent } from '../timeseries-list-selector/timeseries-list-selector.component';
+import { CategorySelectionComponent } from '../category-selection/category-selection.component';
 import { ConfigurationService } from './../../services/configuration.service';
 import {
   ListConfig,
@@ -32,13 +30,11 @@ import {
   templateUrl: './list-selection.component.html',
   styleUrls: ['./list-selection.component.scss'],
   imports: [
-    FilterLabelComponent,
+    CategorySelectionComponent,
     MatButtonModule,
     MatButtonToggleModule,
     MatDialogModule,
     MatExpansionModule,
-    ParameterListSelectorComponent,
-    TimeseriesListSelectorComponent,
     TranslateModule,
   ],
 })

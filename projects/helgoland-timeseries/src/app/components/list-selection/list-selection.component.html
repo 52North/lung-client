@@ -1,6 +1,7 @@
 <h1 mat-dialog-title>{{ "diagram-view.add-timeseries.list" | translate }}</h1>
 <div mat-dialog-content>
-  <mat-accordion>
+  <app-category-selection></app-category-selection>
+  <!-- <mat-accordion>
     @for (entry of filterList; track entry) {
       <mat-expansion-panel [expanded]="entry.expanded">
         <mat-expansion-panel-header>
@@ -82,12 +83,12 @@
         </div>
       </mat-expansion-panel>
     }
-  </mat-accordion>
+  </mat-accordion> -->
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button (click)="openListSettings()">
+  <!-- <button mat-raised-button (click)="openListSettings()">
     {{ "provider" | translate }}: {{ selectedService?.label }}
-  </button>
+  </button> -->
   <div style="flex: 1"></div>
   <button mat-raised-button mat-dialog-close>
     {{ "controls.close" | translate }}

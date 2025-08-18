@@ -1,0 +1,28 @@
+:host {
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+
+    .selection {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .section {
+        .header {
+          font-weight: bold;
+        }
+
+        .entry {
+          &.active {
+            font-weight: bold;
+          }
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
