@@ -23,7 +23,6 @@
     "mapSelectionClusterConfig": {
         "maxClusterRadius": 60
     },
-    "daysForOldTimespanCheck": 31,
     "baseLayers": [
         {
             "label": "OSM",
