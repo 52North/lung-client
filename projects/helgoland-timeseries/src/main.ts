@@ -1,7 +1,7 @@
 import 'moment/locale/de';
 
 import { registerLocaleData } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import localeDe from '@angular/common/locales/de';
 import {
   ApplicationConfig,
@@ -38,6 +38,13 @@ import {
 import { firstValueFrom, forkJoin, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import {
+  createInterceptorCondition,
+  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+  IncludeBearerTokenCondition,
+  includeBearerTokenInterceptor,
+  provideKeycloak,
+} from 'keycloak-angular';
 import { BasicAuthInformerImplService } from '../../helgoland-common/src/lib/services/basic-auth-informer-impl.service';
 import { DatasetStaCustomConnectorProvider } from '../../helgoland/core/src/lib/api-communication/connectors/sta-api-v1-connector/sta-api-custom-connector';
 import { AppComponent } from './app/app.component';
@@ -107,8 +114,30 @@ const initializeApp = async () => {
     (res) => res?.json(),
   );
 
+  const urlPattern = new RegExp(
+    config.keycloak.bearerTokenCondition.urlPattern,
+  );
+  const bearerPrefix = config.keycloak.bearerTokenCondition.bearerPrefix;
+
   const appConfig: ApplicationConfig = {
     providers: [
+      provideKeycloak({
+        config: config.keycloak.config,
+        initOptions: {
+          onLoad: 'check-sso',
+          silentCheckSsoRedirectUri: `${window.location.origin}/assets/silent-check-sso.html`,
+        },
+      }),
+      {
+        provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+        useValue: [
+          createInterceptorCondition<IncludeBearerTokenCondition>({
+            urlPattern,
+            bearerPrefix,
+          }),
+        ],
+      },
+      provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
       provideRouter(ROUTES),
       provideHttpClient(),
       provideAnimations(),

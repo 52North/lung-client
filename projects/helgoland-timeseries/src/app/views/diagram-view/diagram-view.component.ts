@@ -30,6 +30,7 @@ import {
   ShareButtonComponent,
 } from 'helgoland-common';
 
+import { AuthenticationComponent } from '../../components/authentication/authentication.component';
 import { DataTableComponent } from '../../components/data-table/data-table.component';
 import { DatasetLegendEntryComponent } from '../../components/dataset-legend-entry/dataset-legend-entry.component';
 import { DownloadDataComponent } from '../../components/download-data/download-data.component';
@@ -39,7 +40,10 @@ import {
   ModalDiagramSettingsComponent,
 } from '../../components/modal-diagram-settings/modal-diagram-settings.component';
 import { GeneralTimeSelectionComponent } from '../../components/time/general-time-selection/general-time-selection.component';
-import { AppConfig, ConfigurationService } from '../../services/configuration.service';
+import {
+  AppConfig,
+  ConfigurationService,
+} from '../../services/configuration.service';
 import { ModalMainConfigButtonComponent } from './../../components/main-config/modal-main-config-button/modal-main-config-button.component';
 import { AppRouterService } from './../../services/app-router.service';
 import {
@@ -55,6 +59,7 @@ type MainContentType = 'diagram' | 'table';
   styleUrls: ['./diagram-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [
+    AuthenticationComponent,
     DataTableComponent,
     DatasetLegendEntryComponent,
     DownloadDataComponent,
@@ -84,7 +89,9 @@ export class DiagramViewComponent implements OnInit {
   protected initStateService = inject(DiagramViewInitStateService);
   private time = inject(Time);
   protected graphDatasetsSrvc = inject(DatasetsService);
-  private configSrvc = inject(ConfigurationService<AppConfig>) as ConfigurationService<AppConfig>;
+  private configSrvc = inject(
+    ConfigurationService<AppConfig>,
+  ) as ConfigurationService<AppConfig>;
 
   mobileQuery: MediaQueryList;
 

@@ -1,0 +1,9 @@
+@if (authenticated) {
+  <button mat-icon-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+} @else {
+  <button mat-icon-button (click)="login()">
+    <mat-icon>login</mat-icon>
+  </button>
+}

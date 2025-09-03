@@ -56,5 +56,16 @@
             }
         }
     ],
-    "dataTableVisible": true
+    "dataTableVisible": true,
+    "keycloak": {
+        "config": {
+           "url": "https://people-ecco.dev.52north.org/auth" ,
+           "realm": "jsp-test",
+           "clientId": "frost-local"
+        },
+        "bearerTokenCondition": {
+            "urlPattern": "^(https:\\/\\/mdpu-lung.docker.srv.int.52north.org)(\\/.*)?$",
+            "bearerPrefix": "Bearer"
+        }
+    }
 }

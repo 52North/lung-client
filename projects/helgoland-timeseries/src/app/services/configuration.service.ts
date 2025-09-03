@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Settings, SettingsService } from '@helgoland/core';
 import { LayerConfiguration } from '@helgoland/map';
+import { KeycloakConfig } from 'keycloak-js';
 
 export interface AppConfig extends Settings {
   supportTimeseriesSymbols: boolean;
   daysForOldTimespanCheck: number;
   baseLayers: LayerConfiguration[];
   dataTableVisible: boolean;
+  keycloak: {
+    config: KeycloakConfig;
+    bearerTokenCondition: {
+      urlPattern: string;
+      bearerPrefix: string;
+    } 
+  }
 }
 
 @Injectable({
