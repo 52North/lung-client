@@ -13,50 +13,44 @@
       }
     </div>
 
-    @if (this.srvc.categoryTwoResource.value()?.length) {
-      <div class="section">
-        <div class="header">Kategorie 2:</div>
-        @for (cat of this.srvc.categoryTwoResource.value(); track cat) {
-          <div
-            (click)="this.srvc.selectCatTwo(cat)"
-            class="entry"
-            [ngClass]="{ active: cat === this.srvc.selection().catTwo }"
-          >
-            {{ cat }}
-          </div>
-        }
-      </div>
-    }
+    <div class="section">
+      <div class="header">Kategorie 2:</div>
+      @for (cat of this.srvc.categoryTwoResource.value(); track cat) {
+        <div
+          (click)="this.srvc.selectCatTwo(cat)"
+          class="entry"
+          [ngClass]="{ active: cat === this.srvc.selection().catTwo }"
+        >
+          {{ cat }}
+        </div>
+      }
+    </div>
 
-    @if (this.srvc.categoryThreeResource.value()?.length) {
-      <div class="section">
-        <div class="header">Kategorie 3:</div>
-        @for (cat of this.srvc.categoryThreeResource.value(); track cat) {
-          <div
-            (click)="this.srvc.selectCatThree(cat)"
-            class="entry"
-            [ngClass]="{ active: cat === this.srvc.selection().catThree }"
-          >
-            {{ cat }}
-          </div>
-        }
-      </div>
-    }
+    <div class="section">
+      <div class="header">Kategorie 3:</div>
+      @for (cat of this.srvc.categoryThreeResource.value(); track cat) {
+        <div
+          (click)="this.srvc.selectCatThree(cat)"
+          class="entry"
+          [ngClass]="{ active: cat === this.srvc.selection().catThree }"
+        >
+          {{ cat }}
+        </div>
+      }
+    </div>
 
-    @if (this.srvc.categoryFourResource.value()?.length) {
-      <div class="section">
-        <div class="header">Kategorie 4:</div>
-        @for (cat of this.srvc.categoryFourResource.value(); track cat) {
-          <div
-            (click)="this.srvc.selectCatFour(cat)"
-            class="entry"
-            [ngClass]="{ active: cat === this.srvc.selection().catFour }"
-          >
-            {{ cat }}
-          </div>
-        }
-      </div>
-    }
+    <div class="section">
+      <div class="header">Kategorie 4:</div>
+      @for (cat of this.srvc.categoryFourResource.value(); track cat) {
+        <div
+          (click)="this.srvc.selectCatFour(cat)"
+          class="entry"
+          [ngClass]="{ active: cat === this.srvc.selection().catFour }"
+        >
+          {{ cat }}
+        </div>
+      }
+    </div>
   </div>
   <div class="stations">
     <div>Found {{ this.srvc.stationsResource.value()?.length }} stations</div>

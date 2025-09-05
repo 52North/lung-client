@@ -183,7 +183,6 @@
           <div>
             <mat-slide-toggle
               [checked]="child.visible"
-              color="primary"
               (change)="child.setVisible($event.checked)"
             >
               <span [ngStyle]="{ color: child.color }">{{ child.label }}</span>

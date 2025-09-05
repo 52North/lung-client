@@ -39,4 +39,13 @@ mat-expansion-panel {
             }
         }
     }
+
+    .mat-mdc-slide-toggle ::ng-deep {
+        .mdc-switch {
+            transform: scale(0.8) translateX(-10px);
+        }
+        .mdc-label {
+            margin-left: -10px;
+        }
+    }
 }

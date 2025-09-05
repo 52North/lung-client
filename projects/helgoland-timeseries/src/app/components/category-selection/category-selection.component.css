@@ -2,14 +2,19 @@
   .wrapper {
     display: flex;
     flex-direction: row;
-    gap: 50px;
+    gap: 10px;
+    height: 100%;
 
     .selection {
+      flex: 1;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 10px;
+      padding-right: 10px;
+      border-right: 1px solid lightgrey;
 
       .section {
+        flex: 1;
         .header {
           font-weight: bold;
         }
@@ -23,6 +28,10 @@
           }
         }
       }
+    }
+
+    .stations {
+      flex: 1;
     }
   }
 }

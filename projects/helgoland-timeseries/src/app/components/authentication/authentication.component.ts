@@ -1,6 +1,8 @@
 import { Component, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   KEYCLOAK_EVENT_SIGNAL,
   KeycloakEventType,
@@ -13,7 +15,7 @@ import Keycloak from 'keycloak-js';
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
   styleUrls: ['./authentication.component.css'],
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule, TranslateModule],
 })
 export class AuthenticationComponent {
   authenticated = false;

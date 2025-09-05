@@ -4,9 +4,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   ClearStorageButtonComponent,
-  DarkModeButtonComponent,
   LanguageSelectorComponent,
-  VersionInfoComponent,
+  VersionInfoComponent
 } from 'helgoland-common';
 
 import { ConfigurationService } from './../../../services/configuration.service';
@@ -17,7 +16,6 @@ import { ConfigurationService } from './../../../services/configuration.service'
   styleUrls: ['./modal-main-config.component.scss'],
   imports: [
     ClearStorageButtonComponent,
-    DarkModeButtonComponent,
     LanguageSelectorComponent,
     MatButtonModule,
     MatDialogModule,
