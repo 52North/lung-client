@@ -1,4 +1,4 @@
-FROM node:18 AS BUILD
+FROM node:24 AS BUILD
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -26,6 +26,6 @@ COPY ./adjustment-script.sh /docker-entrypoint.d/
 RUN chmod 0775 /docker-entrypoint.d/adjustment-script.sh
 
 # copy build from previous stage
-COPY --from=BUILD /usr/src/app/dist/helgoland-timeseries /usr/share/nginx/html
+COPY --from=BUILD /usr/src/app/dist/helgoland-timeseries/browser /usr/share/nginx/html
 
 CMD ["nginx", "-g", "daemon off;"]
