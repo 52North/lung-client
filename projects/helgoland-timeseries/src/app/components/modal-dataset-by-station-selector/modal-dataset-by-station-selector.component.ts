@@ -49,7 +49,11 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
   private staUrl = this.configSrvc.configuration.defaultService.apiUrl;
 
 
-  protected override loadData(withPhenomenonFilter: boolean) {
+  override ngOnInit() {
+    this.loadData(true);
+  }
+  
+  protected loadData(withPhenomenonFilter: boolean) {
     if (this.othersList.length > 0) {
       // we have already fetched previously.
       return;
