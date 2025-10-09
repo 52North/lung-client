@@ -13,9 +13,7 @@
     </button>
     <div class="phenomenon-list">
       <helgoland-common-parameter-list-selector
-        [endpoint]="'phenomenon'"
         [selected]="state.selectedPhenomenonId"
-        [filterList]="phenomenonFilter"
         (onItemSelected)="onPhenomenonSelected($event)"
       >
       </helgoland-common-parameter-list-selector>

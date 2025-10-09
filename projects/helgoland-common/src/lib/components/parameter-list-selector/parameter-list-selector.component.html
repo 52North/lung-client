@@ -1,23 +1,28 @@
 @if (loading) {
-  <div>
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </div>
+<div>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
 }
 @if (!loading && items.length === 0) {
-  <div style="text-align: center">no results found</div>
+<div style="text-align: center">no results found</div>
 }
 
-<mat-selection-list
-  #parameters
-  [multiple]="false"
-  (selectionChange)="selectionChanged($event)"
-  attr.aria-label="{{
+<mat-form-field style="width: 100%">
+  <mat-label> {{ "map-selection-view.search" | translate }}</mat-label>
+  <input matInput type="text" placeholder="" (input)="onInput($event)" class="example-input">
+</mat-form-field>
+
+<mat-selection-list #parameters [multiple]="false" (selectionChange)="selectionChanged($event)" attr.aria-label="{{
     'map-selection-view.phenomenon-selection-list' | translate
-  }}"
->
-  @for (item of items; track item) {
-    <mat-list-option [value]="item.id" [selected]="item.id === selected()">
-      {{ item.label }}
-    </mat-list-option>
+  }}">
+  @for (item of filteredItems; track item) {
+  <mat-list-option [value]="item.name" [selected]="item.name === selected()">
+    <div matListItemTitle>
+      <n52-label-mapper [label]="item.name"></n52-label-mapper>
+    </div>
+    <div matListItemLine>
+      {{ item.description }}
+    </div>
+  </mat-list-option>
   }
 </mat-selection-list>

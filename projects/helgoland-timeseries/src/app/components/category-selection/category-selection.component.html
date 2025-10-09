@@ -53,7 +53,7 @@
     </div>
   </div>
   <div class="stations">
-    <div>Found {{ this.srvc.stationsResource.value()?.length }} stations</div>
+    <h2>Found {{ this.srvc.stationsResource.value()?.length }} stations</h2>
     @for (
       station of this.srvc.stationsResource.value();
       track station["@iot.id"]
