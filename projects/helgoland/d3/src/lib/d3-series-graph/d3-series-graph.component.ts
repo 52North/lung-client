@@ -189,7 +189,7 @@ export class D3SeriesGraphComponent
 
   // default plot options
   plotOptions: D3SeriesGraphOptions = {
-    hoverStyle: HoveringStyle.point,
+    hoverStyle: HoveringStyle.line,
     grid: true,
     yaxis: true,
     showTimeLabel: true,

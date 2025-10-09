@@ -32,8 +32,7 @@ const TIME_LABEL_CLASS = 'time-label';
 })
 export class D3GraphHoverLineComponent
   extends D3SeriesGraphControl
-  implements D3GraphObserver
-{
+  implements D3GraphObserver {
   protected timezoneSrvc = inject(TimezoneService);
 
   readonly showLabels = input(true);
@@ -157,11 +156,13 @@ export class D3GraphHoverLineComponent
         this.drawLineIndicator(mouse);
         if (this.showLabels()) {
           this.datasets.forEach((entry, entryIdx) => {
-            const idx = this.getItemForX(
-              mouse[0] + this.graphExtent!.leftOffset,
-              this.data!.get(entry.id)!,
-            );
-            if (idx) this.showLabel(entry, idx, mouse[0], entryIdx);
+            if (this.data!.has(entry.id)) {
+              const idx = this.getItemForX(
+                mouse[0] + this.graphExtent!.leftOffset,
+                this.data!.get(entry.id)!,
+              );
+              if (idx) this.showLabel(entry, idx, mouse[0], entryIdx);
+            }
           });
         }
       }
@@ -211,6 +212,9 @@ export class D3GraphHoverLineComponent
     const PixelBuffer = 5;
     const time = this.graphExtent?.xScale.invert(xCoord);
     const idx = d3.bisector((d: DataEntry) => d.timestamp).left(data, time);
+    if (idx >= data.length) {
+      return undefined;
+    }
     const distIdx = this.calcDist(data[idx], xCoord);
     if (idx > 0) {
       const distPrev = this.calcDist(data[idx - 1], xCoord);
@@ -292,15 +296,15 @@ export class D3GraphHoverLineComponent
     const entryX: number = this.checkLeftSide(item.xDiagCoord!)
       ? item.xDiagCoord! + 4
       : item.xDiagCoord! -
-        this.graphHelper.getDimensions(label.text.node()).w -
-        4;
+      this.graphHelper.getDimensions(label.text.node()).w -
+      4;
     label.text.attr(
       'transform',
       `translate(${entryX + padding}, ${item.yDiagCoord! + padding})`,
     );
     label.rect
       .attr('x', entryX)
-      .attr('y', item.yDiagCoord!)
+      .attr('y', item.yDiagCoord! - 15)
       .attr(
         'width',
         this.graphHelper.getDimensions(label.text.node()).w + padding * 2,
