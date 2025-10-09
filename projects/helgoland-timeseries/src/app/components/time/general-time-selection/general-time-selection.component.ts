@@ -56,6 +56,9 @@ export class GeneralTimeSelectionComponent {
   LAST_MONTH = DefinedTimespan.LAST_MONTH;
   CURRENT_YEAR = DefinedTimespan.CURRENT_YEAR;
   LAST_YEAR = DefinedTimespan.LAST_YEAR;
+  LAST_10_YEARS = DefinedTimespan.LAST_10_YEARS;
+  LAST_20_YEARS = DefinedTimespan.LAST_20_YEARS;
+  LAST_100_YEARS = DefinedTimespan.LAST_100_YEARS;
 
   range: UntypedFormGroup = new UntypedFormGroup({
     start: new UntypedFormControl(),

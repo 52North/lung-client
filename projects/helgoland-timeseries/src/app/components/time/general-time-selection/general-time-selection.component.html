@@ -1,57 +1,42 @@
 @if (timespan()) {
-  <div class="wrapper">
-    <div style="flex: 1"></div>
-    <button
-      mat-icon-button
-      (click)="back()"
-      matTooltip="{{ 'time-selection.step-back' | translate }}"
-      attr.aria-label="{{ 'time-selection.step-back' | translate }}"
-    >
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <button
-      mat-button
-      [matMenuTriggerFor]="menu"
-      (menuOpened)="onMenuOpen(picker)"
-      class="desktop-only"
-    >
-      {{ timespan().from | tzDate }}
-      &nbsp;&ndash;&nbsp;
-      {{ timespan().to | tzDate }}
-    </button>
-    <button
-      mat-button
-      [matMenuTriggerFor]="menu"
-      (menuOpened)="onMenuOpen(picker)"
-      class="mobile-only"
-    >
-      <div>{{ timespan().from | tzDate }}</div>
-      <div>{{ timespan().to | tzDate }}</div>
-    </button>
-    <button
-      mat-icon-button
-      (click)="forward()"
-      matTooltip="{{ 'time-selection.step-forward' | translate }}"
-      attr.aria-label="{{ 'time-selection.step-forward' | translate }}"
-    >
-      <mat-icon>arrow_forward</mat-icon>
-    </button>
-    <div style="flex: 1"></div>
-  </div>
+<div class="wrapper">
+  <div style="flex: 1"></div>
+  <button mat-icon-button (click)="back()" matTooltip="{{ 'time-selection.step-back' | translate }}"
+    attr.aria-label="{{ 'time-selection.step-back' | translate }}">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <button mat-button [matMenuTriggerFor]="menu" (menuOpened)="onMenuOpen(picker)" class="desktop-only">
+    {{ timespan().from | tzDate }}
+    &nbsp;&ndash;&nbsp;
+    {{ timespan().to | tzDate }}
+  </button>
+  <button mat-button [matMenuTriggerFor]="menu" (menuOpened)="onMenuOpen(picker)" class="mobile-only">
+    <div>{{ timespan().from | tzDate }}</div>
+    <div>{{ timespan().to | tzDate }}</div>
+  </button>
+  <button mat-icon-button (click)="forward()" matTooltip="{{ 'time-selection.step-forward' | translate }}"
+    attr.aria-label="{{ 'time-selection.step-forward' | translate }}">
+    <mat-icon>arrow_forward</mat-icon>
+  </button>
+  <div style="flex: 1"></div>
+</div>
 }
 <mat-menu #menu="matMenu">
+  <!--
   <button mat-menu-item (click)="predefinedRange(LASTHOUR)">
     {{ "time-selection.predefined.last-hour" | translate }}
   </button>
   <button mat-menu-item (click)="predefinedRange(TODAY)">
     {{ "time-selection.predefined.today" | translate }}
   </button>
+
   <button mat-menu-item (click)="predefinedRange(YESTERDAY)">
     {{ "time-selection.predefined.yesterday" | translate }}
   </button>
   <button mat-menu-item (click)="predefinedRange(TODAY_YESTERDAY)">
     {{ "time-selection.predefined.today_yesterday" | translate }}
   </button>
+-->
   <button mat-menu-item (click)="predefinedRange(CURRENT_WEEK)">
     {{ "time-selection.predefined.current-week" | translate }}
   </button>
@@ -69,6 +54,15 @@
   </button>
   <button mat-menu-item (click)="predefinedRange(LAST_YEAR)">
     {{ "time-selection.predefined.last-year" | translate }}
+  </button>
+  <button mat-menu-item (click)="predefinedRange(LAST_10_YEARS)">
+    {{ "time-selection.predefined.last-10-years" | translate }}
+  </button>
+  <button mat-menu-item (click)="predefinedRange(LAST_20_YEARS)">
+    {{ "time-selection.predefined.last-20-years" | translate }}
+  </button>
+  <button mat-menu-item (click)="predefinedRange(LAST_100_YEARS)">
+    {{ "time-selection.predefined.last-100-years" | translate }}
   </button>
   <mat-divider />
   <mat-form-field appearance="fill">
