@@ -46,7 +46,6 @@ import {
   provideKeycloak,
 } from 'keycloak-angular';
 import { BasicAuthInformerImplService } from '../../helgoland-common/src/lib/services/basic-auth-informer-impl.service';
-import { DatasetStaCustomConnectorProvider } from '../../helgoland/core/src/lib/api-communication/connectors/sta-api-v1-connector/sta-api-custom-connector';
 import { AppComponent } from './app/app.component';
 import { ROUTES } from './app/app.consts';
 import {
@@ -206,12 +205,12 @@ const initializeApp = async () => {
         provide: DatasetApiInterface,
         useClass: SplittedDataDatasetApiInterface,
       },
-      DatasetApiV1ConnectorProvider,
-      DatasetApiV2ConnectorProvider,
-      DatasetApiV3ConnectorProvider,
+      //DatasetApiV1ConnectorProvider,
+      //DatasetApiV2ConnectorProvider,
+      //DatasetApiV3ConnectorProvider,
       DatasetStaConnectorProvider,
-      DatasetStaCustomConnectorProvider,
-      PegelonlineApiConnectorProvider,
+      //DatasetStaCustomConnectorProvider,
+      //PegelonlineApiConnectorProvider,
     ],
   };
 
