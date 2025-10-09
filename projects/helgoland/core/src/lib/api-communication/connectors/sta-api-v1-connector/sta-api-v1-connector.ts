@@ -354,10 +354,19 @@ export class StaApiV1Connector implements HelgolandServiceConnector {
     if (this.filterTimeseriesMatchesNot(filter)) {
       return throwError(() => new Error('Could not create platform'));
     }
+
+    const parameters: string[] = [
+      "$select=id",
+      "$top=1000"
+    ];
+
+    if (filter.phenomenon) {
+      parameters.push(`$filter=${this.createDatastreamFilter(filter).$filter!}`)
+    }
+    
     return this.sta
       .getLocation(url, id, {
-        $expand:
-          'Things/Datastreams/Thing,Things/Locations,Things/Datastreams/ObservedProperty,Things/Datastreams/Sensor',
+        $expand: `Things/Datastreams(${parameters.join(";")})`,
       })
       .pipe(map((loc) => this.createExtendedPlatform(loc)));
   }
@@ -515,7 +524,7 @@ export class StaApiV1Connector implements HelgolandServiceConnector {
       DatastreamExpandParams
     > = {
       $expand:
-        'Thing,Thing/Locations,ObservedProperty,Sensor,Observations($orderby=phenomenonTime desc;$top=1)',
+        'Observations($orderby=phenomenonTime desc;$top=1)',
       $select: { Observations: true, id: true },
     };
     const firstRequest = this.sta.getDatastream(
