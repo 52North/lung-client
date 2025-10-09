@@ -1,12 +1,12 @@
 {
     "defaultService": {
         "serviceId": "1",
-        "apiUrl": "https://mdpu-lung.docker.srv.int.52north.org/FROST-Server/v1.1/"
+        "apiUrl": "https://mdpu.dev.52north.org/FROST-Server/v1.1/"
     },
     "datasetApis": [
         {
-            "name": "https://mdpu-lung.docker.srv.int.52north.org/FROST-Server/v1.1/",
-            "url": "https://mdpu-lung.docker.srv.int.52north.org/FROST-Server/v1.1/"
+            "name": "https://mdpu.dev.52north.org/FROST-Server/v1.1/",
+            "url": "https://mdpu.dev.52north.org/FROST-Server/v1.1/"
         }
     ],
     "languages": [
@@ -25,12 +25,38 @@
     },
     "baseLayers": [
         {
-            "label": "OSM",
+            "label": "ORKa.MV",
             "visible": true,
             "type": "tilelayer",
-            "urlTemplate": "https://maps.omniscale.net/v2/fluggs-d9227d46/style.default/{z}/{x}/{y}.png",
+            "urlTemplate": "https://www.orka-mv.de/geodienste/orkamv/tiles/1.0.0/orkamv/GLOBAL_WEBMERCATOR/{z}/{x}/{y}.png",
             "options": {
-                "maxZoom": 18
+                "maxZoom": 19,
+                "minZoom": 7,
+                "attribution": "<a href=\"https://www.orka-mv.de//copyright\">Kartenbild &copy; Hanse- und Universitätsstadt Rostock (CC BY 4.0) | Kartendaten &copy; OpenStreetMap (ODbL) und LkKfS-MV</a>"
+            }
+        },
+        {
+            "label": "GDI-MV DOP WMS",
+            "visible": false,
+            "type": "wms",
+            "url": " https://www.geodaten-mv.de/dienste/adv_dop?",
+            "options": {
+                "layers": "mv_dop",
+                "format": "image/png",
+                "transparent": true,
+                "minZoom": 11,
+                "attribution": "&copy; GeoBasis-DE/M-V 2025"
+            }
+        },
+        {
+            "label": "Luftbild MV (20 cm)",
+            "visible": false,
+            "type": "tilelayer",
+            "urlTemplate": "https://geo.sv.rostock.de/geodienste/luftbild_mv-20/wmts/hro.luftbild_mv-20.luftbild_mv-20/GLOBAL_WEBMERCATOR/{z}/{x}/{y}.png",
+            "options": {
+                "maxZoom": 19,
+                "minZoom": 10,
+                "attribution": "&copy; GeoBasis-DE/M-V 2025"
             }
         },
         {
@@ -41,30 +67,21 @@
             "options": {
                 "layers": "gebaeude",
                 "format": "image/png",
-                "transparent": true
-            }
-        },
-        {
-            "label": "Badewasserqualität M-V",
-            "visible": false,
-            "type": "wms",
-            "url": "https://www.geodaten-mv.de/dienste/badewassermv_wms?",
-            "options": {
-                "layers": "badewassermv_wms",
-                "format": "image/png",
-                "transparent": true
+                "transparent": true,
+                "minZoom": 14,
+                "attribution": "&copy; GeoBasis-DE/M-V 2025"
             }
         }
     ],
     "dataTableVisible": true,
     "keycloak": {
         "config": {
-           "url": "https://people-ecco.dev.52north.org/auth" ,
-           "realm": "jsp-test",
-           "clientId": "frost-local"
+           "url": "https://mdpu.dev.52north.org/auth" ,
+           "realm": "mdpu",
+           "clientId": "lung-client"
         },
         "bearerTokenCondition": {
-            "urlPattern": "^(https:\\/\\/mdpu-lung.docker.srv.int.52north.org)(\\/.*)?$",
+            "urlPattern": "^(http:\\/\\/mdpu.dev.52north.org)(\\/.*)?$",
             "bearerPrefix": "Bearer"
         }
     }
