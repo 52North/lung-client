@@ -28,6 +28,7 @@ export class ParameterListSelectorComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   readonly onItemSelected = output<Phenomenon>();
+  readonly selectAllPhenomena = output();
   readonly selected = input<string>();
 
   filteredItems: ObservedProperty[] | undefined;
@@ -35,6 +36,7 @@ export class ParameterListSelectorComponent implements OnInit {
   loading = 1;
 
   ngOnInit() {
+    this.selectAllPhenomena.emit();
     this.loadItems();
   }
   
