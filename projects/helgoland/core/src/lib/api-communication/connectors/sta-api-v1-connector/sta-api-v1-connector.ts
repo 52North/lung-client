@@ -634,6 +634,14 @@ export class StaApiV1Connector implements HelgolandServiceConnector {
     if (thing.properties) {
       parameters.additional = thing.properties;
     }
+    if (ds.ObservedProperty && ds.ObservedProperty.definition) {
+      parameters.additional = {
+        ...parameters.additional,
+        observedProperty: {
+          definition: ds.ObservedProperty.definition,
+        },
+      };
+    }
     return parameters;
   }
 
