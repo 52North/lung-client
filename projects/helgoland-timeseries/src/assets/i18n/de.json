@@ -1,6 +1,8 @@
 {
 	"authentication.login.tooltip": "Log in",
 	"authentication.logout.tooltip": "Log out",
+	"change-data-source-modal.title": "Datenquelle wechseln",
+	"change-data-source.button-label": "Datenquelle wechseln",
 	"controls.close": "Schließen",
 	"controls.ok": "Ok",
 	"dataset-by-station.hint": "Bitte wählen Sie Zeitreihen zur Darstellung aus:",

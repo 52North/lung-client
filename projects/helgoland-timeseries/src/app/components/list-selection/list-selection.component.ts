@@ -13,12 +13,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import {
   ErrorHandlerService,
   ParameterListEntry,
-  ParameterType
+  ParameterType,
 } from 'helgoland-common';
 
 import { AppRouterService } from '../../services/app-router.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
 import { CategorySelectionComponent } from '../category-selection/category-selection.component';
+import { ChangeDataSourceComponent } from '../change-data-source/change-data-source.component';
 import { ConfigurationService } from './../../services/configuration.service';
 import {
   ListConfig,
@@ -36,6 +37,7 @@ import {
     MatDialogModule,
     MatExpansionModule,
     TranslateModule,
+    ChangeDataSourceComponent,
   ],
 })
 export class ListSelectionComponent implements OnInit {
