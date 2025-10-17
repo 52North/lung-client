@@ -99,7 +99,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
                 }
               }
             } as SelectableDataset,
-            this.defaultSelected(),
+            this.timeseries.hasDataset(this.idHandler.createInternalId(this.staUrl, ds['@iot.id']))
           );
         })
         this.counter--;
