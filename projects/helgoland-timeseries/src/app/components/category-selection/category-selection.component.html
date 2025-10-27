@@ -54,8 +54,18 @@
   </div>
   <div class="stations">
     <h2>Found {{ this.srvc.stationsResource.value()?.length }} stations</h2>
+    <mat-form-field style="width: 100%">
+      <mat-label> {{ "map-selection-view.search" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder=""
+        (input)="onInput($event)"
+        class="example-input"
+      />
+    </mat-form-field>
     @for (
-      station of this.srvc.stationsResource.value();
+      station of this.filteredStations();
       track station["@iot.id"]
     ) {
       <div (click)="this.srvc.openStation(station)">
