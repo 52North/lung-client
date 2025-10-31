@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DoCheck,
@@ -6,27 +7,41 @@ import {
   input,
   IterableDiffer,
   IterableDiffers,
+  ViewChild,
 } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
-import { HelgolandCoreModule, Timespan } from '@helgoland/core';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  HelgolandCoreModule,
+  Timespan,
+  TimezoneService,
+} from '@helgoland/core';
 import { SeriesGraphDataset } from '@helgoland/d3';
 import { Subscription } from 'rxjs';
-import { buildDataTable, DataTableRow } from '../../helper/table-creation';
-
+import { createDataTable, TableRow } from '../../helper/table-creation';
 interface DatasetEventSubscriptions {
   state: Subscription;
   data: Subscription;
+}
+
+interface ColumnConfig {
+  title: string;
+  key: string;
+  visible: boolean;
+  sort?: boolean;
+  formatter?: (val: string) => string;
 }
 
 @Component({
   selector: 'helgoland-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
-  imports: [MatTableModule, HelgolandCoreModule],
+  imports: [MatTableModule, HelgolandCoreModule, MatSortModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataTableComponent implements DoCheck {
+export class DataTableComponent implements DoCheck, AfterViewInit {
   protected iterableDiffers = inject(IterableDiffers);
+  private timezoneSrvc = inject(TimezoneService);
 
   readonly datasets = input<SeriesGraphDataset[]>([]);
   private datasetsDiffer: IterableDiffer<SeriesGraphDataset>;
@@ -35,19 +50,108 @@ export class DataTableComponent implements DoCheck {
 
   private subscriptions: Map<string, DatasetEventSubscriptions> = new Map();
 
-  displayedColumns: string[] = [];
-  dataSource: DataTableRow[] = [];
+  @ViewChild(MatSort) sort: MatSort | undefined;
+
+  visibleColumns: ColumnConfig[] = [
+    {
+      title: 'Gewässerart',
+      key: 'gew_art',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'Bundesland',
+      key: 'bundesland',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'mst_nr',
+      key: 'mst_nr',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'Ort',
+      key: 'ort',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'Gewässer',
+      key: 'gewässername',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'wb_cd',
+      key: 'wb_cd',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'wb_type_cd',
+      key: 'wb_type_cd',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'datum_uhrzeit',
+      key: 'datum_uhrzeit',
+      visible: true,
+      sort: true,
+      formatter: (val) => this.timezoneSrvc.formatTzDate(val),
+    },
+    {
+      title: 'matrix',
+      key: 'matrix',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'methode',
+      key: 'methode',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'param_kurz',
+      key: 'param_kurz',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'parameter',
+      key: 'parameter',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'vorzeichen',
+      key: 'vorzeichen',
+      visible: true,
+      sort: true,
+    },
+    {
+      title: 'wert_berechnet',
+      key: 'wert_berechnet',
+      sort: true,
+      visible: true,
+    },
+  ];
+
+  dataSource: MatTableDataSource<TableRow> | undefined;
+
+  protected get displayedColumns(): string[] {
+    return this.visibleColumns.filter((e) => e.visible).map((e) => e.key);
+  }
 
   constructor() {
     this.datasetsDiffer = this.iterableDiffers.find([]).create();
+  }
 
-    // effect(() => {
-    //   // We just have to use the source signals
-    //   // somewhere inside this effect
-    //   const currentCount = this.datasets();
-    //   // const derivedCounter = this.derivedCounter();
-    //   console.log(`current datasets: ${currentCount}`);
-    // });
+  ngAfterViewInit(): void {
+    this.finalizeTableInit();
   }
 
   ngDoCheck(): void {
@@ -70,14 +174,27 @@ export class DataTableComponent implements DoCheck {
     }
   }
 
+  protected renderValue(val: string, colConf: ColumnConfig) {
+    if (colConf.formatter) {
+      return colConf.formatter(val);
+    } else {
+      return val;
+    }
+  }
+
   private calcData() {
     const timespan = this.timespan();
     if (timespan === undefined) return;
-    this.displayedColumns = [
-      'timestamp',
-      ...this.datasets().map((ds) => ds.id),
-    ];
-    this.dataSource = buildDataTable(this.datasets(), timespan);
+    this.dataSource = new MatTableDataSource(
+      createDataTable(this.datasets(), timespan),
+    );
+    this.finalizeTableInit();
+  }
+
+  private finalizeTableInit() {
+    if (this.dataSource && this.sort) {
+      this.dataSource.sort = this.sort;
+    }
   }
 
   private subscribeEvents(ds: SeriesGraphDataset) {

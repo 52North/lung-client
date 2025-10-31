@@ -39,6 +39,7 @@ helgoland-diagram-view {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            overflow: hidden;
 
             .legend-button {
                 position: absolute;

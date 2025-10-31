@@ -1,34 +1,50 @@
 import { Timespan } from '@helgoland/core';
 import { DatasetStyle, SeriesGraphDataset } from '@helgoland/d3';
 
-export type DataTableRow = (number | null)[];
+export interface TableRow {
+  gew_art: string;
+  bundesland: string;
+  mst_nr: string;
+  ort: string;
+  gewässername: string;
+  wb_cd: string;
+  wb_type_cd: string;
+  datum_uhrzeit: number;
+  matrix: string;
+  methode: string;
+  param_kurz: string;
+  parameter: string;
+  vorzeichen: string;
+  wert_berechnet: number;
+}
 
-export function buildDataTable<T extends DatasetStyle>(
-  datasets: SeriesGraphDataset<T>[],
+export function createDataTable(
+  datasets: SeriesGraphDataset<DatasetStyle>[],
   timespan: Timespan,
-): DataTableRow[] {
-  const series = datasets.map((ds) =>
-    ds.data.map((d) => ({
-      t: d.timestamp,
-      v: d.value,
-    })),
-  );
-
-  let timestamps = Array.from(
-    new Set(series.flatMap((s) => s.map((p) => p.t))),
-  ).sort((a, b) => a - b);
-  const start = timestamps.findIndex((t) => t >= timespan.from);
-  const end = timestamps.findLastIndex((t) => t <= timespan.to);
-  timestamps = timestamps.slice(start, end + 1);
-
-  const maps = series.map(
-    (s) => new Map<number, number>(s.map((p) => [p.t, p.v])),
-  );
-
-  const rows: DataTableRow[] = timestamps.map((t) => {
-    const values = maps.map((m) => m.get(t) ?? null); // null, falls Wert fehlt
-    return [t, ...values];
+) {
+  let data: TableRow[] = [];
+  datasets.forEach((ds) => {
+    ds.data.forEach((d) => {
+      const additional = ds.description.additional;
+      if (d.timestamp > timespan.from && d.timestamp < timespan.to) {
+        data.push({
+          gew_art: additional?.['gew_art'] || '',
+          bundesland: '???',
+          mst_nr: '???',
+          ort: ds.description.platformLabel || '',
+          gewässername: additional?.['gew_name'] || '',
+          wb_cd: additional?.['wb_cd'] || '',
+          wb_type_cd: additional?.['wb_type_cd'] || '',
+          datum_uhrzeit: d.timestamp,
+          matrix: additional?.['matrix']?.join(',') || '',
+          methode: '???',
+          param_kurz: ds.description.phenomenonLabel || '',
+          parameter: additional?.['observedProperty']?.definition || '',
+          vorzeichen: '???',
+          wert_berechnet: d.value,
+        });
+      }
+    });
   });
-
-  return rows;
+  return data;
 }

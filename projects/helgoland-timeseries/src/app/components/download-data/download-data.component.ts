@@ -8,6 +8,7 @@ import { SeriesGraphDataset } from '@helgoland/d3';
 import { TranslateModule } from '@ngx-translate/core';
 import moment from 'moment';
 import { utils, WorkBook, WorkSheet, writeFile } from 'xlsx';
+import { createDataTable } from '../../helper/table-creation';
 type xlsxExport = any[][];
 
 enum DownloadType {
@@ -49,30 +50,7 @@ export class DownloadDataComponent {
     const timespan = this.timespan();
     if (timespan === undefined) return;
 
-    let data: any[] = [];
-
-    this.datasets().forEach((ds) => {
-      const entries = ds.data.map((d) => {
-        const additional = ds.description.additional;
-        return {
-          gew_art: additional?.['gew_art'] || '',
-          bundesland: '???',
-          mst_nr: '???',
-          ort: ds.description.platformLabel,
-          gewässername: additional?.['gew_name'] || '',
-          wb_cd: additional?.['wb_cd'] || '',
-          wb_type_cd: additional?.['wb_type_cd'] || '',
-          datum_uhrzeit: d.timestamp,
-          matrix: additional?.['matrix']?.join(',') || '',
-          methode: '???',
-          param_kurz: ds.description.phenomenonLabel,
-          parameter: additional?.['observedProperty']?.definition || '',
-          vorzeichen: '???',
-          wert_berechnet: d.value,
-        };
-      });
-      data.push(...entries);
-    });
+    let data: any[] = createDataTable(this.datasets(), timespan);
 
     data.sort((a, b) => a.datum_uhrzeit - b.datum_uhrzeit);
 
