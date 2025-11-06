@@ -8,6 +8,7 @@ import { ModalMetadataPreviewComponent } from './modal-metadata-preview/modal-me
 const keyMapping: Record<string, string> = {
   gew_art: 'Gewässerart',
   gew_name: 'Gewässername',
+  tiefe: 'Tiefe',
   kat1: 'Kategorie 1',
   kat2: 'Kategorie 2',
   matrix: 'Matrix',

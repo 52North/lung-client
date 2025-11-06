@@ -16,6 +16,7 @@ export interface TableRow {
   parameter: string;
   vorzeichen: string;
   wert_berechnet: number;
+  einheit: string;
 }
 
 export function createDataTable(
@@ -29,8 +30,8 @@ export function createDataTable(
       if (d.timestamp > timespan.from && d.timestamp < timespan.to) {
         data.push({
           gew_art: additional?.['gew_art'] || '',
-          bundesland: '???',
-          mst_nr: '???',
+          bundesland: additional?.['location']['bundesland'] || '',
+          mst_nr: additional?.['mst_nr'] || '',
           ort: ds.description.platformLabel || '',
           gewässername: additional?.['gew_name'] || '',
           wb_cd: additional?.['wb_cd'] || '',
@@ -42,6 +43,7 @@ export function createDataTable(
           parameter: additional?.['observedProperty']?.definition || '',
           vorzeichen: '???',
           wert_berechnet: d.value,
+          einheit: ds.description.uom
         });
       }
     });

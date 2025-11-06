@@ -138,6 +138,12 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
       sort: true,
       visible: true,
     },
+    {
+      title: 'einheit',
+      key: 'einheit',
+      sort: true,
+      visible: true,
+    },
   ];
 
   dataSource: MatTableDataSource<TableRow> | undefined;
