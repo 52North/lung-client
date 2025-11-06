@@ -27,6 +27,7 @@
 	"diagram-view.legend.entry.first-value-tooltip": "Springe zur ältesten Messung",
 	"diagram-view.legend.entry.last-value-at": "Aktuellster Wert",
 	"diagram-view.legend.entry.last-value-tooltip": "Springe zur aktuellsten Messung",
+	"diagram-view.legend.entry.show-complete-timespan": "Zeige ganzen Zeitraum",
 	"diagram-view.no-timeseries.hint": "Derzeit sind keine Zeitreihen ausgewählt. Folgende Wege sind möglich:",
 	"diagram-view.open-diagram-settings": "Öffne Diagrammeinstellungen",
 	"diagram-view.remove-legend-entries.tooltip": "Entferne alle Zeitreihen",

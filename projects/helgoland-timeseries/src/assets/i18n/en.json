@@ -27,6 +27,7 @@
 	"diagram-view.legend.entry.first-value-tooltip": "Move to oldest measurement",
 	"diagram-view.legend.entry.last-value-at": "Recent Value",
 	"diagram-view.legend.entry.last-value-tooltip": "Move to recent measurement",
+	"diagram-view.legend.entry.show-complete-timespan": "Show complete timeframe",
 	"diagram-view.no-timeseries.hint": "Currently no timeseries are selected. Choose one of the following ways:",
 	"diagram-view.open-diagram-settings": "Open diagram settings",
 	"diagram-view.remove-legend-entries.tooltip": "Remove all timeseries",

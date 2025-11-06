@@ -27,6 +27,7 @@
                 [timeInterval]="graphDatasetsSrvc.timespan"
                 [selected]="false"
                 (selectDate)="jumpToDate($event)"
+                (selectTimespan)="setTimespan($event)"
                 (datasetDeleted)="
                   this.graphDatasetsSrvc.deleteDataset(dataset.id, true)
                 "

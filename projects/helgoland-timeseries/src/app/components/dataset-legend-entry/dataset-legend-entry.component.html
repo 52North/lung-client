@@ -176,6 +176,18 @@
           </div>
         </div>
       }
+      <div
+        class="entry-line clickable"
+        (click)="showCompleteTimespan(); $event.stopPropagation()"
+        style="display: flex; align-items: center"
+      >
+        <mat-icon>chevron_right</mat-icon>
+        <div>
+          <span>
+            {{ "diagram-view.legend.entry.show-complete-timespan" | translate }}
+          </span>
+        </div>
+      </div>
       <!-- Reference values -->
       @if (getTimeseriesDatasetChildren().length > 0) {
         <div>{{ "diagram-view.legend-reference-values" | translate }}:</div>

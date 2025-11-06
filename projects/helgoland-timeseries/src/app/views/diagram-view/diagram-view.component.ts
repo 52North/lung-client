@@ -16,7 +16,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Time } from '@helgoland/core';
+import { Time, Timespan } from '@helgoland/core';
 import {
   D3SeriesGraphOptions,
   DatasetStyle,
@@ -199,6 +199,10 @@ export class DiagramViewComponent implements OnInit {
       this.graphDatasetsSrvc.timespan!,
       date,
     );
+  }
+
+  setTimespan(timespan: Timespan) {
+    this.graphDatasetsSrvc.timespan = timespan;
   }
 
   openMapSelection() {
