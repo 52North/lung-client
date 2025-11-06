@@ -111,6 +111,7 @@ export class AxisSettings {
 export interface GraphDataEntry {
   timestamp: number;
   value: number;
+  parameter?: any;
   highlight?: boolean;
   xDiagCoord?: number;
   yDiagCoord?: number;

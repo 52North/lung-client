@@ -38,10 +38,10 @@ export function createDataTable(
           wb_type_cd: additional?.['wb_type_cd'] || '',
           datum_uhrzeit: d.timestamp,
           matrix: additional?.['matrix']?.join(',') || '',
-          methode: '???',
+          methode: d.parameter?.methode || '',
           param_kurz: ds.description.phenomenonLabel || '',
           parameter: additional?.['observedProperty']?.definition || '',
-          vorzeichen: '???',
+          vorzeichen: d.parameter?.vorzeichen || '',
           wert_berechnet: d.value,
           einheit: ds.description.uom
         });

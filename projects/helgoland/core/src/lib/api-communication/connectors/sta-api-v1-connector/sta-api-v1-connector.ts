@@ -719,7 +719,10 @@ export class StaApiV1Connector implements HelgolandServiceConnector {
         (obs) =>
           [
             new Date(obs.phenomenonTime!).getTime(),
-            parseFloat(obs.result as string),
+            {
+              value: parseFloat(obs.result as string),
+              parameter: obs.parameters,
+            },
           ] as TimeValueTuple,
       );
     const data = new HelgolandTimeseriesData(values);

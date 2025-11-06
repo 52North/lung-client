@@ -582,9 +582,10 @@ export class TimeseriesServiceImpl
         rawdata.values = this.sumValues.sum(startOf, period, rawdata.values);
       }
 
-      const data = rawdata.values.map((e) => ({
+      const data: GraphDataEntry[] = rawdata.values.map((e) => ({
         timestamp: e[0],
-        value: e[1],
+        value: e[1].value,
+        parameter: e[1].parameter
       }));
 
       const ds = this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId);
@@ -655,7 +656,7 @@ export class TimeseriesServiceImpl
 
       const data = rawdata.values.map((e) => ({
         timestamp: e[0],
-        value: e[1],
+        value: e[1].value,
       }));
 
       const ds = this.graphDatasetsSrvc.getOverviewDatasetEntry(
