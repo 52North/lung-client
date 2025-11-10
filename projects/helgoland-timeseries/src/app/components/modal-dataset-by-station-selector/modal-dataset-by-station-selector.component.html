@@ -1,118 +1,163 @@
 <h1 mat-dialog-title>{{ station().label }}</h1>
 <mat-dialog-content>
   @if (counter) {
-  <mat-progress-bar mode="indeterminate" />
+    <mat-progress-bar mode="indeterminate" />
   }
   <div class="full-height">
     @if (!counter && phenomenonMatchedList.length == 0) {
-    <mat-error>
-      {{ "dataset-by-station.no-datasets" | translate }}
-    </mat-error>
-    }
-    @else {
-    <p>
-      {{ "dataset-by-station.hint" | translate }}
-    </p>
-    @if (!phenomenonId()) {
-    <mat-form-field style="width: 100%">
-      <mat-label> {{ "map-selection-view.search" | translate }}</mat-label>
-      <input matInput type="text" placeholder="" (input)="filterDatasets($event, phenomenonMatchedList)"
-        class="example-input">
-    </mat-form-field>
-    }
-    <mat-selection-list (selectionChange)="adjustSelection($event)">
-      @for (ds of phenomenonMatchedList; track ds) {
-      <mat-list-option color="primary" [value]="ds" [selected]="ds.selected"
-        [disabled]="ds.parameters.service?.id == '0'">
-        <div matListItemTitle>
-          <n52-label-mapper [label]="ds.parameters.procedure?.label"></n52-label-mapper>
-        </div>
-        <div matListItemLine>
-          <n52-label-mapper [label]="ds.parameters.phenomenon?.label"></n52-label-mapper>
-        </div>
-        @if (ds.firstValue) {
-        <div matListItemLine>
-          {{ "diagram-view.legend.entry.first-value-at" | translate }}:
-          <span>
-            {{
-            ds.firstValue.timestamp
-            | tzDate: "L LT z" : null : translateSrvc.currentLang
-            }}
-          </span>
-        </div>
-        }
-        @if (ds.lastValue) {
-        <div matListItemLine>
-          {{ "diagram-view.legend.entry.last-value-at" | translate }}:
-          <span>
-            {{
-            ds.lastValue.timestamp
-            | tzDate: "L LT z" : null : translateSrvc.currentLang
-            }}
-          </span>
-        </div>
-        }
-      </mat-list-option>
+      <mat-error>
+        {{ "dataset-by-station.no-datasets" | translate }}
+      </mat-error>
+    } @else {
+      <p>
+        {{ "dataset-by-station.hint" | translate }}
+      </p>
+      <div style="padding: 10px;">
+        <app-grouped-dataset-list [datasets]="datasets()"/>
+      </div>
+      <!-- @if (!phenomenonId()) {
+        <mat-form-field style="width: 100%">
+          <mat-label> {{ "map-selection-view.search" | translate }}</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder=""
+            (input)="filterDatasets($event, phenomenonMatchedList)"
+            class="example-input"
+          />
+        </mat-form-field>
       }
-    </mat-selection-list>
-    @if (othersList.length > 0) {
-    <mat-divider> </mat-divider>
-    }
-
-    @if (phenomenonId()) {
-    <mat-accordion>
-      <mat-expansion-panel class="mat-elevation-z0">
-        <mat-expansion-panel-header (click)="loadData(false)">
-          <mat-panel-title>
-            {{ "dataset-by-station.show-additional-datasets" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        @if (othersList.length > 0) {
-        <div>
-          <mat-form-field style="width: 100%">
-            <mat-label> {{ "map-selection-view.search" | translate }}</mat-label>
-            <input matInput type="text" placeholder="" (input)="filterDatasets($event, othersList)"
-              class="example-input">
-          </mat-form-field>
-          <mat-selection-list color="primary" (selectionChange)="adjustSelection($event)">
-            @for (ds of othersList; track ds) {
-            <mat-list-option [value]="ds" [selected]="ds.selected" [disabled]="ds.parameters.service?.id == '0'">
-              <div matListItemTitle>
-                <n52-label-mapper [label]="ds.parameters.procedure?.label"></n52-label-mapper>
-              </div>
-              <div matListItemLine>
-                <n52-label-mapper [label]="ds.parameters.phenomenon?.label"></n52-label-mapper>
-              </div>
-              @if (ds.firstValue) {
+      <mat-selection-list (selectionChange)="adjustSelection($event)">
+        @for (ds of phenomenonMatchedList; track ds) {
+          <mat-list-option
+            color="primary"
+            [value]="ds"
+            [selected]="ds.selected"
+            [disabled]="ds.parameters.service?.id == '0'"
+          >
+            <div matListItemTitle>
+              <n52-label-mapper
+                [label]="ds.parameters.procedure?.label"
+              ></n52-label-mapper>
+            </div>
+            <div matListItemLine>
+              <n52-label-mapper
+                [label]="ds.parameters.phenomenon?.label"
+              ></n52-label-mapper>
+            </div>
+            @if (ds.firstValue) {
               <div matListItemLine>
                 {{ "diagram-view.legend.entry.first-value-at" | translate }}:
                 <span>
                   {{
-                  ds.firstValue.timestamp
-                  | tzDate: "L LT z" : null : translateSrvc.currentLang
+                    ds.firstValue.timestamp
+                      | tzDate: "L LT z" : null : translateSrvc.currentLang
                   }}
                 </span>
               </div>
-              }
-              @if (ds.lastValue) {
+            }
+            @if (ds.lastValue) {
               <div matListItemLine>
                 {{ "diagram-view.legend.entry.last-value-at" | translate }}:
                 <span>
                   {{
-                  ds.lastValue.timestamp
-                  | tzDate: "L LT z" : null : translateSrvc.currentLang
+                    ds.lastValue.timestamp
+                      | tzDate: "L LT z" : null : translateSrvc.currentLang
                   }}
                 </span>
               </div>
-              }
-            </mat-list-option>
             }
-          </mat-selection-list>
-        </div>
+          </mat-list-option>
         }
-      </mat-expansion-panel>
-    </mat-accordion>
-    }
+      </mat-selection-list> -->
+      @if (othersList.length > 0) {
+        <mat-divider> </mat-divider>
+      }
+
+      @if (phenomenonId()) {
+        <mat-accordion>
+          <mat-expansion-panel class="mat-elevation-z0">
+            <mat-expansion-panel-header (click)="loadData(false)">
+              <mat-panel-title>
+                {{ "dataset-by-station.show-additional-datasets" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            @if (othersList.length > 0) {
+              <div>
+                <mat-form-field style="width: 100%">
+                  <mat-label>
+                    {{ "map-selection-view.search" | translate }}</mat-label
+                  >
+                  <input
+                    matInput
+                    type="text"
+                    placeholder=""
+                    (input)="filterDatasets($event, othersList)"
+                    class="example-input"
+                  />
+                </mat-form-field>
+                <mat-selection-list
+                  color="primary"
+                  (selectionChange)="adjustSelection($event)"
+                >
+                  @for (ds of othersList; track ds) {
+                    <mat-list-option
+                      [value]="ds"
+                      [selected]="ds.selected"
+                      [disabled]="ds.parameters.service?.id == '0'"
+                    >
+                      <div matListItemTitle>
+                        <n52-label-mapper
+                          [label]="ds.parameters.procedure?.label"
+                        ></n52-label-mapper>
+                      </div>
+                      <div matListItemLine>
+                        <n52-label-mapper
+                          [label]="ds.parameters.phenomenon?.label"
+                        ></n52-label-mapper>
+                      </div>
+                      @if (ds.firstValue) {
+                        <div matListItemLine>
+                          {{
+                            "diagram-view.legend.entry.first-value-at"
+                              | translate
+                          }}:
+                          <span>
+                            {{
+                              ds.firstValue.timestamp
+                                | tzDate
+                                  : "L LT z"
+                                  : null
+                                  : translateSrvc.currentLang
+                            }}
+                          </span>
+                        </div>
+                      }
+                      @if (ds.lastValue) {
+                        <div matListItemLine>
+                          {{
+                            "diagram-view.legend.entry.last-value-at"
+                              | translate
+                          }}:
+                          <span>
+                            {{
+                              ds.lastValue.timestamp
+                                | tzDate
+                                  : "L LT z"
+                                  : null
+                                  : translateSrvc.currentLang
+                            }}
+                          </span>
+                        </div>
+                      }
+                    </mat-list-option>
+                  }
+                </mat-selection-list>
+              </div>
+            }
+          </mat-expansion-panel>
+        </mat-accordion>
+      }
     }
   </div>
 </mat-dialog-content>

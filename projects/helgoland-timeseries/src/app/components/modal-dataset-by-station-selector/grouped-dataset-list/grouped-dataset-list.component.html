@@ -1,0 +1,33 @@
+<app-string-filter (filter)="setFilter($event)"></app-string-filter>
+<mat-accordion>
+  @for (item of groupedDatasets(); track item.id) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span>{{ item.title }}</span>
+          <span style="color: grey; padding-left: 6px"
+            >({{ item.datasets.length }})</span
+          >
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <mat-selection-list (selectionChange)="adjustSelection($event)">
+          @for (ds of item.datasets | sort; track ds.id) {
+            <mat-list-option
+              color="primary"
+              [value]="ds"
+              [selected]="ds.selected"
+              [disabled]="ds.parameters.service?.id == '0'"
+            >
+              <n52-label-mapper
+                [label]="ds.additional.tiefe"
+              ></n52-label-mapper>
+            </mat-list-option>
+          }
+        </mat-selection-list>
+      </ng-template>
+    </mat-expansion-panel>
+  } @empty {
+    <li>There are no items.</li>
+  }
+</mat-accordion>

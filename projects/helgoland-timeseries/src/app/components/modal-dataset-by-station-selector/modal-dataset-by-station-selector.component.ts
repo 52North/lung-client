@@ -1,11 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { FirstLastValue, HelgolandCoreModule, InternalIdHandler, Parameter, StaInterfaceService } from '@helgoland/core';
+import {
+  HelgolandCoreModule,
+  InternalIdHandler,
+  Parameter,
+  StaInterfaceService,
+} from '@helgoland/core';
 import { HelgolandLabelMapperModule } from '@helgoland/depiction';
 import {
   DatasetByStationSelectorComponent,
@@ -13,13 +18,13 @@ import {
 } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { AppRouterService } from '../../services/app-router.service';
-import { DatasetsService } from '../../services/graph-datasets.service';
-import { TimeseriesService } from './../../services/timeseries-service.service';
-import { ConfigurationService } from '../../services/configuration.service';
-import { first } from 'lodash';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AppRouterService } from '../../services/app-router.service';
+import { ConfigurationService } from '../../services/configuration.service';
+import { DatasetsService } from '../../services/graph-datasets.service';
+import { TimeseriesService } from './../../services/timeseries-service.service';
+import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-dataset-list.component';
 
 @Component({
   selector: 'helgoland-modal-dataset-by-station-selector',
@@ -37,6 +42,7 @@ import { MatInputModule } from '@angular/material/input';
     MatListModule,
     MatProgressBarModule,
     TranslateModule,
+    GroupedDatasetListComponent,
   ],
 })
 export class ModalDatasetByStationSelectorComponent extends DatasetByStationSelectorComponent {
@@ -48,11 +54,12 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
   private idHandler = inject(InternalIdHandler);
   private staUrl = this.configSrvc.configuration.defaultService.apiUrl;
 
+  protected datasets = signal(<SelectableDataset[]>[]);
 
   override ngOnInit() {
     this.loadData(true);
   }
-  
+
   protected loadData(withPhenomenonFilter: boolean) {
     if (this.othersList.length > 0) {
       // we have already fetched previously.
@@ -61,66 +68,78 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
 
     let phenomenonId = withPhenomenonFilter ? this.phenomenonId() : undefined;
 
-    let dsFilter = ""
+    let dsFilter = '';
     if (phenomenonId) {
-      dsFilter = `;$filter=ObservedProperty/id eq '${phenomenonId}'`
+      dsFilter = `;$filter=ObservedProperty/id eq '${phenomenonId}'`;
     }
     this.counter = 1;
-    this.staSrvc.getLocation(this.staUrl, this.station().id, {
-      $select: "id",
-      $expand: `Things($select=id),Things/Datastreams($top=1000;$expand=ObservedProperty($select=id,description,name);$select=id,phenomenonTime${dsFilter})`
-    }).subscribe(location => {
-      this.counter = location.Things?.length || 0;
-      location.Things?.forEach(thing => {
-        this.phenomenonMatchedList = [];
-        thing.Datastreams?.forEach(ds => {
-          let firstValue, lastValue;
-          if (ds.phenomenonTime) {
-            const split = ds.phenomenonTime?.split("/")
-            firstValue = { timestamp: Date.parse(split[0]) };
-            lastValue = { timestamp: Date.parse(split[1]) };
-          }
-          this.prepareResult(
-            {
-              id: ds['@iot.id'],
-              firstValue: firstValue,
-              lastValue: lastValue,
-              label: ds.ObservedProperty?.name,
-              parameters: {
-                phenomenon: {
-                  id: ds.ObservedProperty?.['@iot.id'],
-                  label: ds.ObservedProperty?.description
-                },
-                procedure: {
-                  label: ds.ObservedProperty?.name
-                },
-                service: {
-                  id: "1"  // We use this for filtering ds matching the search or not.
-                }
-              }
-            } as SelectableDataset,
-            this.timeseries.hasDataset(this.idHandler.createInternalId(this.staUrl, ds['@iot.id']))
-          );
-        })
-        this.counter--;
+    this.staSrvc
+      .getLocation(this.staUrl, this.station().id, {
+        $select: 'id',
+        $expand: `Things($select=id),Things/Datastreams($top=1000;$expand=ObservedProperty($select=id,description,name);$select=id,phenomenonTime,properties${dsFilter})`,
       })
-      this.othersList.sort(this.sorter);
-      this.phenomenonMatchedList.sort(this.sorter);
-    })
+      .subscribe((location) => {
+        this.counter = location.Things?.length || 0;
+        location.Things?.forEach((thing) => {
+          this.phenomenonMatchedList = [];
+          thing.Datastreams?.forEach((ds) => {
+            let firstValue, lastValue;
+            if (ds.phenomenonTime) {
+              const split = ds.phenomenonTime?.split('/');
+              firstValue = { timestamp: Date.parse(split[0]) };
+              lastValue = { timestamp: Date.parse(split[1]) };
+            }
+            this.prepareResult(
+              {
+                id: ds['@iot.id'],
+                firstValue: firstValue,
+                lastValue: lastValue,
+                label: ds.ObservedProperty?.name,
+                parameters: {
+                  phenomenon: {
+                    id: ds.ObservedProperty?.['@iot.id'],
+                    label: ds.ObservedProperty?.description,
+                  },
+                  procedure: {
+                    label: ds.ObservedProperty?.name,
+                  },
+                  service: {
+                    id: '1', // We use this for filtering ds matching the search or not.
+                  },
+                },
+                additional: {
+                  tiefe: ds.properties?.['tiefe'],
+                },
+              } as SelectableDataset,
+              this.timeseries.hasDataset(
+                this.idHandler.createInternalId(this.staUrl, ds['@iot.id']),
+              ),
+            );
+          });
+          this.counter--;
+        });
+        this.othersList.sort(this.sorter);
+        this.phenomenonMatchedList.sort(this.sorter);
+        this.datasets.set(this.phenomenonMatchedList);
+      });
   }
 
   protected filterDatasets(event: Event, list: SelectableDataset[]) {
-    const val = ((event.target as HTMLInputElement).value)
+    const val = (event.target as HTMLInputElement).value;
     const filterValue = val.toLowerCase().replace(/\s/g, '');
-    list.forEach(item => {
-      const matches = ((item.id || "")
-        + (item.parameters.phenomenon?.label || "")
-        + (item.parameters.procedure?.label || ""))
-        .toLowerCase().replace(/\s/g, '').includes(filterValue);
-      item.parameters.service!.id = matches ? "1" : "0";
+    list.forEach((item) => {
+      const matches = (
+        (item.id || '') +
+        (item.parameters.phenomenon?.label || '') +
+        (item.parameters.procedure?.label || '')
+      )
+        .toLowerCase()
+        .replace(/\s/g, '')
+        .includes(filterValue);
+      item.parameters.service!.id = matches ? '1' : '0';
     });
 
-    list.sort(this.sorter)
+    list.sort(this.sorter);
   }
 
   sorter(a: SelectableDataset, b: SelectableDataset) {
@@ -153,10 +172,9 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
     this.onSelectionChanged.emit(selected);
   }
 
-
   adjustSelection(change: MatSelectionListChange) {
     const id = (change.options[0].value as SelectableDataset).id;
-    const internalId = this.idHandler.createInternalId(this.staUrl, id)
+    const internalId = this.idHandler.createInternalId(this.staUrl, id);
     if (change.options[0].selected) {
       this.timeseries.addDataset(internalId);
     } else {

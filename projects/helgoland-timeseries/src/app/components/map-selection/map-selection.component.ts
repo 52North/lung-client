@@ -38,7 +38,7 @@ import {
   ConfigurationService,
 } from '../../services/configuration.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
-import { ChangeDataSourceComponent } from "../change-data-source/change-data-source.component";
+import { ChangeDataSourceComponent } from '../change-data-source/change-data-source.component';
 import { LayersControlComponent } from '../layers-control/layers-control.component';
 import { ModalDatasetByStationSelectorComponent } from '../modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
 import {
@@ -66,8 +66,8 @@ interface MapSelectionAppConfig extends AppConfig {
     ParameterListSelectorComponent,
     TranslateModule,
     LayersControlComponent,
-    ChangeDataSourceComponent
-],
+    ChangeDataSourceComponent,
+  ],
 })
 export class MapSelectionComponent implements OnInit, AfterViewInit {
   protected appRouter = inject(AppRouterService);
