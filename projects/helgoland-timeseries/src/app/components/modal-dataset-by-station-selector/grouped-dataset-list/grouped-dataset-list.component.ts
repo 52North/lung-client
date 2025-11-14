@@ -15,16 +15,18 @@ import {
   MatExpansionPanelTitle,
 } from '@angular/material/expansion';
 import {
+  MatListModule,
   MatListOption,
   MatSelectionList,
   MatSelectionListChange,
 } from '@angular/material/list';
-import { InternalIdHandler } from '@helgoland/core';
+import { InternalIdHandler, TzDatePipe } from '@helgoland/core';
 import { LabelMapperComponent } from '@helgoland/depiction';
 import { SelectableDataset } from '@helgoland/selector';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { TimeseriesService } from '../../../services/timeseries-service.service';
 import { StringFilterComponent } from '../../string-filter/string-filter.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface Entry {
   title: string;
@@ -57,8 +59,11 @@ export class SortPipe implements PipeTransform {
     SortPipe,
     MatAccordion,
     LabelMapperComponent,
+    TranslateModule,
+    TzDatePipe,
     MatSelectionList,
     MatListOption,
+    MatListModule,
     StringFilterComponent,
   ],
 })

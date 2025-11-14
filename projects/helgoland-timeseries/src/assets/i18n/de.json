@@ -60,6 +60,8 @@
 	"map-config.title": "Kartenkonfiguration",
 	"map-selection-view.adjust-map-button.tooltip": "Karte anpassen",
 	"map-selection-view.search": "Suche",
+	"map-selection-view.depth": "Tiefenstufe",
+	"map-selection-view.depth-unspecified": "nicht spezifiziert",
 	"map-selection-view.select-all-phenomena": "Zeige alle Phänomene",
 	"modal-edit-timeseries-options.adjust-color": "Farbe ändern",
 	"modal-edit-timeseries-options.adjust-color-confirm-button": "Ok",

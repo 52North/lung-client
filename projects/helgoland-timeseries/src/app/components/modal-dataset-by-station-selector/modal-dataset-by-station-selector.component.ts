@@ -10,6 +10,7 @@ import {
   InternalIdHandler,
   Parameter,
   StaInterfaceService,
+  TzDatePipe,
 } from '@helgoland/core';
 import { HelgolandLabelMapperModule } from '@helgoland/depiction';
 import {
@@ -55,6 +56,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
   private staUrl = this.configSrvc.configuration.defaultService.apiUrl;
 
   protected datasets = signal(<SelectableDataset[]>[]);
+  protected otherDatasets = signal(<SelectableDataset[]>[]);
 
   override ngOnInit() {
     this.loadData(true);
@@ -118,9 +120,12 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
           });
           this.counter--;
         });
-        this.othersList.sort(this.sorter);
         this.phenomenonMatchedList.sort(this.sorter);
         this.datasets.set(this.phenomenonMatchedList);
+        if (!phenomenonId) {
+          this.othersList.sort(this.sorter);
+          this.otherDatasets.set(this.othersList);
+        }
       });
   }
 
