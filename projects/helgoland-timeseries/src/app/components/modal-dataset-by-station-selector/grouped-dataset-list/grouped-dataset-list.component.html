@@ -14,6 +14,9 @@
         <mat-list-option color="primary" [value]="ds" [selected]="ds.selected"
           [disabled]="ds.parameters.service?.id == '0'">
           <div matListItemLine>
+            {{ "map-selection-view.method" | translate }}:
+            <n52-label-mapper [label]="ds.additional.methode"></n52-label-mapper>
+             |
             {{ "map-selection-view.depth" | translate }}:
              @if (ds.additional.tiefe == 1.0) {
                 {{ "map-selection-view.depth-unspecified" | translate }}

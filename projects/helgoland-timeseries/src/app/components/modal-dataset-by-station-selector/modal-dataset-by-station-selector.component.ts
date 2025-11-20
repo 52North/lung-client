@@ -111,6 +111,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
                 },
                 additional: {
                   tiefe: ds.properties?.['tiefe'],
+                  methode: ds.properties?.['methode'],
                 },
               } as SelectableDataset,
               this.timeseries.hasDataset(

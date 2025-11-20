@@ -9,6 +9,7 @@ const keyMapping: Record<string, string> = {
   gew_art: 'Gewässerart',
   gew_name: 'Gewässername',
   tiefe: 'Tiefe',
+  methode: 'Methode',
   kat1: 'Kategorie 1',
   kat2: 'Kategorie 2',
   matrix: 'Matrix',
