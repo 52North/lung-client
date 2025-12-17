@@ -648,6 +648,7 @@ export class StaApiV1Connector implements HelgolandServiceConnector {
     if (ds.Sensor) parameters.procedure = this.createProcedure(ds.Sensor);
     if (ds.ObservedProperty)
       parameters.phenomenon = this.createPhenomenon(ds.ObservedProperty);
+      parameters.additional!["phenomenon_group"] = (ds.ObservedProperty?.properties?.["groups"]);
     if (ds.ObservedProperty)
       parameters.category = [this.createCategory(ds.ObservedProperty)];
     if (thing.properties) {

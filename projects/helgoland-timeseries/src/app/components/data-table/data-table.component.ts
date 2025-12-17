@@ -127,6 +127,12 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
       sort: true,
     },
     {
+      title: 'par_gruppen',
+      key: 'param_gruppen',
+      visible: true,
+      sort: true,
+    },
+    {
       title: 'vorzeichen',
       key: 'vorzeichen',
       visible: true,

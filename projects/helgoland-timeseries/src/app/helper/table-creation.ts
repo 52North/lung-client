@@ -14,6 +14,7 @@ export interface TableRow {
   methode: string;
   param_kurz: string;
   parameter: string;
+  param_gruppen: string[]
   vorzeichen: string;
   wert_berechnet: number;
   einheit: string;
@@ -41,6 +42,7 @@ export function createDataTable(
           methode: d.parameter?.methode || '',
           param_kurz: ds.description.phenomenonLabel || '',
           parameter: additional?.['observedProperty']?.definition || '',
+          param_gruppen: additional?.['phenomenon_group'] || [],
           vorzeichen: d.parameter?.vorzeichen || '',
           wert_berechnet: d.value,
           einheit: ds.description.uom
