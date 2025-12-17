@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{ station().label }}</h1>
+<h1 mat-dialog-title>{{ station().label }} | {{ phenomenonLabel }}</h1>
 <mat-dialog-content>
   @if (counter) {
   <mat-progress-bar mode="indeterminate" />
@@ -12,14 +12,17 @@
     <p>
       {{ "dataset-by-station.hint" | translate }}
     </p>
+
     <div style="padding: 10px;">
+      @if (!phenomenonId()) {
       <app-grouped-dataset-list [datasets]="datasets()" />
+      } @else {
+      <app-dataset-list [datasets]="datasets()" />
+      }
     </div>
-    @if (othersList.length > 0) {
-    <mat-divider> </mat-divider>
-    }
 
     @if (phenomenonId()) {
+    <mat-divider> </mat-divider>
     <mat-accordion>
       <mat-expansion-panel class="mat-elevation-z0">
         <mat-expansion-panel-header (click)="loadData(false)">

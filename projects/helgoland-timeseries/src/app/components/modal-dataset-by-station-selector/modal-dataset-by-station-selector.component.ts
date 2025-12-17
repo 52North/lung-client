@@ -26,6 +26,7 @@ import { ConfigurationService } from '../../services/configuration.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
 import { TimeseriesService } from './../../services/timeseries-service.service';
 import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-dataset-list.component';
+import { DatasetListComponent } from './dataset-list/dataset-list.component';
 
 @Component({
   selector: 'helgoland-modal-dataset-by-station-selector',
@@ -44,6 +45,7 @@ import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-data
     MatProgressBarModule,
     TranslateModule,
     GroupedDatasetListComponent,
+    DatasetListComponent,
   ],
 })
 export class ModalDatasetByStationSelectorComponent extends DatasetByStationSelectorComponent {
@@ -57,6 +59,8 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
 
   protected datasets = signal(<SelectableDataset[]>[]);
   protected otherDatasets = signal(<SelectableDataset[]>[]);
+
+  phenomenonLabel: string = "Alle Phänomene";
 
   override ngOnInit() {
     this.loadData(true);
@@ -78,7 +82,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
     this.staSrvc
       .getLocation(this.staUrl, this.station().id, {
         $select: 'id',
-        $expand: `Things($select=id),Things/Datastreams($top=1000;$expand=ObservedProperty($select=id,description,name);$select=id,phenomenonTime,properties${dsFilter})`,
+        $expand: `Things($select=id),Things/Datastreams($top=1000;$expand=ObservedProperty($select=id,description,name,properties);$select=id,phenomenonTime,properties${dsFilter})`,
       })
       .subscribe((location) => {
         this.counter = location.Things?.length || 0;
@@ -112,6 +116,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
                 additional: {
                   tiefe: ds.properties?.['tiefe'],
                   methode: ds.properties?.['methode'],
+                  phenomenon_group: ds.ObservedProperty?.properties?.["groups"] || []
                 },
               } as SelectableDataset,
               this.timeseries.hasDataset(
@@ -165,6 +170,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
     if (phenomenonId) {
       if (result.parameters.phenomenon?.id === phenomenonId) {
         this.phenomenonMatchedList.push(result);
+        this.phenomenonLabel = result.parameters.phenomenon?.label
       } else {
         this.othersList.push(result);
       }

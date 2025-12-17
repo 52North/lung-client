@@ -76,6 +76,10 @@ export class CategorySelectionService {
           const platform = new HelgolandPlatform(locId, label, []);
           const dialogRef = this.dialog.open(
             ModalDatasetByStationSelectorComponent,
+            {
+              minWidth: '80vh',
+              width:'80vh'
+            }
           );
           dialogRef.componentRef?.setInput('station', platform);
           dialogRef.componentRef?.setInput('url', this.staUrl);

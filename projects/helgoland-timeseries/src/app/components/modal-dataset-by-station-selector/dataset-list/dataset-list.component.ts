@@ -29,11 +29,6 @@ import { StringFilterComponent } from '../../string-filter/string-filter.compone
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-interface Entry {
-  title: string;
-  id: string;
-  datasets: SelectableDataset[];
-}
 
 @Pipe({ name: 'sort' })
 export class SortPipe implements PipeTransform {
@@ -49,9 +44,9 @@ export class SortPipe implements PipeTransform {
 }
 
 @Component({
-  selector: 'app-grouped-dataset-list',
-  templateUrl: './grouped-dataset-list.component.html',
-  styleUrls: ['./grouped-dataset-list.component.scss'],
+  selector: 'app-dataset-list',
+  templateUrl: './dataset-list.component.html',
+  styleUrls: ['./dataset-list.component.scss'],
   imports: [
     MatExpansionPanel,
     MatExpansionPanelHeader,
@@ -69,57 +64,13 @@ export class SortPipe implements PipeTransform {
     StringFilterComponent,
   ],
 })
-export class GroupedDatasetListComponent {
+export class DatasetListComponent {
   private idHandler = inject(InternalIdHandler);
   private configSrvc = inject(ConfigurationService);
   private timeseries = inject(TimeseriesService);
   private staUrl = this.configSrvc.configuration.defaultService.apiUrl;
-
+  
   readonly datasets = input.required<SelectableDataset[]>();
-
-  private filter = signal<string>('');
-
-  readonly groupedDatasets = computed<Entry[]>(() => {
-    const result: Entry[] = [];
-    const filteredDatasets = this.datasets().filter((ds) => {
-      return ds.parameters.phenomenon?.label
-        .toLowerCase()
-        .includes(this.filter().toLowerCase());
-    })
-    if (filteredDatasets.length > 0) {
-      result.push({
-        id: "all",
-        title: "Alle Phänomene",
-        datasets: filteredDatasets,
-      });
-    }
-
-    for (const ds of filteredDatasets) {
-      const phenomenonId = ds.parameters.phenomenon?.id;
-      const phenomenonTitle = ds.parameters.phenomenon?.label;
-      const phenomenonGroups = ds.additional?.["phenomenon_group"];
-      if (phenomenonId && phenomenonTitle) {
-
-        for (const group of phenomenonGroups || []) {
-          const match = result.find((e) => e.id === group);
-          if (!match) {
-            result.push({
-              id: group,
-              title: group,
-              datasets: [ds],
-            });
-          } else {
-            match.datasets.push(ds);
-          }
-        }
-      }
-    }
-    return result;
-  });
-
-  setFilter(filter: string) {
-    this.filter.set(filter);
-  }
 
   adjustSelection(change: MatSelectionListChange) {
     const id = (change.options[0].value as SelectableDataset).id;

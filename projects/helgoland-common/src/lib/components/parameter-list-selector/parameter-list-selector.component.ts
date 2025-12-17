@@ -12,12 +12,27 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ConfigurationService } from 'projects/helgoland-timeseries/src/app/services/configuration.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelContent, MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'helgoland-common-parameter-list-selector',
   templateUrl: './parameter-list-selector.component.html',
   styleUrls: ['./parameter-list-selector.component.scss'],
-  imports: [MatInputModule, MatFormFieldModule, LabelMapperComponent, MatListModule, MatProgressBarModule, TranslateModule],
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelContent,
+    MatInputModule,
+    MatFormFieldModule,
+    LabelMapperComponent,
+    MatListModule,
+    MatExpansionModule,
+    MatProgressBarModule,
+    MatTooltipModule,
+    TranslateModule
+  ],
 })
 export class ParameterListSelectorComponent implements OnInit {
   readonly list = viewChild(MatSelectionList);
@@ -31,7 +46,7 @@ export class ParameterListSelectorComponent implements OnInit {
   readonly selectAllPhenomena = output();
   readonly selected = input<string>();
 
-  filteredItems: ObservedProperty[] | undefined;
+  observedPropertyGroups: Map<string, ObservedProperty[]> = new Map();
   items: ObservedProperty[] = []
   loading = 1;
 
@@ -39,17 +54,10 @@ export class ParameterListSelectorComponent implements OnInit {
     this.selectAllPhenomena.emit();
     this.loadItems();
   }
-  
+
   protected onInput(event: Event) {
     const value = ((event.target as HTMLInputElement).value);
-    this.filteredItems = this._filter(value);
-  }
-
-  private _filter(value: string): ObservedProperty[] {
-    const filterValue = this._normalizeValue(value);
-    return this.items.filter(item => {
-      return this._normalizeValue((item.name || "") + (item.description || "")).includes(filterValue);
-    });
+    this.parseIntoGroups(value);
   }
 
   private _normalizeValue(value: string): string {
@@ -57,15 +65,46 @@ export class ParameterListSelectorComponent implements OnInit {
   }
 
   protected loadItems() {
-    this.staSrvc.getObservedProperties(this.staUrl, { $select: "id,name,description", $top: 1000 })
+    this.staSrvc.getObservedProperties(this.staUrl, { $select: "id,name,description,properties", $top: 10000 })
       .subscribe({
         next: (res) => {
           this.items = res.value;
-          this.filteredItems = this.items.sort((a,b) => a.name! < b.name! ? -1 : 1);
           this.loading = 0;
+          this.parseIntoGroups("")
         },
         error: (error) => console.log(error),
       })
+  }
+
+  private parseIntoGroups(filter: string) {
+    const filterValue = this._normalizeValue(filter);
+    const ALL_DATASTREAMS = "Alle Phänomene";
+
+    const groups = new Map<string, Set<ObservedProperty>>(
+      [[ALL_DATASTREAMS, new Set()]]
+    );
+
+    for (const item of this.items) {
+      if (filterValue != "" && !(this._normalizeValue((item.name || "") + (item.description || "")).includes(filterValue))) {
+        continue;
+      }
+
+      groups.get(ALL_DATASTREAMS)?.add(item);
+      for (const group of item.properties?.["groups"] || []) {
+        if (!groups.has(group)) {
+          groups.set(group, new Set([item]));
+        }
+        groups.get(group)?.add(item);
+      }
+    }
+
+    // sort alphabetically
+    this.observedPropertyGroups.clear();  
+    const sortedKeys = Array.from(groups.keys());
+    for (const k of sortedKeys) {
+      const entries = Array.from(groups.get(k)!);
+      this.observedPropertyGroups.set(k, entries.sort((a, b) => a.name! < b.name! ? -1 : 1));
+    }
   }
 
   onSelectItem(item: FilteredParameter): void {

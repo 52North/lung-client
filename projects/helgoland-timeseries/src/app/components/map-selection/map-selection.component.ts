@@ -143,6 +143,10 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
     if (this.state.selectedService) {
       const dialogRef = this.dialog.open(
         ModalDatasetByStationSelectorComponent,
+        {
+          minHeight: '80vh',
+          minWidth: '80vh'
+        }
       );
       dialogRef.componentRef?.setInput('station', station);
       dialogRef.componentRef?.setInput(
