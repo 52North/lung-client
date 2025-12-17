@@ -651,7 +651,7 @@ export class StaApiV1Connector implements HelgolandServiceConnector {
     if (ds.ObservedProperty)
       parameters.category = [this.createCategory(ds.ObservedProperty)];
     if (thing.properties) {
-      parameters.additional = { ...parameters.additional, ...thing.properties };
+      parameters.additional = { ...thing.properties, ...parameters.additional };
     }
     if (ds.ObservedProperty && ds.ObservedProperty.definition) {
       parameters.additional = {

@@ -37,7 +37,7 @@ export function createDataTable(
           wb_cd: additional?.['wb_cd'] || '',
           wb_type_cd: additional?.['wb_type_cd'] || '',
           datum_uhrzeit: d.timestamp,
-          matrix: additional?.['matrix']?.join(',') || '',
+          matrix: additional?.['matrix'] || '',
           methode: d.parameter?.methode || '',
           param_kurz: ds.description.phenomenonLabel || '',
           parameter: additional?.['observedProperty']?.definition || '',
