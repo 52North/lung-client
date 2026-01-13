@@ -1,0 +1,27 @@
+@if (dataset().description.additional) {
+  <mat-accordion>
+    <mat-expansion-panel
+      (opened)="panelOpenState.set(true)"
+      (closed)="panelOpenState.set(false)"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>Metadata</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        @for (item of metadata(); track $index) {
+          <div class="metadata-item">
+            <span class="metadata-label">{{ item.label }}: </span>
+            <span class="metadata-value">{{ item.value }}</span>
+          </div>
+        }
+        @if (metaID()) {
+          <div class="metadata-button-container">
+            <button matButton (click)="openModalMetadataPreview()">
+              Zeige Metadaten von MetaVer
+            </button>
+          </div>
+        }
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+}

@@ -1,0 +1,76 @@
+<div class="wrapper">
+  <div class="selection">
+    <div class="section">
+      <div class="header">Kategorie 1:</div>
+      @for (cat of this.srvc.categoryOneResource.value(); track cat) {
+        <div
+          (click)="this.srvc.selectCatOne(cat)"
+          class="entry"
+          [ngClass]="{ active: cat === this.srvc.selection().catOne }"
+        >
+          {{ cat }}
+        </div>
+      }
+    </div>
+
+    <div class="section">
+      <div class="header">Kategorie 2:</div>
+      @for (cat of this.srvc.categoryTwoResource.value(); track cat) {
+        <div
+          (click)="this.srvc.selectCatTwo(cat)"
+          class="entry"
+          [ngClass]="{ active: cat === this.srvc.selection().catTwo }"
+        >
+          {{ cat }}
+        </div>
+      }
+    </div>
+
+    <div class="section">
+      <div class="header">Kategorie 3:</div>
+      @for (cat of this.srvc.categoryThreeResource.value(); track cat) {
+        <div
+          (click)="this.srvc.selectCatThree(cat)"
+          class="entry"
+          [ngClass]="{ active: cat === this.srvc.selection().catThree }"
+        >
+          {{ cat }}
+        </div>
+      }
+    </div>
+
+    <div class="section">
+      <div class="header">Kategorie 4:</div>
+      @for (cat of this.srvc.categoryFourResource.value(); track cat) {
+        <div
+          (click)="this.srvc.selectCatFour(cat)"
+          class="entry"
+          [ngClass]="{ active: cat === this.srvc.selection().catFour }"
+        >
+          {{ cat }}
+        </div>
+      }
+    </div>
+  </div>
+  <div class="stations">
+    <h2>Found {{ this.srvc.stationsResource.value()?.length }} stations</h2>
+    <mat-form-field style="width: 100%">
+      <mat-label> {{ "map-selection-view.search" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder=""
+        (input)="onInput($event)"
+        class="example-input"
+      />
+    </mat-form-field>
+    @for (
+      station of this.filteredStations();
+      track station["@iot.id"]
+    ) {
+      <div (click)="this.srvc.openStation(station)">
+        {{ station.description }}
+      </div>
+    }
+  </div>
+</div>

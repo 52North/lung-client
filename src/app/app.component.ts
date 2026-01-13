@@ -1,66 +1,17 @@
-import { registerLocaleData } from '@angular/common';
-import localeDe from '@angular/common/locales/de';
-import { Component, inject } from '@angular/core';
-import { MatListModule } from '@angular/material/list';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Language, StatusCheckService } from '@helgoland/core';
-import { TranslateService } from '@ngx-translate/core';
-
-import { LocalSelectorImplComponent } from './components/local-selector/local-selector.component';
-import { TimezoneSelectorComponent } from './components/timezone-selector/timezone-selector.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
-  selector: 'n52-root',
+  selector: 'helgoland-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [
-    LocalSelectorImplComponent,
-    TimezoneSelectorComponent,
-    RouterModule,
-    MatSidenavModule,
-    MatListModule,
-  ],
+  imports: [CommonModule, RouterModule, HeaderComponent],
 })
 export class AppComponent {
-  languageList: Language[];
+  title = 'helgoland';
+  fullscreen = true;
 
-  constructor() {
-    const translate = inject(TranslateService);
-    const status = inject(StatusCheckService);
-
-    translate.setDefaultLang('en');
-    translate.use('en');
-
-    status
-      .checkAll()
-      .subscribe((res) => res.forEach((entry) => console.log(entry)));
-
-    // necessary to load information on e.g. what 'medium' date format should look like in German etc.
-    registerLocaleData(localeDe);
-
-    this.languageList = [
-      {
-        label: 'Deutsch',
-        code: 'de',
-      },
-      {
-        label: 'English',
-        code: 'en',
-      },
-    ];
-
-    // d3translate.addTimeFormatLocale('de',
-    //   {
-    //     'dateTime': '%a %b %e %X %Y',
-    //     'date': '%d-%m-%Y',
-    //     'time': '%H:%M:%S',
-    //     'periods': ['AM', 'PM'],
-    //     'days': ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
-    //     'shortDays': ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
-    //     'months': ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-    //     'shortMonths': ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
-    //   }
-    // );
-  }
+  constructor() {}
 }

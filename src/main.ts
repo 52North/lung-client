@@ -1,72 +1,171 @@
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import 'moment/locale/de';
+
+import { registerLocaleData } from '@angular/common';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import localeDe from '@angular/common/locales/de';
+import {
+  ApplicationConfig,
+  enableProdMode,
+  importProvidersFrom,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import {
-  BasicAuthInformer,
-  BasicAuthService,
-  BasicAuthServiceMaintainer,
-} from '@helgoland/auth';
+import { BasicAuthInformer, HelgolandBasicAuthModule } from '@helgoland/auth';
 import { HelgolandCachingModule } from '@helgoland/caching';
 import {
   DatasetApiInterface,
-  DatasetApiV1ConnectorProvider,
-  DatasetApiV2ConnectorProvider,
-  DatasetApiV3ConnectorProvider,
   DatasetStaConnectorProvider,
-  PegelonlineApiConnectorProvider,
-  HttpService,
-  InternalIdHandler,
+  HelgolandCoreModule,
   LocalStorage,
   SettingsService,
-  SplittedDataDatasetApiInterface,
-  StatusCheckService,
+  SplittedDataDatasetApiInterface
 } from '@helgoland/core';
 import {
-  EventingApiService,
-  EventingImplApiInterface,
-} from '@helgoland/eventing';
-import {
-  FavoriteService,
-  JsonFavoriteExporterService,
-} from '@helgoland/favorite';
-import { GeoSearch, NominatimGeoSearchService } from '@helgoland/map';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
+import { firstValueFrom, forkJoin, from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { BasicAuthInformerImplService } from '../projects/testing/basic-auth.testing';
+import {
+  createInterceptorCondition,
+  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+  IncludeBearerTokenCondition,
+  includeBearerTokenInterceptor,
+  provideKeycloak,
+} from 'keycloak-angular';
 import { AppComponent } from './app/app.component';
-import { ROUTES } from './app/app.routes';
-import { ExtendedSettingsService } from './app/settings/settings.service';
-import { environment, settingsPromise } from './environments/environment';
+import { ROUTES } from './app/app.consts';
+import { BasicAuthInformerImplService } from './app/services/basic-auth-informer-impl.service';
+import {
+  AppConfig,
+  ConfigurationService,
+} from './app/services/configuration.service';
+import {
+  DATASET_FAVORITE_SERVICE_INJECTION,
+  DATASET_STATE_SERVICE_INJECTION,
+} from './app/services/service-interfaces';
+import {
+  TimeseriesService,
+  TimeseriesServiceImpl,
+} from './app/services/timeseries-service.service';
+import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
 }
 
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+export class AppTranslateLoader implements TranslateLoader {
+  getTranslation(lang: string): Observable<any> {
+    return forkJoin([
+      from(import(`./assets/i18n/${lang}.json`)),
+      // from(import(`../../helgoland-common/src/i18n/${lang}.json`)),
+    ]).pipe(map((res) => Object.assign(res[0].default)));
+  }
 }
 
-Promise.all([settingsPromise]).then((config: any) => {
-  bootstrapApplication(AppComponent, {
+export function initApplication(
+  config: AppConfig,
+  configService: ConfigurationService,
+  translate: TranslateService,
+  localStorage: LocalStorage,
+): () => Promise<void> {
+  return () => {
+    configService.configuration = config;
+    const localStorageLanguageKey = 'client-language';
+    registerLocaleData(localeDe);
+    let lang = translate.getBrowserLang() || 'en';
+    const storedLang = localStorage.load(localStorageLanguageKey) as string;
+    if (storedLang) {
+      lang = storedLang;
+    }
+    const url = window.location.href;
+    const name = 'locale';
+    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    const results = regex.exec(url);
+    if (results && results[2]) {
+      const match = config.languages?.find((e) => e.code === results[2]);
+      if (match) {
+        lang = match.code;
+      }
+    }
+    translate.setDefaultLang(lang);
+    translate.onLangChange.subscribe((lce) => {
+      localStorage.save(localStorageLanguageKey, lce.lang);
+    });
+    return firstValueFrom(translate.use(lang));
+  };
+}
+
+const initializeApp = async () => {
+  const config: AppConfig = await fetch('./assets/app-config.json').then(
+    (res) => res?.json(),
+  );
+
+  const urlPattern = new RegExp(
+    config.keycloak.bearerTokenCondition.urlPattern,
+  );
+  const bearerPrefix = config.keycloak.bearerTokenCondition.bearerPrefix;
+
+  const appConfig: ApplicationConfig = {
     providers: [
+      provideKeycloak({
+        config: config.keycloak.config,
+        initOptions: {
+          onLoad: 'check-sso',
+          silentCheckSsoRedirectUri: `${window.location.origin}/assets/silent-check-sso.html`,
+        },
+      }),
       {
-        provide: SettingsService,
-        useClass: ExtendedSettingsService,
+        provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+        useValue: [
+          createInterceptorCondition<IncludeBearerTokenCondition>({
+            urlPattern,
+            bearerPrefix,
+          }),
+        ],
       },
+      provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
       provideRouter(ROUTES),
+      provideHttpClient(),
+      provideAnimations(),
       importProvidersFrom(
         TranslateModule.forRoot({
           loader: {
             provide: TranslateLoader,
-            useFactory: HttpLoaderFactory,
-            deps: [HttpClient],
+            useClass: AppTranslateLoader,
           },
         }),
       ),
+      provideAppInitializer(() => {
+        const initializerFn = initApplication(
+          config,
+          inject(ConfigurationService),
+          inject(TranslateService),
+          inject(LocalStorage),
+        );
+        return initializerFn();
+      }),
+      { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+      {
+        provide: SettingsService,
+        useExisting: ConfigurationService,
+      },
+      importProvidersFrom(HelgolandCoreModule),
+      importProvidersFrom(MatSnackBarModule),
+      importProvidersFrom(MatDialogModule),
+      importProvidersFrom(HelgolandBasicAuthModule),
+      {
+        provide: BasicAuthInformer,
+        useClass: BasicAuthInformerImplService,
+      },
       importProvidersFrom(
         HelgolandCachingModule.forRoot({
           cachingDurationInMilliseconds: 300000,
@@ -74,63 +173,48 @@ Promise.all([settingsPromise]).then((config: any) => {
           logging: false,
         }),
       ),
-      importProvidersFrom(MatMomentDateModule),
-      provideHttpClient(),
-      provideAnimations(),
-
-      StatusCheckService,
-      HttpService,
-      InternalIdHandler,
-
-      FavoriteService,
-      JsonFavoriteExporterService,
-      LocalStorage,
-
+      {
+        provide: TimeseriesService,
+        useClass: TimeseriesServiceImpl,
+      },
+      {
+        provide: DATASET_STATE_SERVICE_INJECTION,
+        useExisting: TimeseriesService,
+        multi: true,
+      },
+      {
+        provide: DATASET_FAVORITE_SERVICE_INJECTION,
+        useExisting: TimeseriesService,
+        multi: true,
+      },
+      // {
+      //   provide: DATASET_STATE_SERVICE_INJECTION,
+      //   useExisting: DummyDatasetsService,
+      //   multi: true,
+      // },
+      // {
+      //   provide: DATASET_FAVORITE_SERVICE_INJECTION,
+      //   useExisting: DummyDatasetsService,
+      //   multi: true,
+      // },
       {
         provide: DatasetApiInterface,
         useClass: SplittedDataDatasetApiInterface,
       },
-      // createEnvironmentInjector([
-      //   { provide: PhotosService, useClass: CustomPhotosService },
-      //   // {
-      //   //   provide: ENVIRONMENT_INITIALIZER, useValue: () => {
-      //   //     console.log("This function runs when this EnvironmentInjector gets created");
-      //   //   }
-      //   // }
-      // ]),
-
-      {
-        provide: GeoSearch,
-        useClass: NominatimGeoSearchService,
-      },
-      BasicAuthService,
-      BasicAuthServiceMaintainer,
-      {
-        provide: EventingApiService,
-        useClass: EventingImplApiInterface,
-      },
-      // SensorMLXmlService,
-      // // XmlService,
-      {
-        provide: BasicAuthInformer,
-        useClass: BasicAuthInformerImplService,
-      },
-      // {
-      //   provide: HELGOLAND_SERVICE_CONNECTOR_HANDLER,
-      //   useClass: MockedDatasetApiV3Connector,
-      //   multi: true
-      // },
-      DatasetApiV1ConnectorProvider,
-      DatasetApiV2ConnectorProvider,
-      DatasetApiV3ConnectorProvider,
+      //DatasetApiV1ConnectorProvider,
+      //DatasetApiV2ConnectorProvider,
+      //DatasetApiV3ConnectorProvider,
       DatasetStaConnectorProvider,
-      PegelonlineApiConnectorProvider,
-      // {
-      //   provide: FacetSearchConfig,
-      //   useValue: {
-      //     showZeroValues: true
-      //   } as FacetSearchConfig
-      // }
+      //DatasetStaCustomConnectorProvider,
+      //PegelonlineApiConnectorProvider,
     ],
-  });
-});
+  };
+
+  await bootstrapApplication(AppComponent, appConfig);
+};
+
+initializeApp().catch((error) =>
+  console.error(
+    `Failed to initialize the application. ${error.message || error}`,
+  ),
+);

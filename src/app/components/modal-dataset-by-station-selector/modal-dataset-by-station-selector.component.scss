@@ -1,0 +1,23 @@
+mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    min-width: 80vh;
+    min-height: 80vh;
+
+    flex-shrink: none;
+
+    .full-height {
+        flex: 1;
+        overflow: auto;
+    }
+
+    mat-expansion-panel {
+        background-color: unset;
+    }
+
+    mat-list-option {
+        padding-top: 10px;
+    }
+}
