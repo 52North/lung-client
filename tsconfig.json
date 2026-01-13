@@ -70,10 +70,6 @@
       "@helgoland/time-range-slider": [
         "dist/helgoland/time-range-slider",
         "projects/helgoland/time-range-slider/src/public-api.ts"
-      ],
-      "helgoland-common": [
-        "dist/helgoland-common",
-        "projects/helgoland-common/src/public-api.ts"
       ]
     },
     "baseUrl": "./",
