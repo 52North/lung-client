@@ -1,33 +1,23 @@
 import {
   Component,
-  computed,
   inject,
   input,
   Pipe,
-  PipeTransform,
-  signal,
+  PipeTransform
 } from '@angular/core';
-import {
-  MatAccordion,
-  MatExpansionPanel,
-  MatExpansionPanelContent,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
-} from '@angular/material/expansion';
 import {
   MatListModule,
   MatListOption,
   MatSelectionList,
   MatSelectionListChange,
 } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { InternalIdHandler, TzDatePipe } from '@helgoland/core';
 import { LabelMapperComponent } from '@helgoland/depiction';
 import { SelectableDataset } from '@helgoland/selector';
+import { TranslateModule } from '@ngx-translate/core';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { TimeseriesService } from '../../../services/timeseries-service.service';
-import { StringFilterComponent } from '../../string-filter/string-filter.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Pipe({ name: 'sort' })
@@ -48,12 +38,7 @@ export class SortPipe implements PipeTransform {
   templateUrl: './dataset-list.component.html',
   styleUrls: ['./dataset-list.component.scss'],
   imports: [
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    MatExpansionPanelContent,
     SortPipe,
-    MatAccordion,
     LabelMapperComponent,
     TranslateModule,
     TzDatePipe,
@@ -61,7 +46,6 @@ export class SortPipe implements PipeTransform {
     MatListOption,
     MatListModule,
     MatTooltipModule,
-    StringFilterComponent,
   ],
 })
 export class DatasetListComponent {
