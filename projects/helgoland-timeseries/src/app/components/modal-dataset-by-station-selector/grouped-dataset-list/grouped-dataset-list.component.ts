@@ -114,7 +114,7 @@ export class GroupedDatasetListComponent {
         }
       }
     }
-    return result;
+    return result.sort((a, b) => a.title.toLowerCase() < b.title.toLowerCase()? -1 : 1);
   });
 
   setFilter(filter: string) {

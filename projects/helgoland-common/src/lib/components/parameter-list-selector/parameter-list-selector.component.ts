@@ -100,7 +100,7 @@ export class ParameterListSelectorComponent implements OnInit {
 
     // sort alphabetically
     this.observedPropertyGroups.clear();  
-    const sortedKeys = Array.from(groups.keys());
+    const sortedKeys = Array.from(groups.keys()).sort((a, b) => a.toLowerCase() < b.toLowerCase() ? -1 : 1);
     for (const k of sortedKeys) {
       const entries = Array.from(groups.get(k)!);
       this.observedPropertyGroups.set(k, entries.sort((a, b) => a.name! < b.name! ? -1 : 1));
