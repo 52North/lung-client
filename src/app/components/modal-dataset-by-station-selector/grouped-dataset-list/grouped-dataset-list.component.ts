@@ -41,8 +41,8 @@ export class SortPipe implements PipeTransform {
 
   transform(datasets: SelectableDataset[]): SelectableDataset[] {
     return datasets.sort((a, b) => {
-      const labelA = a.additional?.tiefe || '';
-      const labelB = b.additional?.tiefe || '';
+      const labelA = a.label || '';
+      const labelB = b.label || '';
       return labelA.localeCompare(labelB);
     });
   }
@@ -114,7 +114,7 @@ export class GroupedDatasetListComponent {
         }
       }
     }
-    return result;
+    return result.sort((a, b) => a.title.toLowerCase() < b.title.toLowerCase()? -1 : 1);
   });
 
   setFilter(filter: string) {
