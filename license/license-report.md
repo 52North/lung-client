@@ -11,13 +11,19 @@
 | MIT                    | git+https://github.com/angular/angular.git                                    | 20.0.6            | @angular/platform-browser              |
 | MIT                    | git+https://github.com/angular/angular.git                                    | 20.0.6            | @angular/platform-browser-dynamic      |
 | MIT                    | git+https://github.com/angular/angular.git                                    | 20.0.6            | @angular/router                        |
+| n/a                    | https://registry.npmjs.org/@helgoland/auth/-/auth-20.0.1.tgz                  | 20.0.1            | @helgoland/auth                        |
+| n/a                    | https://registry.npmjs.org/@helgoland/caching/-/caching-20.0.1.tgz            | 20.0.1            | @helgoland/caching                     |
+| n/a                    | https://registry.npmjs.org/@helgoland/core/-/core-20.0.1.tgz                  | 20.0.1            | @helgoland/core                        |
+| n/a                    | https://registry.npmjs.org/@helgoland/d3/-/d3-20.0.1.tgz                      | 20.0.1            | @helgoland/d3                          |
+| n/a                    | https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz                           | 20.0.1            | @helgoland/depiction                   |
+| n/a                    | https://registry.npmjs.org/@helgoland/map/-/map-20.0.1.tgz                    | 20.0.1            | @helgoland/map                         |
+| n/a                    | https://registry.npmjs.org/@helgoland/selector/-/selector-20.0.1.tgz          | 20.0.1            | @helgoland/selector                    |
 | SEE LICENSE IN LICENSE | https://registry.npmjs.org/@ngx-translate/core/-/core-15.0.0.tgz              | 15.0.0            | @ngx-translate/core                    |
 | SEE LICENSE IN LICENSE | https://registry.npmjs.org/@ngx-translate/http-loader/-/http-loader-8.0.0.tgz | 8.0.0             | @ngx-translate/http-loader             |
-| MIT                    | git://github.com/seiyria/bootstrap-slider.git                                 | 11.0.2            | bootstrap-slider                       |
-| MIT                    | git+https://github.com/typestack/class-transformer.git                        | 0.4.0             | class-transformer                      |
 | ISC                    | git+https://github.com/d3/d3.git                                              | 7.8.5             | d3                                     |
 | ISC                    | git+https://github.com/d3/d3-delaunay.git                                     | 6.0.4             | d3-delaunay                            |
-| MIT                    | git+https://github.com/jquery/jquery.git                                      | 3.6.1             | jquery                                 |
+| MIT                    | git+ssh://git@github.com/mauriciovigolo/keycloak-angular.git                  | 20.0.0            | keycloak-angular                       |
+| Apache-2.0             | git+https://github.com/keycloak/keycloak-js.git                               | 26.2.0            | keycloak-js                            |
 | BSD-2-Clause           | git://github.com/Leaflet/Leaflet.git                                          | 1.9.4             | leaflet                                |
 | MIT                    | git+https://github.com/Leaflet/Leaflet.markercluster.git                      | 1.5.3             | leaflet.markercluster                  |
 | Apache-2.0             | git+https://github.com/marella/material-icons.git                             | 1.13.12           | material-icons                         |
@@ -25,7 +31,6 @@
 | MIT                    | git+https://github.com/moment/moment-timezone.git                             | 0.5.39            | moment-timezone                        |
 | MIT                    | https://github.com/maxisam/ngx-clipboard                                      | 15.1.0            | ngx-clipboard                          |
 | MIT                    | https://github.com/zefoy/ngx-color-picker/issues                              | 13.0.0            | ngx-color-picker                       |
-| BSD-2-Clause           | git://github.com/openlayers/openlayers.git                                    | 6.4.3             | ol                                     |
 | Apache-2.0             | git+https://github.com/choffmeister/roboto-fontface-bower.git                 | 0.10.0            | roboto-fontface                        |
 | Apache-2.0             | git+https://github.com/reactivex/rxjs.git                                     | 7.8.1             | rxjs                                   |
 | 0BSD                   | git+https://github.com/Microsoft/tslib.git                                    | 2.8.1             | tslib                                  |
@@ -40,15 +45,11 @@
 | MIT                    | git+https://github.com/angular/angular-cli.git                                | 20.0.5            | @angular/build                         |
 | MIT                    | git+https://github.com/angular/angular-cli.git                                | 20.0.5            | @angular/cli                           |
 | MIT                    | git+https://github.com/angular/angular.git                                    | 20.0.6            | @angular/compiler-cli                  |
-| MIT                    | git+https://github.com/compodoc/compodoc.git                                  | 1.1.26            | @compodoc/compodoc                     |
 | MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 7.4.0             | @types/d3                              |
 | MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 6.0.1             | @types/d3-delaunay                     |
 | MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 7946.0.10         | @types/geojson                         |
-| MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 4.3.0             | @types/jasmine                         |
-| MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 6.1.0             | @types/jsonfile                        |
 | MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 1.9.3             | @types/leaflet                         |
 | MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 1.5.5             | @types/leaflet.markercluster           |
-| MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 4.14.197          | @types/lodash                          |
 | MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 12.20.33          | @types/node                            |
 | MIT                    | https://github.com/DefinitelyTyped/DefinitelyTyped.git                        | 5.3.7             | @types/ol                              |
 | MIT                    | git+https://github.com/typescript-eslint/typescript-eslint.git                | 8.35.1            | @typescript-eslint/eslint-plugin       |
@@ -58,12 +59,6 @@
 | MIT                    | git+https://github.com/eslint/eslint.git                                      | 9.30.1            | eslint                                 |
 | MIT                    | git+https://github.com/prettier/eslint-config-prettier.git                    | 9.1.0             | eslint-config-prettier                 |
 | MIT                    | git+https://github.com/prettier/eslint-plugin-prettier.git                    | 5.1.2             | eslint-plugin-prettier                 |
-| MIT                    | git+https://github.com/jasmine/jasmine.git                                    | 4.5.0             | jasmine-core                           |
-| MIT                    | git://github.com/karma-runner/karma.git                                       | 6.4.1             | karma                                  |
-| MIT                    | git://github.com/karma-runner/karma-chrome-launcher.git                       | 3.1.1             | karma-chrome-launcher                  |
-| MIT                    | git://github.com/karma-runner/karma-coverage.git                              | 2.2.0             | karma-coverage                         |
-| MIT                    | git://github.com/karma-runner/karma-jasmine.git                               | 5.1.0             | karma-jasmine                          |
-| MIT                    | git+https://github.com/dfederm/karma-jasmine-html-reporter.git                | 2.0.0             | karma-jasmine-html-reporter            |
 | MIT                    | git+https://github.com/kessler/license-report.git                             | 6.3.0             | license-report                         |
 | MIT                    | git+https://github.com/ng-packagr/ng-packagr.git                              | 20.0.1            | ng-packagr                             |
 | MIT                    | git+https://github.com/prettier/prettier.git                                  | 3.1.1             | prettier                               |

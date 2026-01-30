@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "helgoland-toolbox": {
+    "lung-client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -21,7 +21,7 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": {
-              "base": "dist/helgoland-toolbox"
+              "base": "dist/lung-client"
             },
             "index": "src/index.html",
             "polyfills": [
@@ -81,10 +81,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "helgoland-toolbox:build:production"
+              "buildTarget": "lung-client:build:production"
             },
             "development": {
-              "buildTarget": "helgoland-toolbox:build:development"
+              "buildTarget": "lung-client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "helgoland-toolbox:build"
+            "buildTarget": "lung-client:build"
           }
         },
         "test": {
