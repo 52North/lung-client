@@ -78,8 +78,8 @@ export class CategorySelectionService {
             ModalDatasetByStationSelectorComponent,
             {
               minWidth: '80vh',
-              width:'80vh'
-            }
+              width: '80vh',
+            },
           );
           dialogRef.componentRef?.setInput('station', platform);
           dialogRef.componentRef?.setInput('url', this.staUrl);

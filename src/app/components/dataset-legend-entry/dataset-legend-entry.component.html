@@ -53,12 +53,15 @@
         ></n52-label-mapper>
         |
         {{ "map-selection-view.depth" | translate }}:
-        @if (dataset().description.additional!['tiefe'] == 1.0) {
+        @if (dataset().description.additional!["tiefe"] === 1.0) {
           {{ "map-selection-view.depth-unspecified" | translate }}
         } @else {
-        <n52-label-mapper [label]="dataset().description.additional!['tiefe']"></n52-label-mapper>m
+          <n52-label-mapper
+            [label]="dataset().description.additional!['tiefe']"
+          ></n52-label-mapper
+          >m
         }
-        </div>
+      </div>
       <div class="controls">
         <button
           mat-icon-button

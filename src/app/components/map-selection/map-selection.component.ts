@@ -145,8 +145,8 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
         ModalDatasetByStationSelectorComponent,
         {
           minHeight: '80vh',
-          minWidth: '80vh'
-        }
+          minWidth: '80vh',
+        },
       );
       dialogRef.componentRef?.setInput('station', station);
       dialogRef.componentRef?.setInput(

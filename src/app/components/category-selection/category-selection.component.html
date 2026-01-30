@@ -64,10 +64,7 @@
         class="example-input"
       />
     </mat-form-field>
-    @for (
-      station of this.filteredStations();
-      track station["@iot.id"]
-    ) {
+    @for (station of this.filteredStations(); track station["@iot.id"]) {
       <div (click)="this.srvc.openStation(station)">
         {{ station.description }}
       </div>

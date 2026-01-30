@@ -1,25 +1,43 @@
 @if (timespan()) {
-<div class="wrapper">
-  <div style="flex: 1"></div>
-  <button mat-icon-button (click)="back()" matTooltip="{{ 'time-selection.step-back' | translate }}"
-    attr.aria-label="{{ 'time-selection.step-back' | translate }}">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <button mat-button [matMenuTriggerFor]="menu" (menuOpened)="onMenuOpen(picker)" class="desktop-only">
-    {{ timespan().from | tzDate }}
-    &nbsp;&ndash;&nbsp;
-    {{ timespan().to | tzDate }}
-  </button>
-  <button mat-button [matMenuTriggerFor]="menu" (menuOpened)="onMenuOpen(picker)" class="mobile-only">
-    <div>{{ timespan().from | tzDate }}</div>
-    <div>{{ timespan().to | tzDate }}</div>
-  </button>
-  <button mat-icon-button (click)="forward()" matTooltip="{{ 'time-selection.step-forward' | translate }}"
-    attr.aria-label="{{ 'time-selection.step-forward' | translate }}">
-    <mat-icon>arrow_forward</mat-icon>
-  </button>
-  <div style="flex: 1"></div>
-</div>
+  <div class="wrapper">
+    <div style="flex: 1"></div>
+    <button
+      mat-icon-button
+      (click)="back()"
+      matTooltip="{{ 'time-selection.step-back' | translate }}"
+      attr.aria-label="{{ 'time-selection.step-back' | translate }}"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button
+      mat-button
+      [matMenuTriggerFor]="menu"
+      (menuOpened)="onMenuOpen(picker)"
+      class="desktop-only"
+    >
+      {{ timespan().from | tzDate }}
+      &nbsp;&ndash;&nbsp;
+      {{ timespan().to | tzDate }}
+    </button>
+    <button
+      mat-button
+      [matMenuTriggerFor]="menu"
+      (menuOpened)="onMenuOpen(picker)"
+      class="mobile-only"
+    >
+      <div>{{ timespan().from | tzDate }}</div>
+      <div>{{ timespan().to | tzDate }}</div>
+    </button>
+    <button
+      mat-icon-button
+      (click)="forward()"
+      matTooltip="{{ 'time-selection.step-forward' | translate }}"
+      attr.aria-label="{{ 'time-selection.step-forward' | translate }}"
+    >
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+    <div style="flex: 1"></div>
+  </div>
 }
 <mat-menu #menu="matMenu">
   <!--

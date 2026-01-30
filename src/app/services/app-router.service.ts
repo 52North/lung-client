@@ -60,7 +60,7 @@ export class AppRouterService {
     const dialogRef = this.dialog.open(ListSelectionComponent, {
       autoFocus: false,
       minWidth: '1000px',
-      height: '80%'
+      height: '80%',
     });
     dialogRef.afterClosed().subscribe((res) => this.resetNavigation());
   }

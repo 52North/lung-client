@@ -24,7 +24,7 @@ import {
   HelgolandCoreModule,
   LocalStorage,
   SettingsService,
-  SplittedDataDatasetApiInterface
+  SplittedDataDatasetApiInterface,
 } from '@helgoland/core';
 import {
   TranslateLoader,

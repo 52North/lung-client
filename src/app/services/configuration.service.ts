@@ -13,8 +13,8 @@ export interface AppConfig extends Settings {
     bearerTokenCondition: {
       urlPattern: string;
       bearerPrefix: string;
-    } 
-  }
+    };
+  };
 }
 
 @Injectable({

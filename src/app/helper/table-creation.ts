@@ -45,7 +45,7 @@ export function createDataTable(
           param_gruppen: additional?.['phenomenon_group'].join('; ') || [],
           vorzeichen: d.parameter?.vorzeichen || '',
           wert_berechnet: d.value,
-          einheit: ds.description.uom
+          einheit: ds.description.uom,
         });
       }
     });

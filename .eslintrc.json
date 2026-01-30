@@ -19,22 +19,6 @@
         "plugin:prettier/recommended"
       ],
       "rules": {
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "n52",
-            "style": "camelCase"
-          }
-        ],
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "n52",
-            "style": "kebab-case"
-          }
-        ]
         // "indent": [
         //   "warn", 2, { "SwitchCase": 1 }
         // ]

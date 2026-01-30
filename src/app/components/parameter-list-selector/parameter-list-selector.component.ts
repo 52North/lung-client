@@ -1,5 +1,18 @@
-import { Component, inject, input, OnInit, output, viewChild } from '@angular/core';
-import { MatExpansionModule, MatExpansionPanel, MatExpansionPanelContent, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import {
+  Component,
+  inject,
+  input,
+  OnInit,
+  output,
+  viewChild,
+} from '@angular/core';
+import {
+  MatExpansionModule,
+  MatExpansionPanel,
+  MatExpansionPanelContent,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -9,7 +22,11 @@ import {
 } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ObservedProperty, Phenomenon, StaInterfaceService } from '@helgoland/core';
+import {
+  ObservedProperty,
+  Phenomenon,
+  StaInterfaceService,
+} from '@helgoland/core';
 import { LabelMapperComponent } from '@helgoland/depiction';
 import { FilteredParameter } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,7 +48,7 @@ import { ConfigurationService } from '../../services/configuration.service';
     MatExpansionModule,
     MatProgressBarModule,
     MatTooltipModule,
-    TranslateModule
+    TranslateModule,
   ],
 })
 export class ParameterListSelectorComponent implements OnInit {
@@ -47,7 +64,7 @@ export class ParameterListSelectorComponent implements OnInit {
   readonly selected = input<string>();
 
   observedPropertyGroups: Map<string, ObservedProperty[]> = new Map();
-  items: ObservedProperty[] = []
+  items: ObservedProperty[] = [];
   loading = 1;
 
   ngOnInit() {
@@ -56,7 +73,7 @@ export class ParameterListSelectorComponent implements OnInit {
   }
 
   protected onInput(event: Event) {
-    const value = ((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
     this.parseIntoGroups(value);
   }
 
@@ -65,32 +82,41 @@ export class ParameterListSelectorComponent implements OnInit {
   }
 
   protected loadItems() {
-    this.staSrvc.getObservedProperties(this.staUrl, { $select: "id,name,description,properties", $top: 10000 })
+    this.staSrvc
+      .getObservedProperties(this.staUrl, {
+        $select: 'id,name,description,properties',
+        $top: 10000,
+      })
       .subscribe({
         next: (res) => {
           this.items = res.value;
           this.loading = 0;
-          this.parseIntoGroups("")
+          this.parseIntoGroups('');
         },
         error: (error) => console.log(error),
-      })
+      });
   }
 
   private parseIntoGroups(filter: string) {
     const filterValue = this._normalizeValue(filter);
-    const ALL_DATASTREAMS = "Alle Phänomene";
+    const ALL_DATASTREAMS = 'Alle Phänomene';
 
-    const groups = new Map<string, Set<ObservedProperty>>(
-      [[ALL_DATASTREAMS, new Set()]]
-    );
+    const groups = new Map<string, Set<ObservedProperty>>([
+      [ALL_DATASTREAMS, new Set()],
+    ]);
 
     for (const item of this.items) {
-      if (filterValue != "" && !(this._normalizeValue((item.name || "") + (item.description || "")).includes(filterValue))) {
+      if (
+        filterValue != '' &&
+        !this._normalizeValue(
+          (item.name || '') + (item.description || ''),
+        ).includes(filterValue)
+      ) {
         continue;
       }
 
       groups.get(ALL_DATASTREAMS)?.add(item);
-      for (const group of item.properties?.["groups"] || []) {
+      for (const group of item.properties?.['groups'] || []) {
         if (!groups.has(group)) {
           groups.set(group, new Set([item]));
         }
@@ -99,11 +125,16 @@ export class ParameterListSelectorComponent implements OnInit {
     }
 
     // sort alphabetically
-    this.observedPropertyGroups.clear();  
-    const sortedKeys = Array.from(groups.keys()).sort((a, b) => a.toLowerCase() < b.toLowerCase() ? -1 : 1);
+    this.observedPropertyGroups.clear();
+    const sortedKeys = Array.from(groups.keys()).sort((a, b) =>
+      a.toLowerCase() < b.toLowerCase() ? -1 : 1,
+    );
     for (const k of sortedKeys) {
       const entries = Array.from(groups.get(k)!);
-      this.observedPropertyGroups.set(k, entries.sort((a, b) => a.name! < b.name! ? -1 : 1));
+      this.observedPropertyGroups.set(
+        k,
+        entries.sort((a, b) => (a.name! < b.name! ? -1 : 1)),
+      );
     }
   }
 
@@ -112,9 +143,14 @@ export class ParameterListSelectorComponent implements OnInit {
   }
 
   selectionChanged(selection: MatSelectionListChange) {
-    const match = this.items.find((e) => e['name'] === selection.options[0].value);
+    const match = this.items.find(
+      (e) => e['name'] === selection.options[0].value,
+    );
     if (match) {
-      this.onItemSelected.emit({ id: match['@iot.id'], label: match.name || "" });
+      this.onItemSelected.emit({
+        id: match['@iot.id'],
+        label: match.name || '',
+      });
     }
   }
 }

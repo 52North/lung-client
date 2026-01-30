@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  input,
-  Pipe,
-  PipeTransform
-} from '@angular/core';
+import { Component, inject, input, Pipe, PipeTransform } from '@angular/core';
 import {
   MatListModule,
   MatListOption,
@@ -19,10 +13,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { TimeseriesService } from '../../../services/timeseries-service.service';
 
-
 @Pipe({ name: 'sort' })
 export class SortPipe implements PipeTransform {
-  constructor() { }
+  constructor() {}
 
   transform(datasets: SelectableDataset[]): SelectableDataset[] {
     return datasets.sort((a, b) => {
@@ -53,7 +46,7 @@ export class DatasetListComponent {
   private configSrvc = inject(ConfigurationService);
   private timeseries = inject(TimeseriesService);
   private staUrl = this.configSrvc.configuration.defaultService.apiUrl;
-  
+
   readonly datasets = input.required<SelectableDataset[]>();
 
   adjustSelection(change: MatSelectionListChange) {

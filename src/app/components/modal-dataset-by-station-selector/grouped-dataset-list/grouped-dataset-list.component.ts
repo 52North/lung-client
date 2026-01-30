@@ -37,7 +37,7 @@ interface Entry {
 
 @Pipe({ name: 'sort' })
 export class SortPipe implements PipeTransform {
-  constructor() { }
+  constructor() {}
 
   transform(datasets: SelectableDataset[]): SelectableDataset[] {
     return datasets.sort((a, b) => {
@@ -85,11 +85,11 @@ export class GroupedDatasetListComponent {
       return ds.parameters.phenomenon?.label
         .toLowerCase()
         .includes(this.filter().toLowerCase());
-    })
+    });
     if (filteredDatasets.length > 0) {
       result.push({
-        id: "all",
-        title: "Alle Phänomene",
+        id: 'all',
+        title: 'Alle Phänomene',
         datasets: filteredDatasets,
       });
     }
@@ -97,9 +97,8 @@ export class GroupedDatasetListComponent {
     for (const ds of filteredDatasets) {
       const phenomenonId = ds.parameters.phenomenon?.id;
       const phenomenonTitle = ds.parameters.phenomenon?.label;
-      const phenomenonGroups = ds.additional?.["phenomenon_group"];
+      const phenomenonGroups = ds.additional?.['phenomenon_group'];
       if (phenomenonId && phenomenonTitle) {
-
         for (const group of phenomenonGroups || []) {
           const match = result.find((e) => e.id === group);
           if (!match) {
@@ -114,7 +113,9 @@ export class GroupedDatasetListComponent {
         }
       }
     }
-    return result.sort((a, b) => a.title.toLowerCase() < b.title.toLowerCase()? -1 : 1);
+    return result.sort((a, b) =>
+      a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1,
+    );
   });
 
   setFilter(filter: string) {

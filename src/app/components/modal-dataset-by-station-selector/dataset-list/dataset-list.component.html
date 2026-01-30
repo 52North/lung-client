@@ -1,33 +1,42 @@
-
 <mat-selection-list (selectionChange)="adjustSelection($event)">
   @for (ds of datasets() | sort; track ds.id) {
-  <mat-list-option color="primary" [value]="ds" [selected]="ds.selected"
-    [disabled]="ds.parameters.service?.id == '0'">
-    <div matListItemTitle>
-      <n52-label-mapper [label]="ds.parameters.phenomenon!.label" matTooltip="{{ds.parameters.phenomenon!.label}}"></n52-label-mapper>
-    </div>
-    <div matListItemLine>
-      {{ "map-selection-view.method" | translate }}:
-      <n52-label-mapper [label]="ds.additional.methode" matTooltip="{{ ds.additional.methode }}"></n52-label-mapper>
-      @if (ds.additional.tiefe) {
-      |
-      {{ "map-selection-view.depth" | translate }}:
-      <n52-label-mapper [label]="ds.additional.tiefe"></n52-label-mapper>
-      }
-    </div>
-    <div matListItemLine>
-      <span>
-        {{ "diagram-view.legend.entry.first-value-at" | translate }}:
-        {{ds.firstValue!.timestamp | tzDate: "L LT z" : null}}
-      </span>
-    </div>
-    <div matListItemLine>
-      {{ "diagram-view.legend.entry.last-value-at" | translate }}:
-      <span>
-        {{ds.lastValue!.timestamp | tzDate: "L LT z" : null}}
-      </span>
-    </div>
-  </mat-list-option>
-  <mat-divider></mat-divider>
+    <mat-list-option
+      color="primary"
+      [value]="ds"
+      [selected]="ds.selected"
+      [disabled]="ds.parameters.service?.id === '0'"
+    >
+      <div matListItemTitle>
+        <n52-label-mapper
+          [label]="ds.parameters.phenomenon!.label"
+          matTooltip="{{ ds.parameters.phenomenon!.label }}"
+        ></n52-label-mapper>
+      </div>
+      <div matListItemLine>
+        {{ "map-selection-view.method" | translate }}:
+        <n52-label-mapper
+          [label]="ds.additional.methode"
+          matTooltip="{{ ds.additional.methode }}"
+        ></n52-label-mapper>
+        @if (ds.additional.tiefe) {
+          |
+          {{ "map-selection-view.depth" | translate }}:
+          <n52-label-mapper [label]="ds.additional.tiefe"></n52-label-mapper>
+        }
+      </div>
+      <div matListItemLine>
+        <span>
+          {{ "diagram-view.legend.entry.first-value-at" | translate }}:
+          {{ ds.firstValue!.timestamp | tzDate: "L LT z" : null }}
+        </span>
+      </div>
+      <div matListItemLine>
+        {{ "diagram-view.legend.entry.last-value-at" | translate }}:
+        <span>
+          {{ ds.lastValue!.timestamp | tzDate: "L LT z" : null }}
+        </span>
+      </div>
+    </mat-list-option>
+    <mat-divider></mat-divider>
   }
 </mat-selection-list>

@@ -60,7 +60,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
   protected datasets = signal(<SelectableDataset[]>[]);
   protected otherDatasets = signal(<SelectableDataset[]>[]);
 
-  phenomenonLabel: string = "Alle Phänomene";
+  phenomenonLabel: string = 'Alle Phänomene';
 
   override ngOnInit() {
     this.loadData(true);
@@ -116,7 +116,8 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
                 additional: {
                   tiefe: ds.properties?.['tiefe'],
                   methode: ds.properties?.['methode'],
-                  phenomenon_group: ds.ObservedProperty?.properties?.["groups"] || []
+                  phenomenon_group:
+                    ds.ObservedProperty?.properties?.['groups'] || [],
                 },
               } as SelectableDataset,
               this.timeseries.hasDataset(
@@ -170,7 +171,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
     if (phenomenonId) {
       if (result.parameters.phenomenon?.id === phenomenonId) {
         this.phenomenonMatchedList.push(result);
-        this.phenomenonLabel = result.parameters.phenomenon?.label
+        this.phenomenonLabel = result.parameters.phenomenon?.label;
       } else {
         this.othersList.push(result);
       }
