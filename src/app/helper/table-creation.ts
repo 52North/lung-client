@@ -18,6 +18,8 @@ export interface TableRow {
   vorzeichen: string;
   wert_berechnet: number;
   einheit: string;
+  tiefe: string;
+  tiefenstufe: string;
 }
 
 export function createDataTable(
@@ -33,7 +35,7 @@ export function createDataTable(
           gew_art: additional?.['gew_art'] || '',
           bundesland: additional?.['location']['bundesland'] || '',
           mst_nr: additional?.['mst_nr'] || '',
-          ort: ds.description.platformLabel || '',
+          ort: additional?.['ort'] || '',
           gewässername: additional?.['gew_name'] || '',
           wb_cd: additional?.['wb_cd'] || '',
           wb_type_cd: additional?.['wb_type_cd'] || '',
@@ -46,7 +48,9 @@ export function createDataTable(
           vorzeichen: d.parameter?.vorzeichen || '',
           wert_berechnet: d.value,
           einheit: ds.description.uom,
-        });
+          tiefe: additional?.['tiefe'] || '',
+          tiefenstufe: additional?.['tiefenstufe'] || '',
+        }); 
       }
     });
   });

@@ -150,6 +150,18 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
       sort: true,
       visible: true,
     },
+    {
+      title: 'tiefe',
+      key: 'tiefe',
+      sort: true,
+      visible: true,
+    },
+    {
+      title: 'tiefenstufe',
+      key: 'tiefenstufe',
+      sort: true,
+      visible: true,
+    },
   ];
 
   dataSource: MatTableDataSource<TableRow> | undefined;
