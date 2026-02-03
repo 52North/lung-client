@@ -43,12 +43,9 @@ export class DatasetMetadataComponent {
     return [];
   });
 
-  metaID = computed(() => {
-    const metaID = this.dataset()?.description?.additional?.['meta_uuid'];
-    if (metaID) {
-      return metaID;
-    }
-  });
+  metaID = computed(
+    () => this.dataset()?.description?.additional?.['meta_uuid'],
+  );
 
   private parseMetadataValue(value: string | string[] | any): string {
     if (Array.isArray(value)) {

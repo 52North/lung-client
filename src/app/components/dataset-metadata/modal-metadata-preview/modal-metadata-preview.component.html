@@ -1,12 +1,78 @@
-<h1 mat-dialog-title>Metadaten von MetaVer für die ID {{ metadataId() }}</h1>
+@if (metadataResource.isLoading()) {
+  <mat-dialog-content>
+    <div class="loading-container">
+      <div>{{ "metadata.loading" | translate }}</div>
+      <mat-progress-bar mode="indeterminate" />
+    </div>
+  </mat-dialog-content>
+} @else if (metadataResource.error()) {
+  <mat-dialog-content>
+    <div class="error-container">
+      {{ "metadata.error" | translate }}
+    </div>
+  </mat-dialog-content>
+} @else if (metadataResource.value()) {
+  <h1 mat-dialog-title>{{ metadataResource.value()!.title }}</h1>
 
-<mat-dialog-content>
-  <pre>{{ xmlContent }}</pre>
-</mat-dialog-content>
+  <mat-dialog-content>
+    <div class="abstract">
+      {{ metadataResource.value()!.abstract }}
+    </div>
 
-<div mat-dialog-actions>
-  <div style="flex: 1"></div>
-  <button mat-button [mat-dialog-close]>
-    {{ "controls.ok" | translate }}
-  </button>
-</div>
+    <div class="contact">
+      <div class="contact-header">{{ "metadata.contact" | translate }}</div>
+      @if (metadataResource.value()!.contact.organisation) {
+        <div class="contact-item">
+          {{ metadataResource.value()!.contact.organisation }}
+        </div>
+      }
+      @if (metadataResource.value()!.contact.positionName) {
+        <div class="contact-item">
+          {{ metadataResource.value()!.contact.positionName }}
+        </div>
+      }
+      @if (metadataResource.value()!.contact.address.deliveryPoint) {
+        <div class="contact-item">
+          {{ metadataResource.value()!.contact.address.deliveryPoint }}
+        </div>
+      }
+      @if (
+        metadataResource.value()!.contact.address.city &&
+        metadataResource.value()!.contact.address.postalCode
+      ) {
+        <div class="contact-item">
+          {{ metadataResource.value()!.contact.address.postalCode }}
+          {{ metadataResource.value()!.contact.address.city }}
+        </div>
+      }
+      @if (metadataResource.value()!.contact.address.email) {
+        <div class="contact-item">
+          {{ metadataResource.value()!.contact.address.email }}
+        </div>
+      }
+    </div>
+
+    @if (metadataResource.value()!.creationDate) {
+      <div class="date">
+        {{ "metadata.creationDate" | translate }}:
+        {{ metadataResource.value()!.creationDate! | tzDate: "L" }}
+      </div>
+    }
+    @if (metadataResource.value()!.revisionDate) {
+      <div class="date">
+        {{ "metadata.revisionDate" | translate }}:
+        {{ metadataResource.value()!.revisionDate! | tzDate: "L" }}
+      </div>
+    }
+  </mat-dialog-content>
+
+  <div mat-dialog-actions>
+    <div style="flex: 1"></div>
+    <button mat-button (click)="openAdditionalInformation()">
+      {{ "metadata.additional-information" | translate }}
+    </button>
+    <button mat-button [mat-dialog-close]>
+      {{ "controls.ok" | translate }}
+    </button>
+  </div>
+}

@@ -74,6 +74,33 @@ export class DatasetLegendEntryComponent {
     effect(() => this.checkDataInTimespan());
   }
 
+  get subheader() {
+    const addtional = this.dataset().description.additional;
+    if (addtional) {
+      const gewaessername = addtional?.['gew_name'];
+      const wb_cd = addtional?.['wb_cd'];
+      const mst_nr = addtional?.['mst_nr'];
+      return `${gewaessername} - ${wb_cd} - ${mst_nr}`;
+    } else {
+      return this.dataset().description.platformLabel;
+    }
+  }
+
+  get additionalInfoLabel() {
+    const additional = this.dataset().description.additional;
+    if (additional) {
+      let label = `Matrix: ${additional?.['matrix']}`;
+      if (additional?.['methode']) {
+        label += ` - Methode: ${additional?.['methode']}`;
+      }
+      if (additional?.['tiefe']) {
+        label += ` | Tiefenstufe: ${additional?.['tiefe']}`;
+      }
+      return label;
+    }
+    return undefined;
+  }
+
   removeDataset() {
     this.datasetDeleted.emit();
   }

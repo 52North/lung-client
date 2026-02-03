@@ -12,16 +12,13 @@
             ></n52-label-mapper>
           }
           @if (dataset().description.uom) {
-            <span>
-              [
-              <n52-label-mapper
-                label="{{ dataset().description.uom }}"
-              ></n52-label-mapper>
-              ]
-            </span>
+            <span> - </span>
+            <n52-label-mapper
+              label="{{ dataset().description.uom }}"
+            ></n52-label-mapper>
           }
           @if (dataset().description.platformLabel) {
-            <div>{{ dataset().description.platformLabel }}</div>
+            <div>{{ subheader }}</div>
           }
         </div>
       } @else {
@@ -46,22 +43,7 @@
   </mat-expansion-panel-header>
   @if (!error && dataset()) {
     <div>
-      <div class="small-label">
-        {{ "map-selection-view.method" | translate }}:
-        <n52-label-mapper
-          label="{{ dataset().description.additional!['methode'] }}"
-        ></n52-label-mapper>
-        |
-        {{ "map-selection-view.depth" | translate }}:
-        @if (dataset().description.additional!["tiefe"] === 1.0) {
-          {{ "map-selection-view.depth-unspecified" | translate }}
-        } @else {
-          <n52-label-mapper
-            [label]="dataset().description.additional!['tiefe']"
-          ></n52-label-mapper
-          >m
-        }
-      </div>
+      <div class="small-label">{{ additionalInfoLabel }}</div>
       <div class="controls">
         <button
           mat-icon-button

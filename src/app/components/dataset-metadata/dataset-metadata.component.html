@@ -1,5 +1,12 @@
 @if (dataset().description.additional) {
-  <mat-accordion>
+  @if (metaID()) {
+    <div class="metadata-button-container">
+      <button matButton (click)="openModalMetadataPreview()">
+        Zeige Metadaten von MetaVer
+      </button>
+    </div>
+  }
+  <!-- <mat-accordion>
     <mat-expansion-panel
       (opened)="panelOpenState.set(true)"
       (closed)="panelOpenState.set(false)"
@@ -23,5 +30,5 @@
         }
       </div>
     </mat-expansion-panel>
-  </mat-accordion>
+  </mat-accordion> -->
 }
