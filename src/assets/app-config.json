@@ -83,6 +83,8 @@
         "bearerTokenCondition": {
             "urlPattern": "^(http:\\/\\/mdpu.dev.52north.org)(\\/.*)?$",
             "bearerPrefix": "Bearer"
-        }
+        },
+        "adminGroup": "/admin",
+        "adminUrl": "https://mdpu.dev.52north.org/auth/admin/mdpu/console/"
     }
 }

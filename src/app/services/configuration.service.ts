@@ -14,6 +14,8 @@ export interface AppConfig extends Settings {
       urlPattern: string;
       bearerPrefix: string;
     };
+    adminGroup: string;
+    adminUrl: string;
   };
 }
 

@@ -2,6 +2,7 @@
 	"authentication.failed": "Authentifizierung ist fehlgeschlagen",
 	"authentication.login.tooltip": "Log in",
 	"authentication.logout.tooltip": "Log out",
+	"authentication.not_logged_in": "Nicht eingeloggt",
 	"change-data-source-modal.title": "Datenquelle wechseln",
 	"change-data-source.button-label": "Datenquelle wechseln",
 	"controls.close": "Schließen",

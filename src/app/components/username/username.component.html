@@ -1,0 +1,11 @@
+@if (username()) {
+  @if (isAdmin()) {
+    <a mat-button [href]="adminUrl" target="_blank">
+      {{ username() }}
+    </a>
+  } @else {
+    <div>{{ username() }}</div>
+  }
+} @else {
+  <div>{{ "authentication.not_logged_in" | translate }}</div>
+}
