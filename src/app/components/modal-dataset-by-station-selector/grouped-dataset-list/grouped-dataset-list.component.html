@@ -8,9 +8,19 @@
           <span style="color: grey; padding-left: 6px"
             >({{ item.datasets.length }})</span
           >
+          <div style="flex: 1"></div>
         </mat-panel-title>
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
+        <div class="select-all-button-container">
+          <mat-checkbox
+            [checked]="item.selectAll"
+            [indeterminate]="item.selectAll === undefined"
+            (change)="toggleSelectAll(item, $event.checked)"
+          >
+            {{ "map-selection-view.select-all" | translate }}
+          </mat-checkbox>
+        </div>
         <mat-selection-list (selectionChange)="adjustSelection($event)">
           @for (ds of item.datasets | sort; track ds.id) {
             <mat-list-option
@@ -31,14 +41,15 @@
                   [label]="ds.additional.methode"
                   matTooltip="{{ ds.additional.methode }}"
                 ></n52-label-mapper>
-                @if (ds.additional.tiefe) {
-                  <br />
+              </div>
+              @if (ds.additional.tiefe) {
+                <div matListItemLine>
                   {{ "map-selection-view.depth" | translate }}:
                   <n52-label-mapper
                     [label]="ds.additional.tiefe"
                   ></n52-label-mapper>
-                }
-              </div>
+                </div>
+              }
               <div matListItemLine>
                 <span>
                   {{ "diagram-view.legend.entry.first-value-at" | translate }}:
@@ -52,7 +63,6 @@
                 </span>
               </div>
             </mat-list-option>
-            <mat-divider></mat-divider>
           }
         </mat-selection-list>
       </ng-template>

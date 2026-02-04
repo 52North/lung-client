@@ -1,4 +1,15 @@
-mat-divider {
-    padding-top: 1em;
-    margin-top: 1em;
+:host {
+    .select-all-button-container {
+        display: flex;
+        justify-content: center;
+        padding: 0.5em 0;
+    }
+
+    .mat-mdc-list-item {
+        padding: 0.5em 0;
+
+        +.mat-mdc-list-item {
+            border-top: 1px solid rgba(0, 0, 0, 0.12);
+        }
+    }
 }

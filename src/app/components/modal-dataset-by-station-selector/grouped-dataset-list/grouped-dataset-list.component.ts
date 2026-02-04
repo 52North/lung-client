@@ -7,6 +7,8 @@ import {
   PipeTransform,
   signal,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MatAccordion,
   MatExpansionPanel,
@@ -20,19 +22,20 @@ import {
   MatSelectionList,
   MatSelectionListChange,
 } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { InternalIdHandler, TzDatePipe } from '@helgoland/core';
 import { LabelMapperComponent } from '@helgoland/depiction';
 import { SelectableDataset } from '@helgoland/selector';
+import { TranslateModule } from '@ngx-translate/core';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { TimeseriesService } from '../../../services/timeseries-service.service';
 import { StringFilterComponent } from '../../string-filter/string-filter.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface Entry {
   title: string;
   id: string;
   datasets: SelectableDataset[];
+  selectAll: boolean | undefined;
 }
 
 @Pipe({ name: 'sort' })
@@ -57,6 +60,8 @@ export class SortPipe implements PipeTransform {
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
     MatExpansionPanelContent,
+    FormsModule,
+    MatCheckboxModule,
     SortPipe,
     MatAccordion,
     LabelMapperComponent,
@@ -91,6 +96,7 @@ export class GroupedDatasetListComponent {
         id: 'all',
         title: 'Alle Phänomene',
         datasets: filteredDatasets,
+        selectAll: this.checkSelectAll(filteredDatasets),
       });
     }
 
@@ -106,6 +112,7 @@ export class GroupedDatasetListComponent {
               id: group,
               title: group,
               datasets: [ds],
+              selectAll: this.checkSelectAll([ds]),
             });
           } else {
             match.datasets.push(ds);
@@ -118,6 +125,21 @@ export class GroupedDatasetListComponent {
     );
   });
 
+  private checkSelectAll(datasets: SelectableDataset[]) {
+    const selectCount = datasets.filter((ds) =>
+      this.timeseries.hasDataset(
+        this.idHandler.createInternalId(this.staUrl, ds.id),
+      ),
+    ).length;
+    if (selectCount === 0) {
+      return false;
+    } else if (selectCount === datasets.length) {
+      return true;
+    } else {
+      return undefined;
+    }
+  }
+
   setFilter(filter: string) {
     this.filter.set(filter);
   }
@@ -129,6 +151,20 @@ export class GroupedDatasetListComponent {
       this.timeseries.addDataset(internalId);
     } else {
       this.timeseries.removeDataset(internalId);
+    }
+  }
+
+  toggleSelectAll(entry: Entry, checked: boolean) {
+    for (const ds of entry.datasets) {
+      const internalId = this.idHandler.createInternalId(this.staUrl, ds.id);
+      if (checked && !this.timeseries.hasDataset(internalId)) {
+        this.timeseries.addDataset(internalId);
+        ds.selected = true;
+      }
+      if (!checked && this.timeseries.hasDataset(internalId)) {
+        this.timeseries.removeDataset(internalId);
+        ds.selected = false;
+      }
     }
   }
 }

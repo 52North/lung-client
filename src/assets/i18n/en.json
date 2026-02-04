@@ -69,6 +69,7 @@
 	"map-selection-view.method": "Method",
 	"map-selection-view.phenomenon-selection-list": "List of phenomena",
 	"map-selection-view.search": "Search",
+	"map-selection-view.select-all": "Select all timeseries",
 	"map-selection-view.select-all-phenomena": "Select all phenomena",
 	"metadata.additional-information": "additional information",
 	"metadata.contact": "Contact",
