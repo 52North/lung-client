@@ -12,15 +12,17 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
-        <div class="select-all-button-container">
-          <mat-checkbox
-            [checked]="item.selectAll"
-            [indeterminate]="item.selectAll === undefined"
-            (change)="toggleSelectAll(item, $event.checked)"
-          >
-            {{ "map-selection-view.select-all" | translate }}
-          </mat-checkbox>
-        </div>
+        @if (item.isGroupSelectable) {
+          <div class="select-all-button-container">
+            <mat-checkbox
+              [checked]="item.selectAll"
+              [indeterminate]="item.selectAll === undefined"
+              (change)="toggleSelectAll(item, $event.checked)"
+            >
+              {{ "map-selection-view.select-all" | translate }}
+            </mat-checkbox>
+          </div>
+        }
         <mat-selection-list (selectionChange)="adjustSelection($event)">
           @for (ds of item.datasets | sort; track ds.id) {
             <mat-list-option

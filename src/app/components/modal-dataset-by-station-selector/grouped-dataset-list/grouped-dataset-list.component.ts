@@ -35,7 +35,8 @@ interface Entry {
   title: string;
   id: string;
   datasets: SelectableDataset[];
-  selectAll: boolean | undefined;
+  isGroupSelectable: boolean;
+  selectAll?: boolean;
 }
 
 @Pipe({ name: 'sort' })
@@ -96,7 +97,7 @@ export class GroupedDatasetListComponent {
         id: 'all',
         title: 'Alle Phänomene',
         datasets: filteredDatasets,
-        selectAll: this.checkSelectAll(filteredDatasets),
+        isGroupSelectable: false,
       });
     }
 
@@ -113,6 +114,7 @@ export class GroupedDatasetListComponent {
               title: group,
               datasets: [ds],
               selectAll: this.checkSelectAll([ds]),
+              isGroupSelectable: true,
             });
           } else {
             match.datasets.push(ds);
