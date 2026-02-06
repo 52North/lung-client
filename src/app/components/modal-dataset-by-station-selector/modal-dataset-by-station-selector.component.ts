@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -59,6 +59,10 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
   protected datasets = signal(<SelectableDataset[]>[]);
   protected otherDatasets = signal(<SelectableDataset[]>[]);
 
+  readonly filterProperty = input<
+    { property: string; value: string } | undefined
+  >();
+
   phenomenonLabel: string = 'Alle Phänomene';
 
   override ngOnInit() {
@@ -78,10 +82,22 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
       dsFilter = `;$filter=ObservedProperty/id eq '${phenomenonId}'`;
     }
     this.counter = 1;
+
+    let dsMatrixFilter = '';
+    if (
+      this.filterProperty() &&
+      this.filterProperty()!.property &&
+      this.filterProperty()!.value !== undefined
+    ) {
+      dsMatrixFilter = `$filter=properties/${
+        this.filterProperty()!.property
+      } eq '${this.filterProperty()!.value}';`;
+    }
+
     this.staSrvc
       .getLocation(this.staUrl, this.station().id, {
         $select: 'id',
-        $expand: `Things($select=id),Things/Datastreams($top=1000;$expand=ObservedProperty($select=id,description,name,properties);$select=id,phenomenonTime,properties${dsFilter})`,
+        $expand: `Things($select=id),Things/Datastreams($top=1000;${dsMatrixFilter}$expand=ObservedProperty($select=id,description,name,properties);$select=id,phenomenonTime,properties${dsFilter})`,
       })
       .subscribe((location) => {
         this.counter = location.Things?.length || 0;

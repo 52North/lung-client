@@ -83,6 +83,10 @@ export class CategorySelectionService {
           );
           dialogRef.componentRef?.setInput('station', platform);
           dialogRef.componentRef?.setInput('url', this.staUrl);
+          dialogRef.componentRef?.setInput('filterProperty', {
+            property: CAT_FOUR_PROP,
+            value: this.params().catFour,
+          });
         }
       });
   }
