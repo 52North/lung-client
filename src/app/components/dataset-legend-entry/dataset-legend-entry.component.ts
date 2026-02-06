@@ -20,6 +20,7 @@ import {
 import { HelgolandLabelMapperModule } from '@helgoland/depiction';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { DatasetsService } from '../../services/graph-datasets.service';
 import { DatasetMetadataComponent } from '../dataset-metadata/dataset-metadata.component';
 import { FavoriteToggleButtonComponent } from '../favorites/favorite-toggle-button/favorite-toggle-button.component';
 import { LoadingOverlayProgressBarComponent } from '../loading-overlay-progress-bar/loading-overlay-progress-bar.component';
@@ -48,6 +49,7 @@ import { TimeseriesEntrySymbolComponent } from '../timeseries-entry-symbol/times
 })
 export class DatasetLegendEntryComponent {
   protected translateSrvc = inject(TranslateService);
+  protected graphDatasetsSrvc = inject(DatasetsService);
   protected timeSrvc = inject(Time);
   private dialog = inject(MatDialog);
 

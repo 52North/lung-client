@@ -76,6 +76,23 @@ helgoland-diagram-view {
                     flex: 0 0 120px;
                     position: relative;
                 }
+
+                .diagram {
+                    .local-settings-button {
+                        position: absolute;
+                        right: 5px;
+                        top: 5px;
+                        z-index: 1000;
+                    }
+
+                    .warning-visibility-limit-reached-button {
+                        position: absolute;
+                        right: 5px;
+                        top: 55px;
+                        z-index: 1000;
+                        background-color: var(--mat-sys-error-container);
+                    }
+                }
             }
         }
     }

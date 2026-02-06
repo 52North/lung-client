@@ -70,6 +70,9 @@
           matTooltip="{{
             'legend-entry.toggle-visibility-button.tooltip' | translate
           }}"
+          [disabled]="
+            graphDatasetsSrvc.visibilityLimitReached() && !dataset().visible
+          "
         >
           <mat-icon>{{
             dataset().visible ? "visibility" : "visibility_off"

@@ -34,6 +34,7 @@
 	"diagram-view.open-diagram-settings": "Öffne Diagrammeinstellungen",
 	"diagram-view.remove-legend-entries.tooltip": "Entferne alle Zeitreihen",
 	"diagram-view.table-button.tooltip": "Zeige die Datentabelle",
+	"diagram-view.warning-visibility-limit-reached": "Das Limit ({{count}}) für gleichzeitig sichtbare Zeitreihen ist erreicht. Bitte blenden Sie eine Zeitreihe aus, um eine neue sichtbar zu machen.",
 	"events.add-favorite": "Favorit hinzugefügt",
 	"events.add-timeseries": "Zeitreihe hinzugefügt",
 	"events.all-timeseries-removed": "Alle Zeitreihen entfernt",

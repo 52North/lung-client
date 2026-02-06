@@ -1,5 +1,11 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { EventEmitter, Injectable, inject } from '@angular/core';
+import {
+  EventEmitter,
+  Injectable,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { Time, Timespan, TimezoneService } from '@helgoland/core';
 import { SeriesGraphDataset } from '@helgoland/d3';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,6 +25,8 @@ export class LoadingDataset {
   }
 }
 
+export const LIMIT_VISIBLE_DATASETS = 10;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -34,6 +42,7 @@ export class DatasetsService {
   timespanChanged: EventEmitter<Timespan> = new EventEmitter();
 
   private _datasets: (SeriesGraphDataset | LoadingDataset)[] = [];
+
   datasetAdded: Subject<string> = new Subject();
   datasetRemoved: Subject<string> = new Subject();
 
@@ -44,6 +53,12 @@ export class DatasetsService {
 
   private _loadingOverviewData: Set<string> = new Set();
   loadingOverviewDataChanged: EventEmitter<Set<string>> = new EventEmitter();
+
+  visibleDatasetCount = signal(0);
+
+  visibilityLimitReached = computed(
+    () => this.visibleDatasetCount() >= LIMIT_VISIBLE_DATASETS,
+  );
 
   private _timespan: Timespan | undefined;
 
@@ -111,7 +126,11 @@ export class DatasetsService {
       overviewDs.setSelected(dataset.selected, false);
       overviewDs.setVisible(dataset.visible, false);
       overviewDs.setStyle(dataset.style.clone());
+      this.validateVisibleCounter();
     });
+    if (this.visibilityLimitReached()) {
+      dataset.setVisible(false, false);
+    }
     if (datasetIdx >= 0) {
       this._datasets[datasetIdx] = dataset;
       this.storageSrvc.saveDataset(dataset.id);
@@ -122,6 +141,14 @@ export class DatasetsService {
       this.datasetAdded.next(dataset.id);
       this.overviewDatasets.push(overviewDs);
     }
+    this.validateVisibleCounter();
+  }
+
+  validateVisibleCounter() {
+    const count = this._datasets.filter(
+      (ds) => ds instanceof SeriesGraphDataset && ds.visible,
+    ).length;
+    this.visibleDatasetCount.set(count);
   }
 
   setDataLoading(id: string, loading: boolean) {
@@ -159,6 +186,7 @@ export class DatasetsService {
     const ovDataset = this.getOverviewDatasetEntry(id);
     ovDataset.deleted();
     this.overviewDatasets.splice(idx, 1);
+    this.validateVisibleCounter();
   }
 
   deleteAllDatasets(quiet?: boolean) {

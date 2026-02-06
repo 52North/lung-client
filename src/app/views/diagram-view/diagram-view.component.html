@@ -141,7 +141,6 @@
               <button
                 class="local-settings-button"
                 mat-mini-fab
-                color="none"
                 (click)="openDiagramSettings()"
                 matTooltip="{{
                   'diagram-view.open-diagram-settings' | translate
@@ -152,6 +151,23 @@
               >
                 <mat-icon>query_stats</mat-icon>
               </button>
+
+              @if (graphDatasetsSrvc.visibilityLimitReached()) {
+                <button
+                  class="warning-visibility-limit-reached-button"
+                  mat-mini-fab
+                  matTooltip="{{
+                    'diagram-view.warning-visibility-limit-reached'
+                      | translate: { count }
+                  }}"
+                  attr.aria-label="{{
+                    'diagram-view.warning-visibility-limit-reached'
+                      | translate: { count }
+                  }}"
+                >
+                  <mat-icon>warning</mat-icon>
+                </button>
+              }
 
               <n52-d3-series-graph
                 #graph

@@ -10,7 +10,6 @@ import {
   InternalIdHandler,
   Parameter,
   StaInterfaceService,
-  TzDatePipe,
 } from '@helgoland/core';
 import { HelgolandLabelMapperModule } from '@helgoland/depiction';
 import {
@@ -25,8 +24,8 @@ import { AppRouterService } from '../../services/app-router.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
 import { TimeseriesService } from './../../services/timeseries-service.service';
-import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-dataset-list.component';
 import { DatasetListComponent } from './dataset-list/dataset-list.component';
+import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-dataset-list.component';
 
 @Component({
   selector: 'helgoland-modal-dataset-by-station-selector',

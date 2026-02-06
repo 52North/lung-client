@@ -46,6 +46,7 @@ import { ModalMainConfigButtonComponent } from './../../components/main-config/m
 import { AppRouterService } from './../../services/app-router.service';
 import {
   DatasetsService,
+  LIMIT_VISIBLE_DATASETS,
   LoadingDataset,
 } from './../../services/graph-datasets.service';
 import { DiagramViewInitStateService } from './diagram-view-permalink.service';
@@ -120,6 +121,8 @@ export class DiagramViewComponent implements OnInit {
   dataTableVisible = this.configSrvc.getSettings().dataTableVisible || false;
   dataLoading: boolean = false;
   overviewLoading: boolean = false;
+
+  count = LIMIT_VISIBLE_DATASETS;
 
   constructor() {
     this.mobileQuery = this.media.matchMedia('(max-width: 1024px)');
