@@ -32,13 +32,16 @@ export class UsernameComponent {
 
     effect(() => {
       const keycloakEvent = keycloakSignal();
-
       if (keycloakEvent.type === KeycloakEventType.Ready) {
         const parsedToken = this.keycloak.idTokenParsed;
         if (parsedToken) {
           const adminGroup = this.configSrvc.getSettings().keycloak.adminGroup;
-          this.username.set(parsedToken['preferred_username']);
           const isAdmin = parsedToken['groups']?.includes(adminGroup) ?? false;
+          const username =
+            parsedToken['preferred_username'] ||
+            parsedToken['name'] ||
+            parsedToken['email'];
+          this.username.set(username);
           this.isAdmin.set(isAdmin);
         }
       }

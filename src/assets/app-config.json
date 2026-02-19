@@ -81,7 +81,7 @@
            "clientId": "lung-client"
         },
         "bearerTokenCondition": {
-            "urlPattern": "^(http:\\/\\/mdpu.dev.52north.org)(\\/.*)?$",
+            "urlPattern": "mdpu.dev.52north.org(\\/.*)?$",
             "bearerPrefix": "Bearer"
         },
         "adminGroup": "/admin",
