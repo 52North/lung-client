@@ -86,6 +86,7 @@ export class ParameterListSelectorComponent implements OnInit {
       .getObservedProperties(this.staUrl, {
         $select: 'id,name,description,properties',
         $top: 10000,
+        $filter: 'Datastreams/id ne null',
       })
       .subscribe({
         next: (res) => {

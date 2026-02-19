@@ -20,12 +20,7 @@ import {
   HelgolandServicesConnector,
   Phenomenon,
 } from '@helgoland/core';
-import {
-  HelgolandMapSelectorModule,
-  LayerCreator,
-  LayerOptions,
-  MapCache,
-} from '@helgoland/map';
+import { LayerCreator, LayerOptions, MapCache } from '@helgoland/map';
 import { MultiServiceFilter } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
 import { MarkerClusterGroupOptions } from 'leaflet';
@@ -46,6 +41,7 @@ import {
 } from '../modal-map-settings/modal-map-settings.component';
 import { ParameterListSelectorComponent } from '../parameter-list-selector/parameter-list-selector.component';
 import { MapSelectionStateService } from './map-selection-state.service';
+import { StationMapSelectorComponent } from './station-map-selector/station-map-selector.component';
 
 interface MapSelectionAppConfig extends AppConfig {
   mapSelectionClusterConfig: MarkerClusterGroupOptions;
@@ -57,7 +53,7 @@ interface MapSelectionAppConfig extends AppConfig {
   styleUrls: ['./map-selection.component.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [
-    HelgolandMapSelectorModule,
+    StationMapSelectorComponent,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,

@@ -124,16 +124,17 @@ export class CategorySelectionService {
   private getStations(params: ParamsState): Observable<Thing[]> {
     const queryParams: StaFilter<ThingSelectParams, ThingExpandParams> = {
       $select: `id,description`,
+      $filter: `properties/active eq true`,
       $top: 10000,
     };
     if (params.catOne && params.catTwo && params.catThree && params.catFour) {
-      queryParams.$filter = `'${params.catOne}' in properties/${CAT_ONE_PROP} and '${params.catTwo}' in properties/${CAT_TWO_PROP} and '${params.catThree}' in properties/${CAT_THREE_PROP} and '${params.catFour}' in properties/${CAT_FOUR_PROP}`;
+      queryParams.$filter += ` and '${params.catOne}' in properties/${CAT_ONE_PROP} and '${params.catTwo}' in properties/${CAT_TWO_PROP} and '${params.catThree}' in properties/${CAT_THREE_PROP} and '${params.catFour}' in properties/${CAT_FOUR_PROP}`;
     } else if (params.catOne && params.catTwo && params.catThree) {
-      queryParams.$filter = `'${params.catOne}' in properties/${CAT_ONE_PROP} and '${params.catTwo}' in properties/${CAT_TWO_PROP} and '${params.catThree}' in properties/${CAT_THREE_PROP}`;
+      queryParams.$filter += ` and '${params.catOne}' in properties/${CAT_ONE_PROP} and '${params.catTwo}' in properties/${CAT_TWO_PROP} and '${params.catThree}' in properties/${CAT_THREE_PROP}`;
     } else if (params.catOne && params.catTwo) {
-      queryParams.$filter = `'${params.catOne}' in properties/${CAT_ONE_PROP} and '${params.catTwo}' in properties/${CAT_TWO_PROP}`;
+      queryParams.$filter += ` and '${params.catOne}' in properties/${CAT_ONE_PROP} and '${params.catTwo}' in properties/${CAT_TWO_PROP}`;
     } else if (params.catOne) {
-      queryParams.$filter = `'${params.catOne}' in properties/${CAT_ONE_PROP}`;
+      queryParams.$filter += ` and '${params.catOne}' in properties/${CAT_ONE_PROP}`;
     }
 
     return this.staSrvc
