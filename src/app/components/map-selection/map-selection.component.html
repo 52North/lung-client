@@ -14,6 +14,7 @@
     <div class="phenomenon-list">
       <helgoland-common-parameter-list-selector
         [selected]="state.selectedPhenomenonId"
+        [showOnlyActive]="state.showActiveOnly()"
         (onItemSelected)="onPhenomenonSelected($event)"
         (selectAllPhenomena)="selectAllPhenomena()"
       >
@@ -45,6 +46,7 @@
       [baseMaps]="baseMaps"
       [filter]="stationFilter"
       [clusterConfig]="clusterConfig"
+      [showOnlyActive]="state.showActiveOnly()"
       (onSelected)="onStationSelected($event)"
       [cluster]="cluster"
       class="vbox boxItem fullHeight"
@@ -55,6 +57,12 @@
 
 <div mat-dialog-actions>
   <app-change-data-source></app-change-data-source>
+  <mat-slide-toggle
+    [checked]="state.showActiveOnly()"
+    (change)="state.setShowActiveOnly($event.checked)"
+  >
+    {{ "selection.show-only-active" | translate }}
+  </mat-slide-toggle>
   <div style="flex: 1"></div>
   <button mat-raised-button mat-dialog-close>
     {{ "controls.close" | translate }}

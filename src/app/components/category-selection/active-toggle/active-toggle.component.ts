@@ -4,12 +4,13 @@ import {
   MatSlideToggleChange,
   MatSlideToggleModule,
 } from '@angular/material/slide-toggle';
+import { TranslateModule } from '@ngx-translate/core';
 import { CategorySelectionService } from '../category-selection.service';
 
 @Component({
   selector: 'app-category-selection-active-toggle',
   standalone: true,
-  imports: [CommonModule, MatSlideToggleModule],
+  imports: [CommonModule, MatSlideToggleModule, TranslateModule],
   templateUrl: './active-toggle.component.html',
   styleUrls: ['./active-toggle.component.scss'],
 })

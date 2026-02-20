@@ -1,5 +1,6 @@
 import {
   Component,
+  effect,
   inject,
   input,
   OnInit,
@@ -30,7 +31,7 @@ import {
 import { LabelMapperComponent } from '@helgoland/depiction';
 import { FilteredParameter } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
-import { ConfigurationService } from '../../services/configuration.service';
+import { ConfigurationService } from '../../../services/configuration.service';
 
 @Component({
   selector: 'helgoland-common-parameter-list-selector',
@@ -62,10 +63,18 @@ export class ParameterListSelectorComponent implements OnInit {
   readonly onItemSelected = output<Phenomenon>();
   readonly selectAllPhenomena = output();
   readonly selected = input<string>();
+  readonly showOnlyActive = input.required<boolean>();
 
   observedPropertyGroups: Map<string, ObservedProperty[]> = new Map();
   items: ObservedProperty[] = [];
   loading = 1;
+
+  constructor() {
+    effect(() => {
+      this.showOnlyActive();
+      this.loadItems();
+    });
+  }
 
   ngOnInit() {
     this.selectAllPhenomena.emit();
@@ -82,11 +91,14 @@ export class ParameterListSelectorComponent implements OnInit {
   }
 
   protected loadItems() {
+    const filter = this.showOnlyActive()
+      ? 'Datastreams/Thing/properties/active eq true'
+      : undefined;
     this.staSrvc
       .getObservedProperties(this.staUrl, {
         $select: 'id,name,description,properties',
         $top: 10000,
-        $filter: 'Datastreams/id ne null',
+        $filter: filter,
       })
       .subscribe({
         next: (res) => {

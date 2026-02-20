@@ -25,6 +25,7 @@ import { MultiServiceFilter } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
 import { MarkerClusterGroupOptions } from 'leaflet';
 
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { AppRouterService } from '../../services/app-router.service';
 import {
   AppConfig,
@@ -39,8 +40,8 @@ import {
   MapConfig,
   ModalMapSettingsComponent,
 } from '../modal-map-settings/modal-map-settings.component';
-import { ParameterListSelectorComponent } from '../parameter-list-selector/parameter-list-selector.component';
 import { MapSelectionStateService } from './map-selection-state.service';
+import { ParameterListSelectorComponent } from './parameter-list-selector/parameter-list-selector.component';
 import { StationMapSelectorComponent } from './station-map-selector/station-map-selector.component';
 
 interface MapSelectionAppConfig extends AppConfig {
@@ -63,6 +64,7 @@ interface MapSelectionAppConfig extends AppConfig {
     TranslateModule,
     LayersControlComponent,
     ChangeDataSourceComponent,
+    MatSlideToggle,
   ],
 })
 export class MapSelectionComponent implements OnInit, AfterViewInit {

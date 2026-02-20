@@ -3,6 +3,7 @@ import 'leaflet.markercluster';
 import {
   AfterViewInit,
   Component,
+  effect,
   inject,
   input,
   OnChanges,
@@ -54,7 +55,19 @@ export class StationMapSelectorComponent
 
   readonly statusIntervals = input<boolean>();
 
+  readonly showOnlyActive = input<boolean>();
+
   readonly ignoreStatusIntervalIfBeforeDuration = input(Infinity);
+
+  constructor() {
+    super();
+    effect(() => {
+      this.showOnlyActive();
+      if (this.map && this.serviceUrl()) {
+        this.drawGeometries(this.map, this.serviceUrl()!);
+      }
+    });
+  }
 
   protected markerFeatureGroup: L.FeatureGroup | undefined;
 
@@ -195,16 +208,20 @@ export class StationMapSelectorComponent
   protected createStationFilter(
     filter?: HelgolandParameterFilter,
   ): StaFilter<LocationSelectParams, LocationExpandParams> {
-    const stafilter: StaFilter<LocationSelectParams, LocationExpandParams> = {
+    const filterParams = [];
+    if (this.showOnlyActive()) {
+      filterParams.push(`Things/properties/active eq true`);
+    }
+    if (filter && filter.phenomenon) {
+      filterParams.push(
+        `Things/Datastreams/ObservedProperty/id eq '${filter.phenomenon}'`,
+      );
+    }
+    return {
       $top: 10000,
       $select: `id,name,location,Things`,
-      $expand: `Things($select=properties/active)`,
-      $filter: `Things/properties/active eq true`,
+      $filter: filterParams.length > 0 ? filterParams.join(' and ') : undefined,
     };
-    if (filter && filter.phenomenon) {
-      stafilter.$filter = `Things/Datastreams/ObservedProperty/id eq '${filter.phenomenon}' and Things/properties/active eq true`;
-    }
-    return stafilter;
   }
 
   protected createHelgolandPlatform(loc: Location): HelgolandPlatform {

@@ -87,6 +87,7 @@
 	"modal-edit-timeseries-options.title": "Zeitreihendarstellung ändern",
 	"permalink.copy-to-clipboard": "Der Sharelink befindet sich in der Zwischenablage",
 	"permalink.copy-to-clipboard-error": "Es ist ein Fehler bei der Erstellung des Sharelinks aufgetreten",
+	"selection.show-only-active": "Zeige nur aktive Zeitreihen",
 	"service-selector.datasets": "Datensätze",
 	"service-selector.phenomena": "Phänomene",
 	"service-selector.platforms": "Stationen",
