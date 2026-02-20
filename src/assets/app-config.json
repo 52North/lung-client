@@ -6,7 +6,8 @@
     "datasetApis": [
         {
             "name": "https://mdpu.dev.52north.org/FROST-Server/v1.1/",
-            "url": "https://mdpu.dev.52north.org/FROST-Server/v1.1/"
+            "url": "https://mdpu.dev.52north.org/FROST-Server/v1.1/",
+            "connector": "LungStaApiConnector"
         }
     ],
     "languages": [

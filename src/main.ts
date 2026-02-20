@@ -48,6 +48,7 @@ import {
   AppConfig,
   ConfigurationService,
 } from './app/services/configuration.service';
+import { LungStaApiConnectorProvider } from './app/services/lung-sta-connector.service';
 import {
   DATASET_FAVORITE_SERVICE_INJECTION,
   DATASET_STATE_SERVICE_INJECTION,
@@ -205,6 +206,7 @@ const initializeApp = async () => {
       //DatasetApiV2ConnectorProvider,
       //DatasetApiV3ConnectorProvider,
       DatasetStaConnectorProvider,
+      LungStaApiConnectorProvider,
       //DatasetStaCustomConnectorProvider,
       //PegelonlineApiConnectorProvider,
     ],

@@ -625,7 +625,7 @@ export class TimeseriesServiceImpl
       }
       refValues = refValues.values;
     }
-    return refValues.map((d: any) => ({ timestamp: d[0], value: d[1] }));
+    return refValues.map((d: any) => ({ timestamp: d[0], value: d[1].value }));
   }
 
   private prepareOverviewData(
