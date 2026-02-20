@@ -28,3 +28,13 @@ body {
         display: none !important;
     }
 }
+
+.mat-mdc-slide-toggle {
+    .mdc-switch {
+        transform: scale(0.8) translateX(-10px);
+    }
+
+    .mdc-label {
+        margin-left: -10px;
+    }
+}

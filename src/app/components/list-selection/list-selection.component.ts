@@ -14,6 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AppRouterService } from '../../services/app-router.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
+import { CategorySelectionActiveToggleComponent } from '../category-selection/active-toggle/active-toggle.component';
 import { CategorySelectionComponent } from '../category-selection/category-selection.component';
 import { ChangeDataSourceComponent } from '../change-data-source/change-data-source.component';
 import { ConfigurationService } from './../../services/configuration.service';
@@ -35,6 +36,7 @@ import { ParameterListEntry, ParameterType } from './model';
     MatExpansionModule,
     TranslateModule,
     ChangeDataSourceComponent,
+    CategorySelectionActiveToggleComponent,
   ],
 })
 export class ListSelectionComponent implements OnInit {

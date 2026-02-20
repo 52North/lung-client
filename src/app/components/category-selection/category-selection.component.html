@@ -6,7 +6,7 @@
         <div
           (click)="this.srvc.selectCatOne(cat)"
           class="entry"
-          [ngClass]="{ active: cat === this.srvc.selection().catOne }"
+          [ngClass]="{ active: cat === this.srvc.selectedCategoryOne() }"
         >
           {{ cat }}
         </div>
@@ -19,7 +19,7 @@
         <div
           (click)="this.srvc.selectCatTwo(cat)"
           class="entry"
-          [ngClass]="{ active: cat === this.srvc.selection().catTwo }"
+          [ngClass]="{ active: cat === this.srvc.selectedCategoryTwo() }"
         >
           {{ cat }}
         </div>
@@ -32,7 +32,7 @@
         <div
           (click)="this.srvc.selectCatThree(cat)"
           class="entry"
-          [ngClass]="{ active: cat === this.srvc.selection().catThree }"
+          [ngClass]="{ active: cat === this.srvc.selectedCategoryThree() }"
         >
           {{ cat }}
         </div>
@@ -45,7 +45,7 @@
         <div
           (click)="this.srvc.selectCatFour(cat)"
           class="entry"
-          [ngClass]="{ active: cat === this.srvc.selection().catFour }"
+          [ngClass]="{ active: cat === this.srvc.selectedCategoryFour() }"
         >
           {{ cat }}
         </div>
