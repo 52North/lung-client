@@ -129,7 +129,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
                   },
                 },
                 additional: {
-                  tiefe: ds.properties?.['tiefe'],
+                  tiefe: ds.properties?.['tiefenstufe'],
                   methode: ds.properties?.['methode'],
                   phenomenon_group:
                     ds.ObservedProperty?.properties?.['groups'] || [],

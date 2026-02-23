@@ -96,8 +96,8 @@ export class DatasetLegendEntryComponent {
       if (additional?.['methode']) {
         label += ` - Methode: ${additional?.['methode']}`;
       }
-      if (additional?.['tiefe']) {
-        label += ` | Tiefenstufe: ${additional?.['tiefe']}`;
+      if (additional?.['tiefenstufe']) {
+        label += ` | Tiefenstufe: ${additional?.['tiefenstufe']}`;
       }
       return label;
     }
