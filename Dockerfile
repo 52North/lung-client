@@ -1,11 +1,23 @@
 FROM node:24 AS BUILD
 
+RUN mkdir -p /usr/src/
+WORKDIR /usr/src/
+
+RUN git clone https://github.com/52North/helgoland-toolbox -b feature/debounce-d3
+WORKDIR /usr/src/helgoland-toolbox
+
+RUN npm install
+RUN npm run lib:build
+RUN npm run lib:pack
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # copy package.json and install dependencies
 COPY package.json package-lock.json /usr/src/app/
 RUN npm install
+
+RUN npm install ../npm-builds/*
 
 # copy the app and build it
 COPY . /usr/src/app
