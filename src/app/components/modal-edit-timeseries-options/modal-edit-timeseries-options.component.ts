@@ -4,6 +4,8 @@ import {
   Component,
   EventEmitter,
   inject,
+  Signal,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,6 +30,7 @@ import { ColorPickerModule, ColorPickerService } from 'ngx-color-picker';
 
 import { ConfigurationService } from './../../services/configuration.service';
 import { TimeseriesSymbolSelectComponent } from './timeseries-symbol-select/timeseries-symbol-select.component';
+import { DatasetsService } from 'src/app/services/graph-datasets.service';
 
 @Component({
   selector: 'helgoland-modal-edit-timeseries-options',
@@ -50,20 +53,21 @@ export class ModalEditTimeseriesOptionsComponent implements AfterContentInit {
   protected dialogRef =
     inject<MatDialogRef<ModalEditTimeseriesOptionsComponent>>(MatDialogRef);
   protected data = inject<{
-    dataset: SeriesGraphDataset;
+    dataset: Signal<SeriesGraphDataset>;
     handler: EventEmitter<void>;
   }>(MAT_DIALOG_DATA);
   protected config = inject(ConfigurationService);
+  private ds = inject(DatasetsService);
 
   adjustedColor: string | undefined;
 
   private style: DatasetStyle;
   private yaxis: AxisSettings;
-  protected loaded = false;
+  protected loaded = signal<boolean>(false);
 
   constructor() {
-    this.style = this.data.dataset?.style;
-    this.yaxis = this.data.dataset?.yAxis;
+    this.style = this.data.dataset()?.style;
+    this.yaxis = this.data.dataset()?.yAxis;
   }
 
   isLineStyle() {
@@ -75,7 +79,7 @@ export class ModalEditTimeseriesOptionsComponent implements AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    setTimeout(() => (this.loaded = true), 100);
+    setTimeout(() => (this.loaded.set(true)), 100);
   }
 
   confirmColor(color: string) {
@@ -83,25 +87,30 @@ export class ModalEditTimeseriesOptionsComponent implements AfterContentInit {
     if (this.style instanceof LineStyle) {
       this.style.pointBorderColor = color;
     }
-    this.data.dataset.setStyle(this.style);
+    this.data.dataset().setStyle(this.style);
+    this.ds.refreshDiagram(this.data.dataset().id, true);
   }
 
   setZeroBased(change: MatSlideToggleChange) {
     this.yaxis.zeroBased = change.checked;
-    this.data.dataset.setYAxis(this.yaxis);
+    this.data.dataset().setYAxis(this.yaxis);
+    this.ds.refreshDiagram(this.data.dataset().id, true);
   }
 
   setLineStyle(style: DatasetStyle) {
-    this.data.dataset.setStyle(style);
+    this.data.dataset().setStyle(style);
+    this.ds.refreshDiagram(this.data.dataset().id, true);
   }
 
   setPointRadius(val: number) {
     this.asLineStyle().pointRadius = val;
-    this.data.dataset.setStyle(this.style);
+    this.data.dataset().setStyle(this.style);
+    this.ds.refreshDiagram(this.data.dataset().id, true);
   }
 
   setLineWidth(val: number) {
     this.style.lineWidth = val;
-    this.data.dataset.setStyle(this.style);
+    this.data.dataset().setStyle(this.style);
+    this.ds.refreshDiagram(this.data.dataset().id, true);
   }
 }

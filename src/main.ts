@@ -9,6 +9,8 @@ import {
   importProvidersFrom,
   inject,
   provideAppInitializer,
+  // provideCheckNoChangesConfig,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -117,6 +119,8 @@ const initializeApp = async () => {
 
   const appConfig: ApplicationConfig = {
     providers: [
+      provideZonelessChangeDetection(),
+      //provideCheckNoChangesConfig({exhaustive: true, interval: 1000}),
       provideKeycloak({
         config: config.keycloak.config,
         initOptions: {

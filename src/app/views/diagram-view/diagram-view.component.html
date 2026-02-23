@@ -12,7 +12,7 @@
     <div class="legend">
       <div class="entries">
         <mat-accordion [multi]="true">
-          @for (dataset of graphDatasetsSrvc.allDatasets; track dataset) {
+          @for (dataset of graphDatasetsSrvc.allDatasets(); track dataset) {
             @if (isLoading(dataset)) {
               <mat-expansion-panel [disabled]="true">
                 <mat-expansion-panel-header>
@@ -81,10 +81,10 @@
         <div style="flex: 1"></div>
         <app-authentication />
         <helgoland-download-data
-          [datasets]="graphDatasetsSrvc.datasets"
+          [datasets]="graphDatasetsSrvc.datasets()"
           [timespan]="graphDatasetsSrvc.timespan"
         ></helgoland-download-data>
-        @if (graphDatasetsSrvc.datasets.length) {
+        @if (graphDatasetsSrvc.datasets().length) {
           <button
             mat-icon-button
             (click)="this.graphDatasetsSrvc.deleteAllDatasets()"
@@ -116,7 +116,7 @@
     </mat-toolbar>
   </div>
   <div class="content">
-    @if (graphDatasetsSrvc.datasets.length === 0) {
+    @if (graphDatasetsSrvc.datasets().length === 0) {
       <div class="no-timeseries">
         {{ "diagram-view.no-timeseries.hint" | translate }}
         <div>
@@ -135,7 +135,7 @@
         @switch (mainContentType) {
           @case ("diagram") {
             <div class="diagram">
-              @if (dataLoading) {
+              @if (visibleDataLoading) {
                 <helgoland-loading-overlay-progress-bar />
               }
               <button
@@ -185,20 +185,22 @@
                 </mat-toolbar>
               }
 
-              <n52-d3-series-graph
-                #graph
-                [datasets]="graphDatasetsSrvc.datasets"
-                [timespan]="graphDatasetsSrvc.timespan"
-                [graphOptions]="graphOptions"
-                (timespanChanged)="graphDatasetsSrvc.timespan = $event"
-              >
-              </n52-d3-series-graph>
+              <div [style.height]="graphDatasetsSrvc.visibilityLimitReached() || graphDatasetsSrvc.visibleDatasetCount() == 0 ? '95%' : '100%'">
+                <n52-d3-series-graph
+                  #graph
+                  [datasets]="graphDatasetsSrvc.datasets()"
+                  [timespan]="graphDatasetsSrvc.timespan"
+                  [graphOptions]="graphOptions()"
+                  (timespanChanged)="graphDatasetsSrvc.timespan = $event"
+                >
+                </n52-d3-series-graph>
+              </div>
             </div>
           }
           @case ("table") {
             <div class="table">
               <helgoland-data-table
-                [datasets]="graphDatasetsSrvc.datasets"
+                [datasets]="graphDatasetsSrvc.datasets()"
                 [timespan]="graphDatasetsSrvc.timespan"
               ></helgoland-data-table>
             </div>
@@ -215,7 +217,7 @@
           }
         </div>
 
-        @if (diagramConfig.overviewVisible) {
+        @if (diagramConfig.overviewVisible()) {
           <div class="overview-diagram desktop-only">
             @if (overviewLoading) {
               <helgoland-loading-overlay-progress-bar />
@@ -223,9 +225,9 @@
             @if (graphDatasetsSrvc.timespan) {
               <n52-d3-series-graph
                 #overview
-                [datasets]="graphDatasetsSrvc.overviewDatasets"
+                [datasets]="graphDatasetsSrvc.overviewDatasets()"
                 [timespan]="graphDatasetsSrvc.overviewTimespan"
-                [graphOptions]="overviewOptions"
+                [graphOptions]="overviewOptions()"
                 (timespanChanged)="graphDatasetsSrvc.timespan = $event"
               >
                 <n52-d3-graph-overview-selection

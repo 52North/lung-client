@@ -105,7 +105,7 @@ export class DiagramViewInitStateService {
     let paramUrl = '';
     if (this.graphDatasetsSrvc.hasDatasets()) {
       const ids: string[] = [];
-      this.graphDatasetsSrvc.datasets.forEach((ds) => {
+      this.graphDatasetsSrvc.datasets().forEach((ds) => {
         this.datasetStateServices?.forEach((dss) => {
           const permaId = dss.getPermaId(ds);
           if (permaId !== undefined) {

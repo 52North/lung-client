@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
@@ -11,10 +11,10 @@ import { HoveringStyle } from '@helgoland/d3';
 import { TranslateModule } from '@ngx-translate/core';
 
 export interface DiagramConfig {
-  yaxisVisible: boolean;
-  overviewVisible: boolean;
-  yaxisModifier: boolean;
-  hoverstyle: HoveringStyle;
+  yaxisVisible: WritableSignal<boolean>;
+  overviewVisible: WritableSignal<boolean>;
+  yaxisModifier: WritableSignal<boolean>;
+  hoverstyle: WritableSignal<HoveringStyle>;
 }
 
 @Component({

@@ -1,9 +1,9 @@
-@if (loading) {
+@if (loading()) {
   <div>
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
 }
-@if (!loading && items.length === 0) {
+@if (!loading() && items().length === 0) {
   <div style="text-align: center">no results found</div>
 }
 
@@ -19,7 +19,7 @@
 </mat-form-field>
 
 <mat-accordion>
-  @for (group of observedPropertyGroups; track group[0]) {
+  @for (group of observedPropertyGroups(); track group[0]) {
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>

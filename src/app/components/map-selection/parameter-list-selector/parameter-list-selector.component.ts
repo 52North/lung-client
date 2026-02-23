@@ -5,7 +5,10 @@ import {
   input,
   OnInit,
   output,
+  signal,
+  Signal,
   viewChild,
+  WritableSignal,
 } from '@angular/core';
 import {
   MatExpansionModule,
@@ -65,9 +68,9 @@ export class ParameterListSelectorComponent implements OnInit {
   readonly selected = input<string>();
   readonly showOnlyActive = input.required<boolean>();
 
-  observedPropertyGroups: Map<string, ObservedProperty[]> = new Map();
-  items: ObservedProperty[] = [];
-  loading = 1;
+  observedPropertyGroups: WritableSignal<Map<string, ObservedProperty[]>> = signal(new Map());
+  items: WritableSignal<ObservedProperty[]> = signal([]);
+  loading: WritableSignal<boolean> = signal(false);
 
   constructor() {
     effect(() => {
@@ -91,6 +94,7 @@ export class ParameterListSelectorComponent implements OnInit {
   }
 
   protected loadItems() {
+    this.loading.set(true);
     const filter = this.showOnlyActive()
       ? 'Datastreams/Thing/properties/active eq true'
       : undefined;
@@ -102,9 +106,9 @@ export class ParameterListSelectorComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          this.items = res.value;
-          this.loading = 0;
+          this.items.set(res.value);
           this.parseIntoGroups('');
+          this.loading.set(false);
         },
         error: (error) => console.log(error),
       });
@@ -118,7 +122,7 @@ export class ParameterListSelectorComponent implements OnInit {
       [ALL_DATASTREAMS, new Set()],
     ]);
 
-    for (const item of this.items) {
+    for (const item of this.items()) {
       if (
         filterValue != '' &&
         !this._normalizeValue(
@@ -138,16 +142,18 @@ export class ParameterListSelectorComponent implements OnInit {
     }
 
     // sort alphabetically
-    this.observedPropertyGroups.clear();
     const sortedKeys = Array.from(groups.keys()).sort((a, b) =>
       a.toLowerCase() < b.toLowerCase() ? -1 : 1,
     );
+    this.observedPropertyGroups.set(new Map());
     for (const k of sortedKeys) {
       const entries = Array.from(groups.get(k)!);
-      this.observedPropertyGroups.set(
-        k,
-        entries.sort((a, b) => (a.name! < b.name! ? -1 : 1)),
-      );
+      this.observedPropertyGroups.update((original) => {
+        return original.set(
+          k,
+          entries.sort((a, b) => (a.name! < b.name! ? -1 : 1)),
+        );
+      })
     }
   }
 
@@ -156,7 +162,7 @@ export class ParameterListSelectorComponent implements OnInit {
   }
 
   selectionChanged(selection: MatSelectionListChange) {
-    const match = this.items.find(
+    const match = this.items().find(
       (e) => e['name'] === selection.options[0].value,
     );
     if (match) {

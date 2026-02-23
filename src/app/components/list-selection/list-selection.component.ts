@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, WritableSignal, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -47,7 +47,7 @@ export class ListSelectionComponent implements OnInit {
   private configSrvc = inject(ConfigurationService);
   private errorHandler = inject(ErrorHandlerService);
 
-  selectedService: HelgolandService | undefined;
+  selectedService: WritableSignal<HelgolandService | undefined> = signal(undefined);
 
   filterList: ParameterListEntry[] = [];
 
@@ -57,12 +57,12 @@ export class ListSelectionComponent implements OnInit {
         .getServices(this.configSrvc.configuration.defaultService.apiUrl)
         .subscribe({
           next: (services) => {
-            this.selectedService = services.find(
+            this.selectedService.set(services.find(
               (e) =>
                 e.id ===
                 this.configSrvc.configuration.defaultService!.serviceId,
-            )!;
-            this.resetView(this.selectedService);
+            )!);
+            this.resetView(this.selectedService()!);
           },
           error: (error) => this.errorHandler.error(error),
         });
@@ -72,7 +72,7 @@ export class ListSelectionComponent implements OnInit {
   openListSettings() {
     if (this.selectedService) {
       const conf: ListConfig = {
-        selectedService: this.selectedService,
+        selectedService: this.selectedService()!,
       };
       const dialogRef = this.dialog.open(ModalListSettingsComponent, {
         data: conf,
@@ -81,11 +81,11 @@ export class ListSelectionComponent implements OnInit {
       dialogRef.afterClosed().subscribe((newConf: ListConfig) => {
         if (newConf) {
           if (
-            this.selectedService!.id !== newConf.selectedService.id ||
-            this.selectedService!.apiUrl !== newConf.selectedService.apiUrl
+            this.selectedService()!.id !== newConf.selectedService.id ||
+            this.selectedService()!.apiUrl !== newConf.selectedService.apiUrl
           ) {
-            this.selectedService = newConf.selectedService;
-            this.resetView(this.selectedService);
+            this.selectedService.set(newConf.selectedService);
+            this.resetView(this.selectedService()!);
           }
         }
       });

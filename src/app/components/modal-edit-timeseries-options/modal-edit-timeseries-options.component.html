@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>
   {{ "modal-edit-timeseries-options.title" | translate }}
 </h1>
-@if (data.dataset) {
+@if (data.dataset()) {
   <mat-dialog-content>
     <!-- <div>
       <mat-slide-toggle [(ngModel)]="options.generalize" color="primary">
@@ -11,7 +11,7 @@
 
     <div>
       <mat-slide-toggle
-        [ngModel]="data.dataset.yAxis.zeroBased"
+        [ngModel]="data.dataset().yAxis.zeroBased"
         (change)="setZeroBased($event)"
         color="primary"
       >
@@ -22,7 +22,7 @@
       {{ "modal-edit-timeseries-options.adjust-color" | translate }}
       <button
         mat-raised-button
-        [colorPicker]="data.dataset.style.baseColor"
+        [colorPicker]="data.dataset().style.baseColor"
         (colorPickerSelect)="confirmColor($event)"
         [cpOKButton]="true"
         [cpOKButtonText]="
@@ -32,14 +32,14 @@
         [cpOKButtonClass]="
           'mat-focus-indicator mat-raised-button mat-button-base'
         "
-        [ngStyle]="{ 'background-color': data.dataset.style.baseColor }"
+        [ngStyle]="{ 'background-color': data.dataset().style.baseColor }"
       >
         &nbsp;
       </button>
     </div>
 
     @if (
-      config.configuration.supportTimeseriesSymbols && isLineStyle() && loaded
+      config.configuration.supportTimeseriesSymbols && isLineStyle() && loaded()
     ) {
       <helgoland-timeseries-symbol-select
         [lineStyle]="asLineStyle()"
@@ -47,7 +47,7 @@
       />
     }
 
-    @if (!config.configuration.supportTimeseriesSymbols && loaded) {
+    @if (!config.configuration.supportTimeseriesSymbols && loaded()) {
       <div>
         {{ "modal-edit-timeseries-options.point-radius" | translate }}
       </div>
@@ -68,7 +68,7 @@
     <mat-slider class="example-margin" color="primary" [min]="1" [max]="5" [thumbLabel]="true" tickInterval="1"
       [(ngModel)]="options.lineWidth">
     </mat-slider> -->
-    @if (loaded) {
+    @if (loaded()) {
       <div>
         {{ "modal-edit-timeseries-options.line-width" | translate }}
       </div>

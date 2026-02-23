@@ -3,9 +3,9 @@
 <mat-dialog-content>
   <p>
     <mat-slide-toggle
-      [checked]="diagramConfig.yaxisVisible"
+      [checked]="diagramConfig.yaxisVisible()"
       color="primary"
-      (change)="diagramConfig.yaxisVisible = $event.checked"
+      (change)="diagramConfig.yaxisVisible.set($event.checked)"
     >
       {{ "diagram-config.yaxis-visible" | translate }}
     </mat-slide-toggle>
@@ -13,9 +13,9 @@
 
   <p>
     <mat-slide-toggle
-      [checked]="diagramConfig.yaxisModifier"
+      [checked]="diagramConfig.yaxisModifier()"
       color="primary"
-      (change)="diagramConfig.yaxisModifier = $event.checked"
+      (change)="diagramConfig.yaxisModifier.set($event.checked)"
     >
       {{ "diagram-config.yaxis-modifier-visible" | translate }}
     </mat-slide-toggle>
@@ -23,9 +23,9 @@
 
   <p>
     <mat-slide-toggle
-      [checked]="diagramConfig.overviewVisible"
+      [checked]="diagramConfig.overviewVisible()"
       color="primary"
-      (change)="diagramConfig.overviewVisible = $event.checked"
+      (change)="diagramConfig.overviewVisible.set($event.checked)"
     >
       {{ "diagram-config.overview-visible" | translate }}
     </mat-slide-toggle>
@@ -38,8 +38,8 @@
     <mat-button-toggle-group
       name="fontStyle"
       aria-label="Font Style"
-      [value]="diagramConfig.hoverstyle"
-      (change)="diagramConfig.hoverstyle = $event.value"
+      [value]="diagramConfig.hoverstyle()"
+      (change)="diagramConfig.hoverstyle.set($event.value)"
     >
       <mat-button-toggle value="none">{{
         "diagram-config.hoverstyle.none" | translate

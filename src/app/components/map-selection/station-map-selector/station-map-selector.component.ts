@@ -1,13 +1,17 @@
 import 'leaflet.markercluster';
 
 import {
+  afterNextRender,
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   effect,
+  ElementRef,
   inject,
   input,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {
   DatasetType,
@@ -41,8 +45,7 @@ import {
 })
 export class StationMapSelectorComponent
   extends MapSelectorComponent<HelgolandPlatform>
-  implements OnChanges, AfterViewInit
-{
+  implements OnChanges, AfterViewInit {
   protected statusIntervalResolver = inject(StatusIntervalResolverService);
   protected servicesConnector = inject(HelgolandServicesConnector);
   private staSrvc = inject(StaInterfaceService);
@@ -77,6 +80,7 @@ export class StationMapSelectorComponent
     if (this.map && serviceUrl && changes['statusIntervals']) {
       this.drawGeometries(this.map, serviceUrl);
     }
+    this.cd.markForCheck();
   }
 
   protected drawGeometries(map: L.Map, serviceUrl: string) {
@@ -90,6 +94,7 @@ export class StationMapSelectorComponent
     } else {
       this.createStationGeometries(serviceUrl, map);
     }
+    this.cd.markForCheck();
   }
 
   protected createValuedMarkers(serviceUrl: string, map: L.Map) {
@@ -113,8 +118,8 @@ export class StationMapSelectorComponent
                   ts.lastValue?.timestamp &&
                   ts.lastValue.value &&
                   ts.lastValue.timestamp >
-                    new Date().getTime() -
-                      this.ignoreStatusIntervalIfBeforeDuration()
+                  new Date().getTime() -
+                  this.ignoreStatusIntervalIfBeforeDuration()
                 ) {
                   const interval =
                     this.statusIntervalResolver.getMatchingInterval(

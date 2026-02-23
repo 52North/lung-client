@@ -1,6 +1,6 @@
 <mat-expansion-panel
   [ngStyle]="{ 'border-color': dataset().style.baseColor }"
-  [expanded]="true"
+  [expanded]="dataset().visible"
 >
   <mat-expansion-panel-header>
     <mat-panel-title>
@@ -198,7 +198,7 @@
           <div>
             <mat-slide-toggle
               [checked]="child.visible"
-              (change)="child.setVisible($event.checked)"
+              (change)="child.setVisible($event.checked); ds.refreshDiagram(this.dataset().id);"
             >
               <span [ngStyle]="{ color: child.color }">{{ child.label }}</span>
             </mat-slide-toggle>

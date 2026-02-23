@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { NotificationComponent } from '../components/notification/notification.component';
 
@@ -8,12 +8,12 @@ import { NotificationComponent } from '../components/notification/notification.c
 export class NotifierService {
   protected snackBar = inject(MatSnackBar);
 
-  private messages: string[] = [];
+  private messages: WritableSignal<string[]> = signal([]);
   private snackBarRef!: MatSnackBarRef<NotificationComponent>;
   private snackBarIsDisplayed: boolean = false;
 
   notify(message: string, duration: number = 2000): void {
-    this.messages.push(message);
+    this.messages.update((msg) => [...msg, message]);
     if (!this.snackBarIsDisplayed) {
       this.snackBarRef = this.snackBar.openFromComponent(
         NotificationComponent,

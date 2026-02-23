@@ -102,6 +102,15 @@ export class TimeseriesServiceImpl
       this.errorHandler = new D3SeriesSimpleGraphErrorHandler();
     }
     this.loadFavorites();
+
+    this.graphDatasetsSrvc.datasetStateChanged.subscribe(ds => {
+      this.setState(ds.id, ds.style, ds.yAxis, ds.selected, ds.visible);
+      this.saveState();
+    })
+
+    this.graphDatasetsSrvc.datasetRemoved.subscribe(id => {
+      this.removeDataset(id);
+    })
   }
 
   getDataset(internalId: string): HelgolandTimeseries | undefined {
@@ -122,6 +131,9 @@ export class TimeseriesServiceImpl
 
   removeDataset(id: string) {
     this.graphDatasetsSrvc.deleteDataset(id, true);
+    this.datasetMap.delete(id);
+    this.state.delete(id);
+    this.saveState();
   }
 
   getPermaId(ds: SeriesGraphDataset): string | undefined {
@@ -343,15 +355,6 @@ export class TimeseriesServiceImpl
       this.setState(dataset.id, style, yaxis, selected, visible);
       this.saveState();
       this.graphDatasetsSrvc.addOrUpdateDataset(dataset);
-      dataset.deleteEvent.subscribe((ds) => {
-        this.datasetMap.delete(ds.id);
-        this.state.delete(ds.id);
-        this.saveState();
-      });
-      dataset.stateChangeEvent.subscribe((ds) => {
-        this.setState(ds.id, ds.style, ds.yAxis, ds.selected, ds.visible);
-        this.saveState();
-      });
       ts.referenceValues?.forEach((ref) => {
         dataset.addChild(
           new TimeseriesChild(
@@ -476,7 +479,7 @@ export class TimeseriesServiceImpl
     const graphDS = this.graphDatasetsSrvc.getDatasetEntry(id);
     const dataset = this.datasetMap.get(id);
     if (this.graphDatasetsSrvc.timespan && dataset && graphDS) {
-      this.graphDatasetsSrvc.setDataLoading(id, true);
+      this.graphDatasetsSrvc.setDataLoading(id, true, graphDS.visible);
       if (
         this.presenterOptions.sendDataRequestOnlyIfDatasetTimespanCovered &&
         graphDS.description.firstValue &&
@@ -512,7 +515,7 @@ export class TimeseriesServiceImpl
 
   private loadOverviewData(id: string) {
     if (this.graphDatasetsSrvc.overviewTimespan) {
-      const graphDS = this.graphDatasetsSrvc.getDatasetEntry(id);
+      const graphDS = this.graphDatasetsSrvc.getOverviewDatasetEntry(id);
       const dataset = this.datasetMap.get(id);
       if (!dataset || !graphDS) return;
       this.graphDatasetsSrvc.setOverviewDataLoading(id, true);
@@ -588,10 +591,11 @@ export class TimeseriesServiceImpl
         parameter: e[1].parameter,
       }));
 
-      const ds = this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId);
+      const ds = this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId).clone();
       this.addReferenceValueDatasets(ds, rawdata);
       ds.setData(data);
-      this.graphDatasetsSrvc.setDataLoading(ds.id, false);
+      this.graphDatasetsSrvc.setDataLoading(ds.id, false, ds.visible);
+      this.graphDatasetsSrvc.updateDatasetWithData(ds.id, ds);
     }
   }
 
@@ -655,9 +659,10 @@ export class TimeseriesServiceImpl
 
       const ds = this.graphDatasetsSrvc.getOverviewDatasetEntry(
         dataset.internalId,
-      );
+      ).clone();
       ds.setData(data);
       this.graphDatasetsSrvc.setOverviewDataLoading(ds.id, false);
+      this.graphDatasetsSrvc.updateOverviewDatasetWithData(ds.id, ds);
     }
   }
 }

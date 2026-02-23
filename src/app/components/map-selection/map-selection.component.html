@@ -6,14 +6,14 @@
       mat-button
       color="primary"
       (click)="selectAllPhenomena()"
-      [disabled]="!state.selectedPhenomenonId"
+      [disabled]="!state.selectedPhenomenonId()"
       style="width: 100%"
     >
       {{ "map-selection-view.select-all-phenomena" | translate }}
     </button>
     <div class="phenomenon-list">
       <helgoland-common-parameter-list-selector
-        [selected]="state.selectedPhenomenonId"
+        [selected]="state.selectedPhenomenonId()"
         [showOnlyActive]="state.showActiveOnly()"
         (onItemSelected)="onPhenomenonSelected($event)"
         (selectAllPhenomena)="selectAllPhenomena()"
@@ -42,7 +42,7 @@
     </button> -->
     <station-map-selector
       [mapId]="mapId"
-      [serviceUrl]="state.selectedService?.apiUrl"
+      [serviceUrl]="state.selectedService()?.apiUrl"
       [baseMaps]="baseMaps"
       [filter]="stationFilter"
       [clusterConfig]="clusterConfig"

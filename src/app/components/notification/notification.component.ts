@@ -17,15 +17,12 @@ export class NotificationComponent {
     inject<MatSnackBarRef<NotificationComponent>>(MatSnackBarRef);
   protected data = inject(MAT_SNACK_BAR_DATA);
 
-  messages: string[] = [];
-
-  constructor() {
-    this.messages = this.data.messages;
-  }
-
   removeMessage(message: string) {
-    this.messages.splice(this.messages.indexOf(message), 1);
-    if (this.messages.length === 0) {
+    this.data.messages.update((msgs: string[]) => {
+      return msgs.toSpliced(msgs.indexOf(message), 1)
+    });
+
+    if (this.data.messages().length === 0) {
       this.snackBarRef.dismiss();
     }
   }

@@ -1,11 +1,16 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
+  Signal,
   ViewEncapsulation,
+  WritableSignal,
+  effect,
   inject,
+  signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -79,9 +84,9 @@ type MainContentType = 'diagram' | 'table';
     ShareButtonComponent,
     TranslateModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiagramViewComponent implements OnInit {
-  private changeDetectorRef = inject(ChangeDetectorRef);
   private media = inject(MediaMatcher);
   private dialog = inject(MatDialog);
   protected appRouter = inject(AppRouterService);
@@ -94,37 +99,36 @@ export class DiagramViewComponent implements OnInit {
 
   mobileQuery: MediaQueryList;
 
-  // private _mobileQueryListener: () => void;
-
   diagramConfig: DiagramConfig = {
-    overviewVisible: true,
-    yaxisVisible: true,
-    yaxisModifier: true,
-    hoverstyle: HoveringStyle.point,
+    overviewVisible: signal(true),
+    yaxisVisible: signal(true),
+    yaxisModifier: signal(true),
+    hoverstyle: signal(HoveringStyle.point),
   };
 
-  graphOptions: D3SeriesGraphOptions = {
+  graphOptions: WritableSignal<D3SeriesGraphOptions> = signal({
     showTimeLabel: false,
-    hoverStyle: this.diagramConfig.hoverstyle,
+    hoverStyle: this.diagramConfig.hoverstyle(),
     togglePanZoom: true,
-    yaxisModifier: this.diagramConfig.yaxisModifier,
-  };
+    yaxisModifier: this.diagramConfig.yaxisModifier(),
+  });
 
-  overviewOptions: D3SeriesGraphOptions = {
+  overviewOptions: Signal<D3SeriesGraphOptions> = signal({
     showTimeLabel: false,
     yaxis: false,
     hoverStyle: HoveringStyle.none,
     overview: true,
-  };
+  });
 
   mainContentType: MainContentType = 'diagram';
   dataTableVisible = this.configSrvc.getSettings().dataTableVisible || false;
-  dataLoading: boolean = false;
+  backgroundDataLoading: boolean = false;
+  visibleDataLoading: boolean = false;
   overviewLoading: boolean = false;
 
   count = LIMIT_VISIBLE_DATASETS;
 
-  constructor() {
+  constructor(private ref: ChangeDetectorRef) {
     this.mobileQuery = this.media.matchMedia('(max-width: 1024px)');
     // this._mobileQueryListener = () => {
     //   debugger;
@@ -142,30 +146,31 @@ export class DiagramViewComponent implements OnInit {
       if (!loadDs) {
         this.openMapSelection();
       }
+      this.ref.markForCheck();
     });
 
-    this.graphDatasetsSrvc.loadingDataChanged.subscribe(
-      (ld) => (this.dataLoading = ld.size > 0),
+    this.graphDatasetsSrvc.loadingVisibleDataStatus.subscribe(
+      (ld) => { 
+        this.visibleDataLoading = ld;
+        this.ref.markForCheck();
+      }
     );
 
-    this.graphDatasetsSrvc.loadingOverviewDataChanged.subscribe(
-      (ld) => (this.overviewLoading = ld.size > 0),
+    /*
+    this.graphDatasetsSrvc.loadingBackgroundDataStatus.subscribe(
+      (ld) => { 
+        this.backgroundDataLoading = ld;
+        this.ref.markForCheck();
+      }
     );
-    // this.timeseries.datasetIdsChanged.subscribe(list => this.setDatasets());
-    //   this.setDatasets();
+    */
 
-    //   if (!this.timeseries.hasDatasets()) {
-    //     this.openMapSelection();
-    //   }
-    // }
-
-    // private setDatasets() {
-    //   this.datasetIds = this.timeseries.datasetIds;
-    //   this.datasetOptions = this.timeseries.datasetOptions;
-    // }
-
-    // setSelected(selectedIds: string[]) {
-    //   this.selectedIds = selectedIds;
+    this.graphDatasetsSrvc.loadingOverviewDataStatus.subscribe(
+      (ld) => { 
+        this.overviewLoading = ld;
+        this.ref.markForCheck();
+      }
+    );
   }
 
   isLoading(
@@ -176,23 +181,18 @@ export class DiagramViewComponent implements OnInit {
 
   openDiagramSettings() {
     const dialogRef = this.dialog.open(ModalDiagramSettingsComponent, {
-      data: {
-        overviewVisible: this.diagramConfig.overviewVisible,
-        yaxisVisible: this.diagramConfig.yaxisVisible,
-        yaxisModifier: this.diagramConfig.yaxisModifier,
-        hoverstyle: this.diagramConfig.hoverstyle,
-      } as DiagramConfig,
+      data: this.diagramConfig,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.diagramConfig = result;
-        this.graphOptions.hoverStyle =
-          HoveringStyle[this.diagramConfig.hoverstyle];
-        this.graphOptions.yaxis = this.diagramConfig.yaxisVisible;
-        this.graphOptions.yaxisModifier = this.diagramConfig.yaxisModifier;
-      }
-    });
+    effect(() => {
+      this.graphOptions.set({
+        showTimeLabel: false,
+        hoverStyle: HoveringStyle[this.diagramConfig.hoverstyle()],
+        yaxis: this.diagramConfig.yaxisVisible(),
+        yaxisModifier: this.diagramConfig.yaxisModifier(),
+      })
+    })
+
   }
 
   jumpToDate(date: Date) {

@@ -4,7 +4,7 @@
     <mat-progress-bar mode="indeterminate" />
   }
   <div class="full-height">
-    @if (!counter && phenomenonMatchedList.length === 0) {
+    @if (datasets().length === 0) {
       <mat-error>
         {{ "dataset-by-station.no-datasets" | translate }}
       </mat-error>

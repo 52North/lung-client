@@ -1,13 +1,13 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { HelgolandService } from '@helgoland/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapSelectionStateService {
-  selectedService?: HelgolandService;
+  selectedService: WritableSignal<HelgolandService | undefined> = signal(undefined);
 
-  selectedPhenomenonId?: string;
+  selectedPhenomenonId: WritableSignal<string | undefined> = signal(undefined);
 
   private _showActiveOnly = signal(true);
 

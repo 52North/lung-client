@@ -2,7 +2,9 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {
   EventEmitter,
   Injectable,
+  WritableSignal,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -15,6 +17,7 @@ import { Subject } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
 import { NotifierService } from './notifier.service';
 import { StorageService } from './storage-service.service';
+import { TimeseriesService } from './timeseries-service.service';
 
 const TIME_CACHE_PARAM = 'timeseriesTime';
 
@@ -22,6 +25,15 @@ export class LoadingDataset {
   constructor(private _id: string) {}
   get id(): string {
     return this._id;
+  }
+
+  dataLoading : boolean = true;
+
+  //clone method that accepts partial overrides
+  clone(overrides: Partial<LoadingDataset> = {}): LoadingDataset {
+    const copy = new LoadingDataset(this.id);
+    Object.assign(copy, this, overrides);    
+    return copy;
   }
 }
 
@@ -41,21 +53,24 @@ export class DatasetsService {
 
   timespanChanged: EventEmitter<Timespan> = new EventEmitter();
 
-  private _datasets: (SeriesGraphDataset | LoadingDataset)[] = [];
+  private _datasets: WritableSignal<(SeriesGraphDataset | LoadingDataset)[]> = signal([]);
+  overviewDatasets: WritableSignal<SeriesGraphDataset[]> = signal([]);
 
-  datasetAdded: Subject<string> = new Subject();
-  datasetRemoved: Subject<string> = new Subject();
+  readonly datasetAdded: Subject<string> = new Subject();
+  readonly datasetRemoved: Subject<string> = new Subject();
+  readonly datasetStateChanged = new Subject<SeriesGraphDataset>();
 
-  overviewDatasets: SeriesGraphDataset[] = [];
 
-  private _loadingData: Set<string> = new Set();
-  loadingDataChanged: EventEmitter<Set<string>> = new EventEmitter();
+  private _loadingVisibleData: Set<string> = new Set();
+  loadingVisibleDataStatus: EventEmitter<boolean> = new EventEmitter();
+
+  private _loadingBackgroundData: Set<string> = new Set();
+  loadingBackgroundDataStatus: EventEmitter<boolean> = new EventEmitter();
 
   private _loadingOverviewData: Set<string> = new Set();
-  loadingOverviewDataChanged: EventEmitter<Set<string>> = new EventEmitter();
+  loadingOverviewDataStatus: EventEmitter<boolean> = new EventEmitter();
 
   visibleDatasetCount = signal(0);
-
   visibilityLimitReached = computed(
     () => this.visibleDatasetCount() >= LIMIT_VISIBLE_DATASETS,
   );
@@ -73,16 +88,8 @@ export class DatasetsService {
     return undefined;
   }
 
-  get datasets(): SeriesGraphDataset[] {
-    const datasets = this._datasets.filter(
-      (ds) => ds instanceof SeriesGraphDataset,
-    );
-    return datasets as SeriesGraphDataset[];
-  }
-
-  get allDatasets(): (SeriesGraphDataset | LoadingDataset)[] {
-    return this._datasets;
-  }
+  readonly allDatasets = computed(() => this._datasets());
+  readonly datasets = computed(() =>  this._datasets().filter((ds) => ds instanceof SeriesGraphDataset));
 
   set timespan(ts: Timespan) {
     const message = `${this.translate.instant(
@@ -97,11 +104,11 @@ export class DatasetsService {
   }
 
   getDatasetCount(): number {
-    return this._datasets.length;
+    return this._datasets().length;
   }
 
   hasDatasets(): boolean {
-    return this._datasets.length > 0;
+    return this._datasets().length > 0;
   }
 
   hasDataset(id: string): boolean {
@@ -110,87 +117,107 @@ export class DatasetsService {
 
   startLoadingDataset(id: string): void {
     this.storageSrvc.saveDataset(id);
-    this._datasets.push(new LoadingDataset(id));
+    this._datasets.set([...this._datasets(), new LoadingDataset(id)]);
   }
 
   stopLoadingDatasetOnError(id: string) {
     const datasetIdx = this.getDatasetEntryIndex(id);
-    this._datasets.splice(datasetIdx, 1);
+    this._datasets.update(ds => ds.toSpliced(datasetIdx, 1));
     this.storageSrvc.removeDataset(id);
   }
 
   addOrUpdateDataset(dataset: SeriesGraphDataset) {
     const datasetIdx = this.getDatasetEntryIndex(dataset.id);
     const overviewDs = dataset.clone();
-    dataset.stateChangeEvent.subscribe((state) => {
-      overviewDs.setSelected(dataset.selected, false);
-      overviewDs.setVisible(dataset.visible, false);
-      overviewDs.setStyle(dataset.style.clone());
-      this.validateVisibleCounter();
-    });
+    overviewDs.children.forEach(c => overviewDs.removeChild(c))
     if (this.visibilityLimitReached()) {
       dataset.setVisible(false, false);
     }
+    debugger;
+    dataset.stateChangeEvent.subscribe((state) => {
+      overviewDs.setSelected(dataset.selected, false);
+      overviewDs.setStyle(dataset.style.clone());
+      this.validateVisibleCounter();
+    });
     if (datasetIdx >= 0) {
-      this._datasets[datasetIdx] = dataset;
+      this._datasets.update(ds => ds.with(datasetIdx, dataset));
+      this.overviewDatasets.update(ds => {
+        ds[datasetIdx] = overviewDs;
+        return [...ds];
+      });
       this.storageSrvc.saveDataset(dataset.id);
-      this.overviewDatasets[datasetIdx] = overviewDs;
     } else {
-      this._datasets.push(dataset);
+      this._datasets.set([...this._datasets(), dataset]);
+      debugger;
+      this.overviewDatasets.set([...this.overviewDatasets(), overviewDs]);
       this.storageSrvc.saveDataset(dataset.id);
       this.datasetAdded.next(dataset.id);
-      this.overviewDatasets.push(overviewDs);
     }
     this.validateVisibleCounter();
   }
 
   validateVisibleCounter() {
-    const count = this._datasets.filter(
+    const count = this._datasets().filter(
       (ds) => ds instanceof SeriesGraphDataset && ds.visible,
     ).length;
     this.visibleDatasetCount.set(count);
   }
 
-  setDataLoading(id: string, loading: boolean) {
-    this.getDatasetEntry(id).setDataLoading(loading);
+  setDataLoading(id: string, loading: boolean, visible: boolean, ) {
+    const idx = this.getDatasetEntryIndex(id);
+    const item = this._datasets()[idx]
+    this._datasets.update(ds => ds.with(idx, item.clone({dataLoading: loading})));
+    const set = (visible)? this._loadingVisibleData : this._loadingBackgroundData;
+    const emitter = (visible)? this.loadingVisibleDataStatus : this.loadingBackgroundDataStatus;
     if (loading) {
-      this._loadingData.add(id);
+      set.add(id);
+      emitter.next(true);
     } else {
-      this._loadingData.delete(id);
+      set.delete(id);
+      if (set.size == 0) {
+        emitter.next(false);
+      }
     }
-    this.loadingDataChanged.next(this._loadingData);
   }
 
   setOverviewDataLoading(id: string, loading: boolean) {
-    this.getOverviewDatasetEntry(id).setDataLoading(loading);
+    const idx = this.getOverviewDatasetEntryIndex(id);
+    const item = this.overviewDatasets()[idx].clone();
+    item.setDataLoading(loading);
+    this.overviewDatasets.update(ds => ds.with(idx, item));
     if (loading) {
       this._loadingOverviewData.add(id);
+      this.loadingOverviewDataStatus.next(true);
     } else {
       this._loadingOverviewData.delete(id);
+      if (this._loadingOverviewData.size == 0) {
+        this.loadingOverviewDataStatus.next(false);
+      }
     }
-    this.loadingOverviewDataChanged.next(this._loadingOverviewData);
   }
 
   deleteDataset(id: string, notify: boolean) {
-    console.log(`delete ${id}`);
-    const dataset = this.getDatasetEntry(id);
+    const idx = this.getDatasetEntryIndex(id);
+    if (idx == -1) {
+      return;
+    }
+
     if (notify) {
       this.la.announce(this.translate.instant('events.remove-timeseries'));
-      this.notifier.notify(this.translate.instant('events.remove-timeseries'));
+      this.notifier.notify(this.translate.instant('events.remove-timeseries') + " " + id);
     }
-    dataset.deleted();
-    const idx = this.getDatasetEntryIndex(dataset.id);
-    this._datasets.splice(idx, 1);
-    this.storageSrvc.removeDataset(dataset.id);
-    this.datasetRemoved.next(dataset.id);
+    this._datasets.update(ds => ds.toSpliced(idx, 1));
+    this.storageSrvc.removeDataset(id);
+    this.datasetRemoved.next(id);
+    
     const ovDataset = this.getOverviewDatasetEntry(id);
     ovDataset.deleted();
-    this.overviewDatasets.splice(idx, 1);
+    this.overviewDatasets.update(ds => ds.toSpliced(idx, 1));
     this.validateVisibleCounter();
   }
 
   deleteAllDatasets(quiet?: boolean) {
-    this._datasets
+    this._datasets()
       .map((e) => e.id)
       .forEach((id) => this.deleteDataset(id, false));
     if (!quiet) {
@@ -202,13 +229,13 @@ export class DatasetsService {
   }
 
   datasetsSelected(): boolean {
-    return this._datasets.some(
+    return this._datasets().some(
       (e) => e instanceof SeriesGraphDataset && e.selected,
     );
   }
 
   clearSelections() {
-    this._datasets.forEach(
+    this._datasets().forEach(
       (e) => e instanceof SeriesGraphDataset && e.setSelected(false),
     );
   }
@@ -256,20 +283,56 @@ export class DatasetsService {
   }
 
   private getDatasetEntryIndex(id: string): number {
-    return this._datasets.findIndex((e) => e.id === id);
+    return this._datasets().findIndex((e) => e.id === id);
+  }
+
+  private getOverviewDatasetEntryIndex(id: string): number {
+    return this.overviewDatasets().findIndex((e) => e !== undefined && e.id === id);
   }
 
   getDatasetEntry(dsId: string): SeriesGraphDataset {
-    const dataset = this._datasets.find((e) => e.id === dsId);
+    const dataset = this._datasets().find((e) => e.id === dsId);
     if (dataset instanceof SeriesGraphDataset) return dataset;
     throw new Error(`No dataset found for ${dsId}`);
   }
 
   getOverviewDatasetEntry(dsId: string): SeriesGraphDataset {
-    const dataset = this.overviewDatasets.find(
+    const dataset = this.overviewDatasets().find(
       (e) => e !== undefined && e.id === dsId,
     );
     if (dataset) return dataset;
     throw new Error(`No dataset found for ${dsId}`);
+  }
+
+  // Helper to allow external components to trigger a refresh/redraw of the graph
+  // after they mutated the object in-place
+  refreshDiagram(dsId: string, updateOverview: boolean = false) {
+    const mutatedIndex = this.getDatasetEntryIndex(dsId);
+    this._datasets.update(ds => ds.with(mutatedIndex, ds.at(mutatedIndex)!.clone()));
+
+    const mutated = this.getDatasetEntry(dsId);
+    if (updateOverview) {
+      // We might also want to redraw the overview
+      // We ignore visible and selected, but need to manually copy styles
+      const mutatedOverviewIndex = this.getOverviewDatasetEntryIndex(dsId);
+      this.overviewDatasets.update(ds => {
+        const overview = ds.at(mutatedOverviewIndex)!.clone();
+        overview.setStyle(mutated.style);
+        return ds.with(mutatedOverviewIndex, overview);
+      });
+    }
+    this.validateVisibleCounter();
+
+    this.datasetStateChanged.next(mutated);
+  }
+
+  updateOverviewDatasetWithData(dsId: string, dataset: SeriesGraphDataset) {
+    const idx = this.getOverviewDatasetEntryIndex(dsId);
+    this.overviewDatasets.update(ds => ds.with(idx, dataset));
+  }
+
+  updateDatasetWithData(dsId: string, dataset: SeriesGraphDataset) {
+    const idx = this.getDatasetEntryIndex(dsId);
+    this._datasets.update(ds => ds.with(idx, dataset));
   }
 }

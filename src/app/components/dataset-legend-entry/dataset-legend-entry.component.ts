@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -52,6 +52,7 @@ export class DatasetLegendEntryComponent {
   protected graphDatasetsSrvc = inject(DatasetsService);
   protected timeSrvc = inject(Time);
   private dialog = inject(MatDialog);
+  protected ds = inject(DatasetsService);
 
   // Remove later:
   error = false;
@@ -70,7 +71,7 @@ export class DatasetLegendEntryComponent {
 
   readonly selectTimespan = output<Timespan>();
 
-  hasData = true;
+  protected hasData = true;
 
   constructor() {
     effect(() => this.checkDataInTimespan());
@@ -109,16 +110,18 @@ export class DatasetLegendEntryComponent {
 
   toggleSelection() {
     this.dataset().setSelected(!this.dataset().selected);
+    this.ds.refreshDiagram(this.dataset().id, true);
   }
 
   toggleVisibility() {
     this.dataset().setVisible(!this.dataset().visible);
+    this.ds.refreshDiagram(this.dataset().id);
   }
 
   editDatasetOptions() {
     const dialogRef = this.dialog.open(ModalEditTimeseriesOptionsComponent, {
       data: {
-        dataset: this.dataset(),
+        dataset: this.dataset,
       },
     });
   }
@@ -127,6 +130,7 @@ export class DatasetLegendEntryComponent {
     const yAxis = this.dataset().yAxis;
     yAxis.separate = !yAxis.separate;
     this.dataset().setYAxis(yAxis);
+    this.ds.refreshDiagram(this.dataset().id);
   }
 
   jumpToFirstTimeStamp() {
@@ -155,13 +159,13 @@ export class DatasetLegendEntryComponent {
     }
   }
 
-  getTimeseriesDatasetChildren() {
-    return this.dataset().children.filter((e) => e instanceof TimeseriesChild);
-  }
+  getTimeseriesDatasetChildren = computed(
+    () => this.dataset().children.filter((e) => e instanceof TimeseriesChild)
+  );
 
-  getAreaDatasetChildren() {
-    return this.dataset().children.filter((e) => e instanceof AreaDatasetChild);
-  }
+  getAreaDatasetChildren = computed(
+    () => this.dataset().children.filter((e) => e instanceof AreaDatasetChild)
+  );
 
   private checkDataInTimespan() {
     const dataset = this.dataset();
