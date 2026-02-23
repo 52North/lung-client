@@ -9,7 +9,8 @@ export interface TableRow {
   gewässername: string;
   wb_cd: string;
   wb_type_cd: string;
-  datum_uhrzeit: number;
+  datum: string;
+  uhrzeit: string;
   matrix: string;
   methode: string;
   param_kurz: string;
@@ -30,6 +31,7 @@ export function createDataTable(
   datasets.forEach((ds) => {
     ds.data.forEach((d) => {
       const additional = ds.description.additional;
+      const date = new Date(d.timestamp)
       if (d.timestamp > timespan.from && d.timestamp < timespan.to) {
         data.push({
           gew_art: additional?.['gew_art'] || '',
@@ -39,7 +41,8 @@ export function createDataTable(
           gewässername: additional?.['gew_name'] || '',
           wb_cd: additional?.['wb_cd'] || '',
           wb_type_cd: additional?.['wb_type_cd'] || '',
-          datum_uhrzeit: d.timestamp,
+          datum: ("0" + date.getDay()).slice(-2) + "." + ("0" + date.getMonth()).slice(-2) + "." + date.getFullYear(),
+          uhrzeit: ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2),
           matrix: additional?.['matrix'] || '',
           methode: d.parameter?.methode || '',
           param_kurz: ds.description.phenomenonLabel || '',
