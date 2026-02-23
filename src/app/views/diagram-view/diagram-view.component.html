@@ -153,20 +153,36 @@
               </button>
 
               @if (graphDatasetsSrvc.visibilityLimitReached()) {
-                <button
-                  class="warning-visibility-limit-reached-button"
-                  mat-mini-fab
-                  matTooltip="{{
-                    'diagram-view.warning-visibility-limit-reached'
-                      | translate: { count }
-                  }}"
-                  attr.aria-label="{{
-                    'diagram-view.warning-visibility-limit-reached'
-                      | translate: { count }
-                  }}"
-                >
-                  <mat-icon>warning</mat-icon>
-                </button>
+                <mat-toolbar
+                    color="warn" 
+                    class="yellow-alert"
+                    attr.aria-label="{{
+                      'diagram-view.warning-visibility-limit-reached'
+                        | translate: { count }
+                    }}"
+                    >
+                    <mat-icon>warning</mat-icon>
+                    {{
+                      'diagram-view.warning-visibility-limit-reached'
+                        | translate: { count }
+                    }}
+                </mat-toolbar>
+              }
+              @if (graphDatasetsSrvc.visibleDatasetCount() == 0) {
+                <mat-toolbar
+                    color="warn" 
+                    class="yellow-alert"
+                    attr.aria-label="{{
+                      'diagram-view.warning-no-visible'
+                        | translate
+                    }}"
+                    >
+                    <mat-icon>warning</mat-icon>
+                    {{
+                      'diagram-view.warning-no-visible'
+                        | translate
+                    }}
+                </mat-toolbar>
               }
 
               <n52-d3-series-graph

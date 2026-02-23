@@ -50,6 +50,17 @@ helgoland-diagram-view {
                 border-bottom-left-radius: 0px;
             }
 
+            .yellow-alert {
+                background-color: var(--mat-sys-error-container);;
+                color: #000 !important;
+                font-size: 14px;
+                display: absolute;
+                z-index: 1001;
+                align-items: center;
+                gap: 12px;
+                height: 5%;
+            }
+
             .no-timeseries {
                 align-self: center;
                 text-align: center;
@@ -83,14 +94,6 @@ helgoland-diagram-view {
                         right: 5px;
                         top: 5px;
                         z-index: 1000;
-                    }
-
-                    .warning-visibility-limit-reached-button {
-                        position: absolute;
-                        right: 5px;
-                        top: 55px;
-                        z-index: 1000;
-                        background-color: var(--mat-sys-error-container);
                     }
                 }
             }
