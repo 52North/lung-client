@@ -22,7 +22,7 @@ RUN npm install ../npm-builds/*
 # copy the app and build it
 COPY . /usr/src/app
 RUN npm run versions-script
-RUN npm run build:timeseries
+RUN npm run build:client
 
 FROM nginx:alpine
 
@@ -38,6 +38,6 @@ COPY ./adjustment-script.sh /docker-entrypoint.d/
 RUN chmod 0775 /docker-entrypoint.d/adjustment-script.sh
 
 # copy build from previous stage
-COPY --from=BUILD /usr/src/app/dist/helgoland-timeseries/browser /usr/share/nginx/html
+COPY --from=BUILD /usr/src/app/dist/lung-client/browser /usr/share/nginx/html
 
 CMD ["nginx", "-g", "daemon off;"]
