@@ -633,31 +633,25 @@ export class TimeseriesServiceImpl
     rawdata: HelgolandTimeseriesData,
   ): void {
     if (rawdata instanceof HelgolandTimeseriesData) {
-      // add surrounding entries to the set
-      if (rawdata.valueBeforeTimespan) {
-        rawdata.values.unshift(rawdata.valueBeforeTimespan);
-      }
-      if (rawdata.valueAfterTimespan) {
-        rawdata.values.push(rawdata.valueAfterTimespan);
-      }
-
-      // const data = this.generalizer.generalizeData(rawdata, this.width, this.timespan); // TODO: eher in graph componente
-
-      // sum values for bar chart visualization
-      const style = this.state.get(dataset.internalId);
-      if (style instanceof BarStyle) {
-        const startOf = style.startOf as unitOfTime.StartOf;
-        const period = duration(style.period);
-        if (period.asMilliseconds() === 0) {
-          throw new Error(`${dataset.internalId} needs a valid barPeriod`);
-        }
-        rawdata.values = this.sumValues.sum(startOf, period, rawdata.values);
-      }
-
-      const data = rawdata.values.map((e) => ({
+      // Generalization to clean up OverviewGraph
+      // We try to reduce to about 10% of the original density
+      // We do not reduce when dataset has fever than factor*3 points
+      const REDUCTION_FACTOR = 10
+      const mod = rawdata.values.length > REDUCTION_FACTOR * 3 ? Math.floor(rawdata.values.length / REDUCTION_FACTOR) : 1;
+      const data = rawdata.values
+      .filter((_, i) => i % mod == 0)
+      .map((e) => ({
         timestamp: e[0],
         value: e[1].value,
       }));
+
+      // add surrounding entries to the set
+      if (rawdata.valueBeforeTimespan) {
+        data.unshift({timestamp: rawdata.valueBeforeTimespan[0], value: rawdata.valueBeforeTimespan[1].value});
+      }
+      if (rawdata.valueAfterTimespan) {
+        data.push({timestamp: rawdata.valueAfterTimespan[0], value: rawdata.valueAfterTimespan[1].value});
+      }
 
       const ds = this.graphDatasetsSrvc.getOverviewDatasetEntry(
         dataset.internalId,
