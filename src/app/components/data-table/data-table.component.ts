@@ -3,21 +3,25 @@ import {
   ChangeDetectionStrategy,
   Component,
   DoCheck,
+  EventEmitter,
   inject,
   input,
   IterableDiffer,
   IterableDiffers,
+  signal,
   ViewChild,
+  WritableSignal,
 } from '@angular/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator'; 
 import {
   HelgolandCoreModule,
   Timespan,
   TimezoneService,
 } from '@helgoland/core';
 import { SeriesGraphDataset } from '@helgoland/d3';
-import { Subscription } from 'rxjs';
+import { debounceTime, from, Subscription } from 'rxjs';
 import { createDataTable, TableRow } from '../../helper/table-creation';
 interface DatasetEventSubscriptions {
   state: Subscription;
@@ -36,21 +40,22 @@ interface ColumnConfig {
   selector: 'helgoland-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
-  imports: [MatTableModule, HelgolandCoreModule, MatSortModule],
+  imports: [MatTableModule, HelgolandCoreModule, MatSortModule, MatPaginatorModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataTableComponent implements DoCheck, AfterViewInit {
+export class DataTableComponent implements DoCheck {
   protected iterableDiffers = inject(IterableDiffers);
   private timezoneSrvc = inject(TimezoneService);
 
   readonly datasets = input<SeriesGraphDataset[]>([]);
   private datasetsDiffer: IterableDiffer<SeriesGraphDataset>;
-
   readonly timespan = input<Timespan>();
 
   private subscriptions: Map<string, DatasetEventSubscriptions> = new Map();
+  private redraw: EventEmitter<SeriesGraphDataset>;
 
-  @ViewChild(MatSort) sort: MatSort | undefined;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
   visibleColumns: ColumnConfig[] = [
     {
@@ -96,11 +101,16 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
       sort: true,
     },
     {
-      title: 'datum_uhrzeit',
-      key: 'datum_uhrzeit',
+      title: 'datum',
+      key: 'datum',
       visible: true,
       sort: true,
-      formatter: (val) => this.timezoneSrvc.formatTzDate(val),
+    },
+    {
+      title: 'uhrzeit',
+      key: 'uhrzeit',
+      visible: true,
+      sort: true,
     },
     {
       title: 'matrix',
@@ -164,7 +174,7 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
     },
   ];
 
-  dataSource: MatTableDataSource<TableRow> | undefined;
+  dataSource: WritableSignal<MatTableDataSource<TableRow> | undefined> = signal(undefined);
 
   protected get displayedColumns(): string[] {
     return this.visibleColumns.filter((e) => e.visible).map((e) => e.key);
@@ -172,10 +182,13 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
 
   constructor() {
     this.datasetsDiffer = this.iterableDiffers.find([]).create();
-  }
 
-  ngAfterViewInit(): void {
-    this.finalizeTableInit();
+    this.redraw = new EventEmitter();
+    from(this.redraw)
+      .pipe(debounceTime(20))
+      .subscribe((obs) => {
+        this.calcData();
+      });
   }
 
   ngDoCheck(): void {
@@ -184,13 +197,13 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
       graphDatasetsChanges.forEachAddedItem((addedItem) => {
         if (addedItem.item instanceof SeriesGraphDataset) {
           if (addedItem.item.hasData()) {
-            this.calcData();
+            this.redraw.emit();
           }
           this.subscribeEvents(addedItem.item);
         }
       });
       graphDatasetsChanges.forEachRemovedItem((removedItem) => {
-        this.calcData();
+        this.redraw.emit();
         if (removedItem.item instanceof SeriesGraphDataset) {
           this.unsubscribeEvents(removedItem.item);
         }
@@ -209,25 +222,20 @@ export class DataTableComponent implements DoCheck, AfterViewInit {
   private calcData() {
     const timespan = this.timespan();
     if (timespan === undefined) return;
-    this.dataSource = new MatTableDataSource(
-      createDataTable(this.datasets(), timespan),
-    );
-    this.finalizeTableInit();
-  }
-
-  private finalizeTableInit() {
-    if (this.dataSource && this.sort) {
-      this.dataSource.sort = this.sort;
-    }
+    const datasource = new MatTableDataSource<TableRow>();
+    datasource.sort = this.sort
+    datasource.paginator = this.paginator;
+    datasource.data = createDataTable(this.datasets(), timespan);
+    this.dataSource.set(datasource);
   }
 
   private subscribeEvents(ds: SeriesGraphDataset) {
     let dataSubscription: Subscription;
     dataSubscription = ds.dataChangeEvent.subscribe(() => {
-      this.calcData();
+      this.redraw.emit();
     });
     const events: DatasetEventSubscriptions = {
-      state: ds.stateChangeEvent.subscribe(() => this.calcData()),
+      state: ds.stateChangeEvent.subscribe(() => this.redraw.emit),
       data: dataSubscription,
     };
     this.subscriptions.set(ds.id, events);

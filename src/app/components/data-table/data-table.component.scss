@@ -1,0 +1,18 @@
+/* The main box holding everything */
+.table-layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* The area that actually scrolls */
+.table-scroll-wrapper {
+  flex: 1;
+  overflow: auto;
+}
+
+/* Ensures the table fills the width */
+table {
+  width: 100%;
+}

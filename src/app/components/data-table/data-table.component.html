@@ -1,30 +1,41 @@
-@if (dataSource) {
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    matSort
-    matSortActive="datum_uhrzeit"
-    matSortDirection="asc"
-    class="mat-elevation-z8"
-  >
-    @for (item of visibleColumns; track $index) {
-      <ng-container [matColumnDef]="item.key">
-        @if (item.sort) {
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sticky>
-            <div>{{ item.title }}</div>
-          </th>
-        } @else {
-          <th mat-header-cell *matHeaderCellDef sticky>
-            <div>{{ item.title }}</div>
-          </th>
+<div class="table-layout-container mat-elevation-z8">
+  
+  <div class="table-scroll-wrapper">
+    @if (dataSource()) {
+      <table
+        mat-table
+        [dataSource]="dataSource()!"
+        matSort
+        matSortActive="datum"
+        matSortDirection="asc"
+        class="mat-elevation-z8"
+      >
+        @for (item of visibleColumns; track $index) {
+          <ng-container [matColumnDef]="item.key">
+            @if (item.sort) {
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sticky>
+                <div>{{ item.title }}</div>
+              </th>
+            } @else {
+              <th mat-header-cell *matHeaderCellDef sticky>
+                <div>{{ item.title }}</div>
+              </th>
+            }
+            <td mat-cell *matCellDef="let element">
+              {{ renderValue(element[item.key], item) }}
+            </td>
+          </ng-container>
         }
-        <td mat-cell *matCellDef="let element">
-          {{ renderValue(element[item.key], item) }}
-        </td>
-      </ng-container>
-    }
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-}
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    }
+  </div>
+  <mat-paginator [length]="1000"
+        [pageSize]="100"
+        [pageSizeOptions]="[100, 1000, 2500, 10000]"
+        aria-label="Select page">
+</mat-paginator>
+</div>
+
