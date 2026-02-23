@@ -21,6 +21,23 @@
             <div>{{ subheader }}</div>
           }
         </div>
+        <button
+          mat-icon-button
+          (click)="toggleVisibility(); $event.stopPropagation()"
+          attr.aria-label="{{
+            'legend-entry.toggle-visibility-button.tooltip' | translate
+          }}"
+          matTooltip="{{
+            'legend-entry.toggle-visibility-button.tooltip' | translate
+          }}"
+          [disabled]="
+            graphDatasetsSrvc.visibilityLimitReached() && !dataset().visible
+          "
+        >
+          <mat-icon>{{
+            dataset().visible ? "visibility" : "visibility_off"
+          }}</mat-icon>
+        </button>
       } @else {
         <div class="title error">
           Error occured, while loading {{ dataset().id }}
