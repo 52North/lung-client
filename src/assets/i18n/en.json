@@ -35,7 +35,7 @@
 	"diagram-view.remove-legend-entries.tooltip": "Remove all timeseries",
 	"diagram-view.table-button.tooltip": "Show data table",
 	"diagram-view.warning-visibility-limit-reached": "The limit ({{count}}) for simultaneously visible timeseries is reached. Please hide one timeseries to make a new one visible.",
-	"diagram-view.warning-warning-no-visible": "All timeseries are currently hidden. Please select at least one timeseries to display.",
+	"diagram-view.warning-no-visible": "All timeseries are currently hidden. Please select at least one timeseries to display.",
 	"events.add-favorite": "Add favorite",
 	"events.add-timeseries": "Add timeseries",
 	"events.all-timeseries-removed": "Removed all timeseries",
