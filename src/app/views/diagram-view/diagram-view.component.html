@@ -227,7 +227,7 @@
                 #overview
                 [datasets]="graphDatasetsSrvc.overviewDatasets()"
                 [timespan]="graphDatasetsSrvc.overviewTimespan"
-                [graphOptions]="overviewOptions()"
+                [graphOptions]="overviewOptions"
                 (timespanChanged)="graphDatasetsSrvc.timespan = $event"
               >
                 <n52-d3-graph-overview-selection

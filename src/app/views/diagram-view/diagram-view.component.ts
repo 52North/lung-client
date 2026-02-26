@@ -8,6 +8,7 @@ import {
   Signal,
   ViewEncapsulation,
   WritableSignal,
+  computed,
   effect,
   inject,
   signal,
@@ -106,19 +107,22 @@ export class DiagramViewComponent implements OnInit {
     hoverstyle: signal(HoveringStyle.point),
   };
 
-  graphOptions: WritableSignal<D3SeriesGraphOptions> = signal({
-    showTimeLabel: false,
-    hoverStyle: this.diagramConfig.hoverstyle(),
-    togglePanZoom: true,
-    yaxisModifier: this.diagramConfig.yaxisModifier(),
-  });
+  graphOptions: Signal<D3SeriesGraphOptions> = computed<D3SeriesGraphOptions>(() => {
+    return {
+      showTimeLabel: false,
+      hoverStyle: this.diagramConfig.hoverstyle(),
+      togglePanZoom: true,
+      yaxisModifier: this.diagramConfig.yaxisModifier(),
+      yaxis: this.diagramConfig.yaxisVisible()
+      }
+    });
 
-  overviewOptions: Signal<D3SeriesGraphOptions> = signal({
+  overviewOptions: D3SeriesGraphOptions = {
     showTimeLabel: false,
     yaxis: false,
     hoverStyle: HoveringStyle.none,
     overview: true,
-  });
+  };
 
   mainContentType: MainContentType = 'diagram';
   dataTableVisible = this.configSrvc.getSettings().dataTableVisible || false;
@@ -180,19 +184,9 @@ export class DiagramViewComponent implements OnInit {
   }
 
   openDiagramSettings() {
-    const dialogRef = this.dialog.open(ModalDiagramSettingsComponent, {
+    this.dialog.open(ModalDiagramSettingsComponent, {
       data: this.diagramConfig,
     });
-
-    effect(() => {
-      this.graphOptions.set({
-        showTimeLabel: false,
-        hoverStyle: HoveringStyle[this.diagramConfig.hoverstyle()],
-        yaxis: this.diagramConfig.yaxisVisible(),
-        yaxisModifier: this.diagramConfig.yaxisModifier(),
-      })
-    })
-
   }
 
   jumpToDate(date: Date) {

@@ -88,8 +88,8 @@ export class DatasetsService {
     return undefined;
   }
 
-  readonly allDatasets = computed(() => this._datasets());
-  readonly datasets = computed(() =>  this._datasets().filter((ds) => ds instanceof SeriesGraphDataset));
+  readonly allDatasets = computed(() => [...this._datasets()]);
+  readonly datasets = computed(() =>  [...this._datasets().filter((ds) => ds instanceof SeriesGraphDataset)]);
 
   set timespan(ts: Timespan) {
     const message = `${this.translate.instant(
