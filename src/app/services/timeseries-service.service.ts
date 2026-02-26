@@ -12,6 +12,8 @@ import {
   LocalStorage,
   SumValuesService,
   Time,
+  Timespan,
+  TimeValueTuple,
 } from '@helgoland/core';
 import {
   AxisSettings,
@@ -83,6 +85,9 @@ export class TimeseriesServiceImpl
     [key: string]: FavoriteSaveState;
   } = {};
   private datasetMap: Map<string, HelgolandTimeseries> = new Map();
+  private datasetFetchedMap: Map<string, Timespan> = new Map();
+  private datasetCache: Map<string, HelgolandTimeseriesData> = new Map();
+  private timespan: Timespan | undefined = undefined;
 
   private presenterOptions = {
     sendDataRequestOnlyIfDatasetTimespanCovered: true,
@@ -93,10 +98,63 @@ export class TimeseriesServiceImpl
   };
 
   constructor() {
-    this.graphDatasetsSrvc.timespanChanged.subscribe(() =>
-      this.datasetMap.forEach((dataset) =>
-        this.loadDatasetData(dataset.internalId),
-      ),
+    this.graphDatasetsSrvc.timespanChanged.subscribe((newTimespan) =>
+    {
+        //const oldTimespan = this.timespan ?? new Timespan(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+        this.timespan = newTimespan;
+        // Only reload data if something significant has changed!
+        // find out what has actually changed
+
+        // expandedBack = new Timespan starts (time-wise) earlier
+        // expandedForward = new Timespan ends (time-wise) later
+        //const expandedBack = newTimespan.from < oldTimespan.from;
+        //const expandedForward = newTimespan.to > oldTimespan.to;
+
+        // New timespan is smaller than previous timespan - no data-update needed
+        //if (!(expandedBack || expandedForward)) {
+        //  console.log("timespan shrank - nothing to fetch")
+        //  return;
+        //}
+
+        // Check if each Dataset actually contains data in the relevant timespan
+        this.datasetMap.forEach((dataset) => {
+
+          // If the old span did include all values, the timeseries only shrank
+          const fetchSpan = this.datasetFetchedMap.get(dataset.internalId) ?? new Timespan(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+          let needFetch = false;
+
+          if (
+            (dataset.firstValue && this.graphDatasetsSrvc.overviewTimespan!.to < dataset.firstValue.timestamp) ||
+            (dataset.lastValue && this.graphDatasetsSrvc.overviewTimespan!.from > dataset.lastValue.timestamp)
+          ) {
+            // Timeseries does not appear in overviewgraph nor diagram itself
+            // We can skip all processing
+            console.log("We can skip all processing")
+            return;
+          }
+
+          // We need to fetch if the already fetched data did not include all values
+          if (dataset.firstValue && dataset.firstValue.timestamp < fetchSpan.from) {
+            needFetch = true;
+          }
+          if (dataset.lastValue && dataset.lastValue.timestamp > fetchSpan.to) {
+            needFetch = true;
+          }
+
+          // Refetch data
+          if (needFetch) {
+            this.loadDatasetData(dataset.internalId);
+          } else {
+            // We cull the data to prevent out-of-view timeseries rendering
+            // As overviewDatasets are generalized, we do not cull them
+            if (this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId).visible) {
+              this.prepareData(dataset, this.datasetCache.get(dataset.internalId)!, newTimespan);
+            } else {
+              this.graphDatasetsSrvc.setDataLoading(dataset.internalId, false, false);
+            }
+          }
+        });
+    }
     );
     if (!this.errorHandler) {
       this.errorHandler = new D3SeriesSimpleGraphErrorHandler();
@@ -132,6 +190,8 @@ export class TimeseriesServiceImpl
   removeDataset(id: string) {
     this.graphDatasetsSrvc.deleteDataset(id, true);
     this.datasetMap.delete(id);
+    this.datasetFetchedMap.delete(id);
+    this.datasetCache.delete(id);
     this.state.delete(id);
     this.saveState();
   }
@@ -475,128 +535,65 @@ export class TimeseriesServiceImpl
   }
 
   private loadDatasetData(id: string) {
-    this.loadOverviewData(id);
-    const graphDS = this.graphDatasetsSrvc.getDatasetEntry(id);
-    const dataset = this.datasetMap.get(id);
-    if (this.graphDatasetsSrvc.timespan && dataset && graphDS) {
-      this.graphDatasetsSrvc.setDataLoading(id, true, graphDS.visible);
-      if (
-        this.presenterOptions.sendDataRequestOnlyIfDatasetTimespanCovered &&
-        graphDS.description.firstValue &&
-        graphDS.description.lastValue &&
-        !this.timeSrvc.overlaps(
-          this.graphDatasetsSrvc.timespan,
-          graphDS.description.firstValue.timestamp,
-          graphDS.description.lastValue.timestamp,
-        )
-      ) {
-        this.prepareData(dataset, new HelgolandTimeseriesData([]));
-      } else {
-        const buffer = this.timeSrvc.getBufferedTimespan(
-          this.graphDatasetsSrvc.timespan,
-          this.presenterOptions.timespanBufferFactor,
-          duration(1, 'day').asMilliseconds(),
-        );
-        this.servicesConnector
-          .getDatasetData(dataset, buffer, {
-            expanded:
-              this.presenterOptions.showReferenceValues ||
-              this.presenterOptions.requestBeforeAfterValues,
-            generalize: this.presenterOptions.generalizeAllways,
-          })
-          .subscribe({
-            next: (result) => this.prepareData(dataset, result),
-            error: (error) =>
-              this.errorHandler.handleDataLoadError(error, dataset),
-          });
-      }
-    }
-  }
-
-  private loadOverviewData(id: string) {
     if (this.graphDatasetsSrvc.overviewTimespan) {
-      const graphDS = this.graphDatasetsSrvc.getOverviewDatasetEntry(id);
+      const graphDS = this.graphDatasetsSrvc.getDatasetEntry(id);
       const dataset = this.datasetMap.get(id);
       if (!dataset || !graphDS) return;
+
       this.graphDatasetsSrvc.setOverviewDataLoading(id, true);
-      if (
-        this.presenterOptions.sendDataRequestOnlyIfDatasetTimespanCovered &&
-        graphDS.description.firstValue &&
-        graphDS.description.lastValue &&
-        !this.timeSrvc.overlaps(
-          this.graphDatasetsSrvc.overviewTimespan,
-          graphDS.description.firstValue.timestamp,
-          graphDS.description.lastValue.timestamp,
-        )
-      ) {
-        this.prepareOverviewData(dataset, new HelgolandTimeseriesData([]));
-      } else {
-        const buffer = this.timeSrvc.getBufferedTimespan(
-          this.graphDatasetsSrvc.overviewTimespan,
-          this.presenterOptions.timespanBufferFactor,
-          duration(1, 'day').asMilliseconds(),
-        );
-        this.servicesConnector
-          .getDatasetData(dataset, buffer, {
-            expanded:
-              this.presenterOptions.showReferenceValues ||
-              this.presenterOptions.requestBeforeAfterValues,
-            generalize: true,
+      this.graphDatasetsSrvc.setDataLoading(id, true, graphDS.visible);
+
+      const buffer = this.graphDatasetsSrvc.overviewTimespan;
+      this.servicesConnector
+        .getDatasetData(dataset, buffer, {
+          expanded:
+            this.presenterOptions.showReferenceValues
           })
-          .subscribe({
-            next: (result) => this.prepareOverviewData(dataset, result),
-            error: (error) => {
-              const message = this.translate.instant(
-                'diagram-view.error-loading-overview-data',
-              );
-              const label = `${dataset.parameters.phenomenon?.label} @ ${dataset.platform.label}`;
-              this.notifier.notify(`${message} ${label}`);
-              this.graphDatasetsSrvc.setOverviewDataLoading(id, false);
-              this.errorHandler.handleDataLoadError(error, dataset);
-            },
-          });
-      }
+        .subscribe({
+          next: (result) => {
+            // Store data + requested timespan
+            this.datasetCache.set(dataset.internalId, result);
+            this.datasetFetchedMap.set(dataset.internalId, buffer);
+
+            this.prepareOverviewData(dataset, result, this.graphDatasetsSrvc.overviewTimespan!);
+            this.prepareData(dataset, result, this.graphDatasetsSrvc.timespan!);
+          },
+          error: (error) => {
+            const message = this.translate.instant(
+              'diagram-view.error-loading-overview-data',
+            );
+            const label = `${dataset.parameters.phenomenon?.label} @ ${dataset.platform.label}`;
+            this.notifier.notify(`${message} ${label}`);
+            this.graphDatasetsSrvc.setOverviewDataLoading(id, false);
+            this.errorHandler.handleDataLoadError(error, dataset);
+          },
+        });
     }
   }
 
   private prepareData(
     dataset: HelgolandTimeseries,
     rawdata: HelgolandTimeseriesData,
+    timespan: Timespan,
   ): void {
-    if (rawdata instanceof HelgolandTimeseriesData) {
-      // add surrounding entries to the set
-      if (rawdata.valueBeforeTimespan) {
-        rawdata.values.unshift(rawdata.valueBeforeTimespan);
-      }
-      if (rawdata.valueAfterTimespan) {
-        rawdata.values.push(rawdata.valueAfterTimespan);
-      }
+    const ds = this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId).clone();
+    const firstInside = rawdata.values.findIndex(tvt => tvt[0] >= timespan.from);
+    const lastInside = rawdata.values.findLastIndex(tvt => tvt[0] <= timespan.to);
 
-      // const data = this.generalizer.generalizeData(rawdata, this.width, this.timespan); // TODO: eher in graph componente
+    const startIndex = Math.max(0, firstInside - 1);
+    const endIndex = lastInside === -1 ? rawdata.values.length : Math.min(rawdata.values.length, lastInside + 2);
 
-      // sum values for bar chart visualization
-      const style = this.state.get(dataset.internalId)?.style;
-      if (style && style instanceof BarStyle) {
-        const startOf = style.startOf as unitOfTime.StartOf;
-        const period = duration(style.period);
-        if (period.asMilliseconds() === 0) {
-          throw new Error(`${dataset.internalId} needs a valid barPeriod`);
-        }
-        rawdata.values = this.sumValues.sum(startOf, period, rawdata.values);
-      }
+    const data: GraphDataEntry[] = rawdata.values
+    .slice(startIndex, endIndex)    .map((e) => ({
+      timestamp: e[0],
+      value: e[1].value,
+      parameter: e[1].parameter,
+    }));
 
-      const data: GraphDataEntry[] = rawdata.values.map((e) => ({
-        timestamp: e[0],
-        value: e[1].value,
-        parameter: e[1].parameter,
-      }));
-
-      const ds = this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId).clone();
-      this.addReferenceValueDatasets(ds, rawdata);
-      ds.setData(data);
-      this.graphDatasetsSrvc.setDataLoading(ds.id, false, ds.visible);
-      this.graphDatasetsSrvc.updateDatasetWithData(ds.id, ds);
-    }
+    this.addReferenceValueDatasets(ds, rawdata);
+    ds.setData(data);
+    this.graphDatasetsSrvc.updateDatasetWithData(ds.id, ds);
+    this.graphDatasetsSrvc.setDataLoading(ds.id, false, ds.visible);
   }
 
   private addReferenceValueDatasets(
@@ -635,19 +632,30 @@ export class TimeseriesServiceImpl
   private prepareOverviewData(
     dataset: HelgolandTimeseries,
     rawdata: HelgolandTimeseriesData,
+    timespan: Timespan,
   ): void {
     if (rawdata instanceof HelgolandTimeseriesData) {
       // Generalization to clean up OverviewGraph
-      // We try to reduce to about 10% of the original density
-      // We do not reduce when dataset has fever than factor*3 points
-      const REDUCTION_FACTOR = 10
-      const mod = rawdata.values.length > REDUCTION_FACTOR * 3 ? Math.floor(rawdata.values.length / REDUCTION_FACTOR) : 1;
-      const data = rawdata.values
-      .filter((_, i) => i % mod == 0)
-      .map((e) => ({
+      // We try to reduce to 25 Datapoints, or 10% if the Dataset is larger than REDUCTION_FACTOR
+      const FACTOR = 25;
+      const REDUCTION_FACTOR = (rawdata.values.length < FACTOR * 10)? FACTOR : Math.floor(rawdata.values.length / 10);
+
+      const rawDataMapped = rawdata.values.map((e) => ({
         timestamp: e[0],
         value: e[1].value,
       }));
+
+      let data;
+      if (rawDataMapped.length > REDUCTION_FACTOR * 3) {
+        // Pass the data and target number of points (threshold)
+        console.log("using lttb generalizer");
+        //data = this.lttb(rawDataMapped, REDUCTION_FACTOR);
+        const start = rawDataMapped.at(0)!.timestamp;
+        const end = rawDataMapped.at(rawDataMapped.length-1)!.timestamp;
+        data = this.timeAlignedLttbdata(rawDataMapped, start, end);
+      } else {
+        data = rawDataMapped;
+      }
 
       // add surrounding entries to the set
       if (rawdata.valueBeforeTimespan) {
@@ -664,5 +672,176 @@ export class TimeseriesServiceImpl
       this.graphDatasetsSrvc.setOverviewDataLoading(ds.id, false);
       this.graphDatasetsSrvc.updateOverviewDatasetWithData(ds.id, ds);
     }
+  }
+
+  /**
+ * Downsamples data using the Largest Triangle Three Buckets algorithm.
+ * @param {GraphDataEntry[]} data - Array of objects: { timestamp: number, value: number }
+ * @param {number} threshold - The number of data points to return
+ */
+  private lttb(data: GraphDataEntry[], threshold: number): GraphDataEntry[]  {
+    const dataLength = data.length;
+    if (threshold >= dataLength || threshold === 0) {
+      return data;
+    }
+
+    const sampled : GraphDataEntry[] = [];
+    let sampledIndex = 0;
+
+    // Bucket size. Leave room for start and end data points
+    const every = (dataLength - 2) / (threshold - 2);
+
+    let a = 0;
+    let maxAreaPoint;
+    let nextA;
+
+    sampled[sampledIndex++] = data[a]; // Always add the first point
+
+    for (let i = 0; i < threshold - 2; i++) {
+      // Calculate point average for next bucket (containing c)
+      let avgX = 0;
+      let avgY = 0;
+      let avgRangeStart = Math.floor((i + 1) * every) + 1;
+      let avgRangeEnd = Math.floor((i + 2) * every) + 1;
+      avgRangeEnd = avgRangeEnd < dataLength ? avgRangeEnd : dataLength;
+
+      const avgRangeLength = avgRangeEnd - avgRangeStart;
+
+      for (; avgRangeStart < avgRangeEnd; avgRangeStart++) {
+        avgX += data[avgRangeStart].timestamp;
+        avgY += data[avgRangeStart].value;
+      }
+      avgX /= avgRangeLength;
+      avgY /= avgRangeLength;
+
+      // Get the range for this bucket
+      let rangeOffs = Math.floor((i + 0) * every) + 1;
+      const rangeTo = Math.floor((i + 1) * every) + 1;
+
+      // Point a
+      const pointAX = data[a].timestamp;
+      const pointAY = data[a].value;
+
+      let maxArea = -1;
+      let area = -1;
+
+      for (; rangeOffs < rangeTo; rangeOffs++) {
+        // Calculate triangle area over three buckets
+        area = Math.abs(
+          (pointAX - avgX) * (data[rangeOffs].value - pointAY) -
+          (pointAX - data[rangeOffs].timestamp) * (avgY - pointAY)
+        ) * 0.5;
+
+        if (area > maxArea) {
+          maxArea = area;
+          maxAreaPoint = data[rangeOffs];
+          nextA = rangeOffs;
+        }
+      }
+
+      sampled[sampledIndex++] = maxAreaPoint!; // Pick this point from the bucket
+      a = nextA!; // This a is the next a (chosen b)
+    }
+
+    sampled[sampledIndex++] = data[dataLength - 1]; // Always add last
+
+    return sampled;
+  }
+
+  /**
+ * Downsamples data using LTTB, anchored to 50 absolute time buckets.
+ * @param {Array} data - Array of objects: { timestamp: number, value: number }
+ * @param {number} timeStart - The absolute start UNIX timestamp of the view window
+ * @param {number} timeEnd - The absolute end UNIX timestamp of the view window
+ * @returns {Array} - The downsampled data
+ */
+  private timeAlignedLttbdata (data: GraphDataEntry[], timeStart: number, timeEnd: number): GraphDataEntry[] {
+    // Edge case: not enough data to downsample
+    if (!data || data.length <= 2) return data;
+
+    const BUCKET_COUNT = 50;
+    const bucketDuration = (timeEnd - timeStart) / BUCKET_COUNT;
+
+    // 1. Initialize 50 empty buckets
+    const buckets = Array.from({ length: BUCKET_COUNT }, () => [] as GraphDataEntry[]);
+
+    // 2. Assign each datapoint to a fixed time bucket
+    for (let i = 0; i < data.length; i++) {
+      const pt = data[i];
+      
+      // Ignore data that falls outside the current viewing window
+      if (pt.timestamp < timeStart || pt.timestamp > timeEnd) continue;
+
+      // Calculate absolute bucket index (0 to 49)
+      let bucketIdx = Math.floor((pt.timestamp - timeStart) / bucketDuration);
+      
+      // Safeguard: Ensure a point exactly on timeEnd goes into the last bucket
+      if (bucketIdx >= BUCKET_COUNT) bucketIdx = BUCKET_COUNT - 1; 
+
+      buckets[bucketIdx].push(pt);
+    }
+
+    // 3. Filter out empty buckets to handle massive data gaps safely
+    const validBuckets = buckets.filter(bucket => bucket.length > 0);
+
+    // If the data is so sparse we only populated 1 or 2 buckets, just return the extremes
+    if (validBuckets.length <= 2) {
+      const firstPt = validBuckets[0][0];
+      const lastBucket = validBuckets[validBuckets.length - 1];
+      const lastPt = lastBucket[lastBucket.length - 1];
+      return firstPt === lastPt ? [firstPt] : [firstPt, lastPt];
+    }
+
+    // 4. Apply LTTB math across the contiguous non-empty buckets
+    const sampled : GraphDataEntry[] = [];
+    
+    // Always select the first point of the first valid bucket
+    let a = validBuckets[0][0]; 
+    sampled.push(a);
+
+    // Loop through middle buckets
+    for (let i = 1; i < validBuckets.length - 1; i++) {
+      const currentBucket = validBuckets[i];
+      const nextBucket = validBuckets[i + 1];
+
+      // Calculate the average X and Y of the NEXT valid bucket
+      let avgX = 0;
+      let avgY = 0;
+      for (let j = 0; j < nextBucket.length; j++) {
+        avgX += nextBucket[j].timestamp;
+        avgY += nextBucket[j].value;
+      }
+      avgX /= nextBucket.length;
+      avgY /= nextBucket.length;
+
+      const pointAX = a.timestamp;
+      const pointAY = a.value;
+
+      let maxArea = -1;
+      let maxAreaPoint = currentBucket[0];
+
+      // Find the point in the CURRENT bucket that creates the largest triangle
+      for (let j = 0; j < currentBucket.length; j++) {
+        const pt = currentBucket[j];
+        const area = Math.abs(
+          (pointAX - avgX) * (pt.value - pointAY) -
+          (pointAX - pt.timestamp) * (avgY - pointAY)
+        ) * 0.5;
+
+        if (area > maxArea) {
+          maxArea = area;
+          maxAreaPoint = pt;
+        }
+      }
+
+      sampled.push(maxAreaPoint);
+      a = maxAreaPoint; // This chosen point becomes 'a' for the next iteration
+    }
+
+    // Always add the very last point of the last valid bucket
+    const lastBucket = validBuckets[validBuckets.length - 1];
+    sampled.push(lastBucket[lastBucket.length - 1]);
+
+    return sampled;
   }
 }

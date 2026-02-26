@@ -150,7 +150,7 @@ export class DiagramViewComponent implements OnInit {
     });
 
     this.graphDatasetsSrvc.loadingVisibleDataStatus.subscribe(
-      (ld) => { 
+      (ld) => {
         this.visibleDataLoading = ld;
         this.ref.markForCheck();
       }
@@ -166,7 +166,7 @@ export class DiagramViewComponent implements OnInit {
     */
 
     this.graphDatasetsSrvc.loadingOverviewDataStatus.subscribe(
-      (ld) => { 
+      (ld) => {
         this.overviewLoading = ld;
         this.ref.markForCheck();
       }
