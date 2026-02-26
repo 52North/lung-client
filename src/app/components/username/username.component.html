@@ -1,7 +1,7 @@
 @if (username()) {
   @if (isAdmin()) {
     <a mat-button [href]="adminUrl" target="_blank">
-      {{ username() }}
+      {{ username() }} [ADMIN]
     </a>
   } @else {
     <div>{{ username() }}</div>
