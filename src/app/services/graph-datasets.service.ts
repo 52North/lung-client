@@ -133,7 +133,6 @@ export class DatasetsService {
     if (this.visibilityLimitReached()) {
       dataset.setVisible(false, false);
     }
-    debugger;
     dataset.stateChangeEvent.subscribe((state) => {
       overviewDs.setSelected(dataset.selected, false);
       overviewDs.setStyle(dataset.style.clone());
@@ -148,7 +147,6 @@ export class DatasetsService {
       this.storageSrvc.saveDataset(dataset.id);
     } else {
       this._datasets.set([...this._datasets(), dataset]);
-      debugger;
       this.overviewDatasets.set([...this.overviewDatasets(), overviewDs]);
       this.storageSrvc.saveDataset(dataset.id);
       this.datasetAdded.next(dataset.id);
@@ -163,7 +161,7 @@ export class DatasetsService {
     this.visibleDatasetCount.set(count);
   }
 
-  setDataLoading(id: string, loading: boolean, visible: boolean, ) {
+  setDataLoading(id: string, loading: boolean, visible: boolean) {
     const idx = this.getDatasetEntryIndex(id);
     const item = this._datasets()[idx]
     this._datasets.update(ds => ds.with(idx, item.clone({dataLoading: loading})));
