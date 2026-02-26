@@ -584,15 +584,21 @@ export class TimeseriesServiceImpl
     const endIndex = lastInside === -1 ? rawdata.values.length : Math.min(rawdata.values.length, lastInside + 2);
 
     const data: GraphDataEntry[] = rawdata.values
-    .slice(startIndex, endIndex)    .map((e) => ({
+    .slice(startIndex, endIndex)
+    .map((e) => ({
       timestamp: e[0],
       value: e[1].value,
       parameter: e[1].parameter,
     }));
 
+    if (data.length > 0) {
+      ds.setData(data);
+      this.graphDatasetsSrvc.updateDatasetWithData(ds.id, ds);
+    } else {
+      this.graphDatasetsSrvc.stopLoadingDatasetOnError(ds.id);
+    }
+
     this.addReferenceValueDatasets(ds, rawdata);
-    ds.setData(data);
-    this.graphDatasetsSrvc.updateDatasetWithData(ds.id, ds);
     this.graphDatasetsSrvc.setDataLoading(ds.id, false, ds.visible);
   }
 
@@ -648,8 +654,6 @@ export class TimeseriesServiceImpl
       let data;
       if (rawDataMapped.length > REDUCTION_FACTOR * 3) {
         // Pass the data and target number of points (threshold)
-        console.log("using lttb generalizer");
-        //data = this.lttb(rawDataMapped, REDUCTION_FACTOR);
         const start = rawDataMapped.at(0)!.timestamp;
         const end = rawDataMapped.at(rawDataMapped.length-1)!.timestamp;
         data = this.timeAlignedLttbdata(rawDataMapped, start, end);
@@ -657,20 +661,12 @@ export class TimeseriesServiceImpl
         data = rawDataMapped;
       }
 
-      // add surrounding entries to the set
-      if (rawdata.valueBeforeTimespan) {
-        data.unshift({timestamp: rawdata.valueBeforeTimespan[0], value: rawdata.valueBeforeTimespan[1].value});
-      }
-      if (rawdata.valueAfterTimespan) {
-        data.push({timestamp: rawdata.valueAfterTimespan[0], value: rawdata.valueAfterTimespan[1].value});
-      }
-
       const ds = this.graphDatasetsSrvc.getOverviewDatasetEntry(
         dataset.internalId,
       ).clone();
       ds.setData(data);
-      this.graphDatasetsSrvc.setOverviewDataLoading(ds.id, false);
       this.graphDatasetsSrvc.updateOverviewDatasetWithData(ds.id, ds);
+      this.graphDatasetsSrvc.setOverviewDataLoading(dataset.internalId, false);
     }
   }
 
@@ -755,7 +751,7 @@ export class TimeseriesServiceImpl
  * @param {number} timeEnd - The absolute end UNIX timestamp of the view window
  * @returns {Array} - The downsampled data
  */
-  private timeAlignedLttbdata (data: GraphDataEntry[], timeStart: number, timeEnd: number): GraphDataEntry[] {
+  private timeAlignedLttbdata(data: GraphDataEntry[], timeStart: number, timeEnd: number): GraphDataEntry[] {
     // Edge case: not enough data to downsample
     if (!data || data.length <= 2) return data;
 
