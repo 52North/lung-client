@@ -11,9 +11,19 @@ export class NotifierService {
   private messages: WritableSignal<string[]> = signal([]);
   private snackBarRef!: MatSnackBarRef<NotificationComponent>;
   private snackBarIsDisplayed: boolean = false;
+  private supressedCount: number = 0;
 
   notify(message: string, duration: number = 2000): void {
-    this.messages.update((msg) => [...msg, message]);
+    this.messages.update((msg) => {
+      if (this.messages().length < 5) {
+        return [...msg, message]
+      } else {
+        let existing = [...msg];
+        this.supressedCount++;
+        existing[existing.length-1] = this.supressedCount + " more notifications...";
+        return existing;
+      }
+    });
     if (!this.snackBarIsDisplayed) {
       this.snackBarRef = this.snackBar.openFromComponent(
         NotificationComponent,
@@ -32,6 +42,7 @@ export class NotifierService {
     );
 
     this.snackBarRef.afterDismissed().subscribe(() => {
+      this.supressedCount = 0;
       this.snackBarIsDisplayed = false;
     });
   }
