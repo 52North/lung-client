@@ -26,6 +26,7 @@ import { FavoriteToggleButtonComponent } from '../favorites/favorite-toggle-butt
 import { LoadingOverlayProgressBarComponent } from '../loading-overlay-progress-bar/loading-overlay-progress-bar.component';
 import { ModalEditTimeseriesOptionsComponent } from '../modal-edit-timeseries-options/modal-edit-timeseries-options.component';
 import { TimeseriesEntrySymbolComponent } from '../timeseries-entry-symbol/timeseries-entry-symbol.component';
+import { duration } from 'moment';
 
 @Component({
   selector: 'helgoland-dataset-legend-entry',
@@ -150,12 +151,19 @@ export class DatasetLegendEntryComponent {
   showCompleteTimespan() {
     const dataset = this.dataset();
     if (dataset.description.firstValue && dataset.description.lastValue) {
-      this.selectTimespan.emit(
-        new Timespan(
-          dataset.description.firstValue.timestamp,
-          dataset.description.lastValue.timestamp,
-        ),
-      );
+      let timespan = new Timespan(
+        dataset.description.firstValue.timestamp,
+        dataset.description.lastValue.timestamp,
+      )
+
+      if (dataset.description.firstValue.timestamp == dataset.description.lastValue.timestamp) {
+        timespan.from = timespan.from - 1
+        timespan = this.timeSrvc.getBufferedTimespan(
+          timespan,
+          duration(1, 'hour').asMilliseconds()
+        );
+      }
+      this.selectTimespan.emit(timespan);
     }
   }
 
