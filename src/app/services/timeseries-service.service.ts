@@ -594,8 +594,6 @@ export class TimeseriesServiceImpl
     if (data.length > 0) {
       ds.setData(data);
       this.graphDatasetsSrvc.updateDatasetWithData(ds.id, ds);
-    } else {
-      this.graphDatasetsSrvc.stopLoadingDatasetOnError(ds.id);
     }
 
     this.addReferenceValueDatasets(ds, rawdata);
