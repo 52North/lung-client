@@ -9,7 +9,7 @@ import {
   importProvidersFrom,
   inject,
   provideAppInitializer,
-  // provideCheckNoChangesConfig,
+  provideCheckNoChangesConfig,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
@@ -120,7 +120,7 @@ const initializeApp = async () => {
   const appConfig: ApplicationConfig = {
     providers: [
       provideZonelessChangeDetection(),
-      //provideCheckNoChangesConfig({exhaustive: true, interval: 1000}),
+      provideCheckNoChangesConfig({exhaustive: true, interval: 1000}),
       provideKeycloak({
         config: config.keycloak.config,
         initOptions: {
