@@ -1,4 +1,4 @@
-import { MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints, MediaMatcher } from '@angular/cdk/layout';
 
 import {
   ChangeDetectionStrategy,
@@ -56,6 +56,8 @@ import {
   LoadingDataset,
 } from './../../services/graph-datasets.service';
 import { DiagramViewInitStateService } from './diagram-view-permalink.service';
+import { map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 type MainContentType = 'diagram' | 'table';
 @Component({
@@ -94,11 +96,16 @@ export class DiagramViewComponent implements OnInit {
   protected initStateService = inject(DiagramViewInitStateService);
   private time = inject(Time);
   protected graphDatasetsSrvc = inject(DatasetsService);
+  private breakpointObserver = inject(BreakpointObserver);
   private configSrvc = inject(
     ConfigurationService<AppConfig>,
   ) as ConfigurationService<AppConfig>;
 
-  mobileQuery: MediaQueryList;
+  private isMobile$ = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(map(result => result.matches));
+
+  isMobile: Signal<boolean> = toSignal(this.isMobile$, { requireSync: true });
 
   diagramConfig: DiagramConfig = {
     overviewVisible: signal(true),
@@ -133,17 +140,7 @@ export class DiagramViewComponent implements OnInit {
   count = LIMIT_VISIBLE_DATASETS;
 
   constructor(private ref: ChangeDetectorRef) {
-    this.mobileQuery = this.media.matchMedia('(max-width: 1024px)');
-    // this._mobileQueryListener = () => {
-    //   debugger;
-    //   return this.changeDetectorRef.detectChanges();
-    // };
-    // this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
-
-  // ngOnDestroy(): void {
-  //   this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-  // }
 
   ngOnInit(): void {
     this.initStateService.preloadDatasets().subscribe((loadDs) => {

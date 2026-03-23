@@ -7,116 +7,98 @@
   </button>
 </mat-menu>
 
-<div class="container" style="display: flex">
-  <div class="menu-wrapper">
-    <div class="legend">
-      <div class="entries">
-        <mat-accordion [multi]="true">
-          @for (dataset of graphDatasetsSrvc.allDatasets(); track dataset) {
+<mat-sidenav-container class="container">
+  <mat-sidenav #lnav [mode]="isMobile() ? 'over' : 'side'" [opened]="!isMobile()" position="start" autoFocus="false">
+    <div class="menu-wrapper">
+      <div class="legend">
+        @if (isMobile()) {
+        <button class="legend-menu-button" mat-icon-button (click)="lnav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        }
+        <div class="entries">
+          <mat-accordion [multi]="true">
+            @for (dataset of graphDatasetsSrvc.allDatasets(); track dataset) {
             @if (isLoading(dataset)) {
-              <mat-expansion-panel [disabled]="true">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-              </mat-expansion-panel>
+            <mat-expansion-panel [disabled]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+            </mat-expansion-panel>
             } @else {
-              <helgoland-dataset-legend-entry
-                [dataset]="dataset"
-                [timeInterval]="graphDatasetsSrvc.timespan"
-                [selected]="false"
-                (selectDate)="jumpToDate($event)"
-                (selectTimespan)="setTimespan($event)"
-                (datasetDeleted)="
+            <helgoland-dataset-legend-entry [dataset]="dataset" [timeInterval]="graphDatasetsSrvc.timespan"
+              [selected]="false" (selectDate)="jumpToDate($event)" (selectTimespan)="setTimespan($event)"
+              (datasetDeleted)="
                   this.graphDatasetsSrvc.deleteDataset(dataset.id, true)
-                "
-              />
+                " />
             }
-          }
-        </mat-accordion>
+            }
+          </mat-accordion>
+        </div>
       </div>
-    </div>
-    <mat-toolbar>
-      <mat-toolbar-row>
-        <helgoland-modal-main-config-button></helgoland-modal-main-config-button>
-        @if (graphDatasetsSrvc.datasetsSelected()) {
-          <button
-            mat-icon-button
-            (click)="this.graphDatasetsSrvc.clearSelections()"
-            attr.aria-label="{{
+      <mat-toolbar>
+        <mat-toolbar-row>
+          <helgoland-modal-main-config-button></helgoland-modal-main-config-button>
+          @if (graphDatasetsSrvc.datasetsSelected()) {
+          <button mat-icon-button (click)="this.graphDatasetsSrvc.clearSelections()" attr.aria-label="{{
               'diagram-view.clear-selection.tooltip' | translate
-            }}"
-            matTooltip="{{
+            }}" matTooltip="{{
               'diagram-view.clear-selection.tooltip' | translate
-            }}"
-          >
+            }}">
             <mat-icon color="accent">remove_done</mat-icon>
           </button>
-        }
-        @if (mainContentType === "diagram" && dataTableVisible) {
-          <button
-            mat-icon-button
-            attr.aria-label="{{
+          }
+          @if (mainContentType === "diagram" && dataTableVisible) {
+          <button mat-icon-button attr.aria-label="{{
               'diagram-view.table-button.tooltip' | translate
-            }}"
-            (click)="mainContentType = 'table'"
-            matTooltip="{{ 'diagram-view.table-button.tooltip' | translate }}"
-          >
+            }}" (click)="mainContentType = 'table'" matTooltip="{{ 'diagram-view.table-button.tooltip' | translate }}">
             <mat-icon>view_list</mat-icon>
           </button>
-        }
-        @if (mainContentType === "table") {
-          <button
-            mat-icon-button
-            attr.aria-label="{{
+          }
+          @if (mainContentType === "table") {
+          <button mat-icon-button attr.aria-label="{{
               'diagram-view.chart-button.tooltip' | translate
-            }}"
-            (click)="mainContentType = 'diagram'"
-            matTooltip="{{ 'diagram-view.chart-button.tooltip' | translate }}"
-          >
+            }}" (click)="mainContentType = 'diagram'"
+            matTooltip="{{ 'diagram-view.chart-button.tooltip' | translate }}">
             <mat-icon>show_chart</mat-icon>
           </button>
-        }
-        <div style="flex: 1"></div>
-        <app-authentication />
-        <helgoland-download-data
-          [datasets]="graphDatasetsSrvc.datasets()"
-          [timespan]="graphDatasetsSrvc.timespan"
-        ></helgoland-download-data>
-        @if (graphDatasetsSrvc.datasets().length) {
-          <button
-            mat-icon-button
-            (click)="this.graphDatasetsSrvc.deleteAllDatasets()"
-            attr.aria-label="{{
+          }
+          <div style="flex: 1"></div>
+          <app-authentication />
+          <helgoland-download-data [datasets]="graphDatasetsSrvc.datasets()"
+            [timespan]="graphDatasetsSrvc.timespan"></helgoland-download-data>
+          @if (graphDatasetsSrvc.datasets().length) {
+          <button mat-icon-button (click)="this.graphDatasetsSrvc.deleteAllDatasets()" attr.aria-label="{{
               'diagram-view.remove-legend-entries.tooltip' | translate
-            }}"
-            matTooltip="{{
+            }}" matTooltip="{{
               'diagram-view.remove-legend-entries.tooltip' | translate
-            }}"
-          >
+            }}">
             <mat-icon>clear</mat-icon>
           </button>
-        }
-        <helgoland-share-button
-          [generatedUrlFunction]="initStateService.generatePermalink"
-        ></helgoland-share-button>
-        <helgoland-modal-favorite-list-button style="margin-right: 10px">
-        </helgoland-modal-favorite-list-button>
-        <button
-          mat-mini-fab
-          [matMenuTriggerFor]="addtsMenu"
-          color="accent"
-          attr.aria-label="{{ 'diagram-view.add-button.tooltip' | translate }}"
-          matTooltip="{{ 'diagram-view.add-button.tooltip' | translate }}"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </mat-toolbar-row>
-    </mat-toolbar>
-  </div>
-  <div class="content">
-    @if (graphDatasetsSrvc.datasets().length === 0) {
+          }
+          <helgoland-share-button [generatedUrlFunction]="initStateService.generatePermalink"></helgoland-share-button>
+          <helgoland-modal-favorite-list-button style="margin-right: 10px">
+          </helgoland-modal-favorite-list-button>
+          <button mat-mini-fab [matMenuTriggerFor]="addtsMenu" color="accent"
+            attr.aria-label="{{ 'diagram-view.add-button.tooltip' | translate }}"
+            matTooltip="{{ 'diagram-view.add-button.tooltip' | translate }}">
+            <mat-icon>add</mat-icon>
+          </button>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="content">
+    @if (isMobile()) {
+    <button class="legend-menu-button" mat-icon-button (click)="lnav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    }
+    <div class="content">
+      @if (graphDatasetsSrvc.datasets().length === 0) {
       <div class="no-timeseries">
         {{ "diagram-view.no-timeseries.hint" | translate }}
         <div>
@@ -130,115 +112,89 @@
           </button>
         </div>
       </div>
-    } @else {
+      } @else {
       <div class="content">
         @switch (mainContentType) {
-          @case ("diagram") {
-            <div class="diagram">
-              @if (visibleDataLoading) {
-                <helgoland-loading-overlay-progress-bar />
-              }
-              <button
-                class="local-settings-button"
-                mat-mini-fab
-                (click)="openDiagramSettings()"
-                matTooltip="{{
+        @case ("diagram") {
+        <div class="diagram">
+          @if (visibleDataLoading) {
+          <helgoland-loading-overlay-progress-bar />
+          }
+          <button class="local-settings-button" mat-mini-fab (click)="openDiagramSettings()" matTooltip="{{
                   'diagram-view.open-diagram-settings' | translate
-                }}"
-                attr.aria-label="{{
+                }}" attr.aria-label="{{
                   'diagram-view.open-diagram-settings' | translate
-                }}"
-              >
-                <mat-icon>query_stats</mat-icon>
-              </button>
+                }}">
+            <mat-icon>query_stats</mat-icon>
+          </button>
 
-              @if (graphDatasetsSrvc.visibilityLimitReached()) {
-                <mat-toolbar
-                    color="warn" 
-                    class="yellow-alert"
-                    attr.aria-label="{{
+          @if (graphDatasetsSrvc.visibilityLimitReached()) {
+          <mat-toolbar color="warn" class="yellow-alert" attr.aria-label="{{
                       'diagram-view.warning-visibility-limit-reached'
                         | translate: { count }
-                    }}"
-                    >
-                    <mat-icon>warning</mat-icon>
-                    {{
-                      'diagram-view.warning-visibility-limit-reached'
-                        | translate: { count }
-                    }}
-                </mat-toolbar>
-              }
-              @if (graphDatasetsSrvc.visibleDatasetCount() == 0) {
-                <mat-toolbar
-                    color="warn" 
-                    class="yellow-alert"
-                    attr.aria-label="{{
+                    }}">
+            <mat-icon>warning</mat-icon>
+            {{
+            'diagram-view.warning-visibility-limit-reached'
+            | translate: { count }
+            }}
+          </mat-toolbar>
+          }
+          @if (graphDatasetsSrvc.visibleDatasetCount() == 0) {
+          <mat-toolbar color="warn" class="yellow-alert" attr.aria-label="{{
                       'diagram-view.warning-no-visible'
                         | translate
-                    }}"
-                    >
-                    <mat-icon>warning</mat-icon>
-                    {{
-                      'diagram-view.warning-no-visible'
-                        | translate
-                    }}
-                </mat-toolbar>
-              }
+                    }}">
+            <mat-icon>warning</mat-icon>
+            {{
+            'diagram-view.warning-no-visible'
+            | translate
+            }}
+          </mat-toolbar>
+          }
 
-              <div [style.height]="graphDatasetsSrvc.visibilityLimitReached() || graphDatasetsSrvc.visibleDatasetCount() == 0 ? '95%' : '100%'">
-                <n52-d3-series-graph
-                  #graph
-                  [datasets]="graphDatasetsSrvc.datasets()"
-                  [timespan]="graphDatasetsSrvc.timespan"
-                  [graphOptions]="graphOptions()"
-                  (timespanChanged)="graphDatasetsSrvc.timespan = $event"
-                >
-                </n52-d3-series-graph>
-              </div>
-            </div>
-          }
-          @case ("table") {
-            <div class="table">
-              <helgoland-data-table
-                [datasets]="graphDatasetsSrvc.datasets()"
-                [timespan]="graphDatasetsSrvc.timespan"
-              ></helgoland-data-table>
-            </div>
-          }
+          <div
+            [style.height]="graphDatasetsSrvc.visibilityLimitReached() || graphDatasetsSrvc.visibleDatasetCount() == 0 ? '95%' : '100%'">
+            <n52-d3-series-graph #graph [datasets]="graphDatasetsSrvc.datasets()"
+              [timespan]="graphDatasetsSrvc.timespan" [graphOptions]="graphOptions()"
+              (timespanChanged)="graphDatasetsSrvc.timespan = $event">
+            </n52-d3-series-graph>
+          </div>
+        </div>
+        }
+        @case ("table") {
+        <div class="table">
+          <helgoland-data-table [datasets]="graphDatasetsSrvc.datasets()"
+            [timespan]="graphDatasetsSrvc.timespan"></helgoland-data-table>
+        </div>
+        }
         }
 
         <div>
           @if (graphDatasetsSrvc.timespan) {
-            <helgoland-general-time-selection
-              [timespan]="graphDatasetsSrvc.timespan"
-              (timespanChanged)="graphDatasetsSrvc.timespan = $event"
-            >
-            </helgoland-general-time-selection>
+          <helgoland-general-time-selection [timespan]="graphDatasetsSrvc.timespan"
+            (timespanChanged)="graphDatasetsSrvc.timespan = $event">
+          </helgoland-general-time-selection>
           }
         </div>
 
         @if (diagramConfig.overviewVisible()) {
-          <div class="overview-diagram desktop-only">
-            @if (overviewLoading) {
-              <helgoland-loading-overlay-progress-bar />
-            }
-            @if (graphDatasetsSrvc.timespan) {
-              <n52-d3-series-graph
-                #overview
-                [datasets]="graphDatasetsSrvc.overviewDatasets()"
-                [timespan]="graphDatasetsSrvc.overviewTimespan"
-                [graphOptions]="overviewOptions"
-                (timespanChanged)="graphDatasetsSrvc.timespan = $event"
-              >
-                <n52-d3-graph-overview-selection
-                  [selectionTimeInterval]="graphDatasetsSrvc.timespan"
-                >
-                </n52-d3-graph-overview-selection>
-              </n52-d3-series-graph>
-            }
-          </div>
+        <div class="overview-diagram desktop-only">
+          @if (overviewLoading) {
+          <helgoland-loading-overlay-progress-bar />
+          }
+          @if (graphDatasetsSrvc.timespan) {
+          <n52-d3-series-graph #overview [datasets]="graphDatasetsSrvc.overviewDatasets()"
+            [timespan]="graphDatasetsSrvc.overviewTimespan" [graphOptions]="overviewOptions"
+            (timespanChanged)="graphDatasetsSrvc.timespan = $event">
+            <n52-d3-graph-overview-selection [selectionTimeInterval]="graphDatasetsSrvc.timespan">
+            </n52-d3-graph-overview-selection>
+          </n52-d3-series-graph>
+          }
+        </div>
         }
       </div>
-    }
-  </div>
-</div>
+      }
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
