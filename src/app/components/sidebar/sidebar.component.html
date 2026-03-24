@@ -1,0 +1,19 @@
+<div class="sidebar-wrapper" [class.collapsed]="collapsed" [class.right]="position === 'right'">
+  <div class="sidebar-panel">
+    <div class="sidebar-content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+  @if (collapsible) {
+    <button
+      class="sidebar-handle"
+      [style.top]="handleTop"
+      (click)="collapsed = !collapsed"
+      [attr.aria-label]="collapsed ? 'Sidebar öffnen' : 'Sidebar schließen'"
+      [attr.title]="collapsed ? 'Sidebar öffnen' : 'Sidebar schließen'">
+      <span class="handle-icon">
+        {{ position === 'left' ? (collapsed ? '›' : '‹') : (collapsed ? '‹' : '›') }}
+      </span>
+    </button>
+  }
+</div>

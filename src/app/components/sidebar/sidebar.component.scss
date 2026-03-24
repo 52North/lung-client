@@ -1,0 +1,98 @@
+:host {
+  display: flex;
+  align-self: stretch;
+}
+
+.sidebar-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+
+  // Right sidebar: handle on the left, panel on the right
+  &.right {
+    flex-direction: row-reverse;
+  }
+
+  .sidebar-panel {
+    width: 280px;
+    overflow: hidden;
+    border-right: 1px solid #ddd;
+    transition: width 0.3s ease;
+  }
+
+  &.collapsed .sidebar-panel {
+    width: 0;
+    border-right-width: 0;
+  }
+
+  &.right .sidebar-panel {
+    border-right: none;
+    border-left: 1px solid #ddd;
+  }
+
+  &.right.collapsed .sidebar-panel {
+    border-left-width: 0;
+  }
+
+  .sidebar-content {
+    width: 280px;
+    height: 100%;
+    overflow: auto;
+    padding: 8px;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  &.collapsed .sidebar-content {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  // Circular handle button — fully outside the panel, floating over the map
+  .sidebar-handle {
+    position: absolute;
+    // top is set via [style.top] binding
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 100;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      background: #f0f0f0;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .handle-icon {
+      font-size: 18px;
+      line-height: 1;
+      user-select: none;
+      color: #444;
+    }
+  }
+
+  // Left sidebar: circle sits fully to the right of the panel
+  &:not(.right) .sidebar-handle {
+    right: 0;
+    transform: translate(calc(100% - 1px), -50%);
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+  }
+
+  // Right sidebar: circle sits fully to the left of the panel
+  &.right .sidebar-handle {
+    left: 0;
+    transform: translate(calc(-100% + 1px), -50%);
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+}
