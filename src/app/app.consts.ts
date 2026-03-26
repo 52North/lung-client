@@ -17,6 +17,13 @@ export const ROUTES: Routes = [
       ),
   },
   {
+    path: 'list-selection',
+    loadComponent: () =>
+      import('./views/list-selection-view/list-selection-view.component').then(
+        (m) => m.ListSelectionViewComponent,
+      ),
+  },
+  {
     path: '**',
     pathMatch: 'full',
     loadComponent: () =>

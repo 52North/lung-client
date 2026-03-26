@@ -58,7 +58,7 @@
   @if (appRouter.isMapSelection()) {
     <div class="info-overlay">
       <div class="overlay-header">
-        <button matIconButton type="button" (click)="appRouter.toDiagram()">
+        <button matIconButton type="button" (click)="appRouter.back()">
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
         <span class="overlay-title">{{
@@ -66,6 +66,20 @@
         }}</span>
       </div>
       <app-map-selection-menu />
+    </div>
+  }
+
+  @if (appRouter.isListSelection()) {
+    <div class="info-overlay">
+      <div class="overlay-header">
+        <button matIconButton type="button" (click)="appRouter.back()">
+          <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+        <span class="overlay-title">{{
+          "diagram-view.add-timeseries.list" | translate
+        }}</span>
+      </div>
+      <app-list-selection-menu />
     </div>
   }
 
