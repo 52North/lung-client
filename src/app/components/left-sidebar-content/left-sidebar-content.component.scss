@@ -84,6 +84,11 @@
             overflow: auto;
             flex: 1;
         }
+
+        app-map-selection-menu {
+            flex: 1;
+            min-height: 0;
+        }
     }
 
     @keyframes slide-in {

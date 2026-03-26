@@ -16,7 +16,7 @@
   }
 
   .sidebar-panel {
-    width: 280px;
+    width: 320px;
     overflow: hidden;
     border-right: 1px solid #ddd;
     transition: width 0.3s ease;
@@ -39,7 +39,6 @@
   }
 
   .sidebar-content {
-    width: 280px;
     height: 100%;
     overflow: hidden;
     opacity: 1;
@@ -69,7 +68,7 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    z-index: 100;
+    z-index: 1000;
     transition: background 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {

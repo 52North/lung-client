@@ -55,6 +55,20 @@
     </a>
   </nav>
 
+  @if (appRouter.isMapSelection()) {
+    <div class="info-overlay">
+      <div class="overlay-header">
+        <button matIconButton type="button" (click)="appRouter.toDiagram()">
+          <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+        <span class="overlay-title">{{
+          "diagram-view.add-timeseries.map" | translate
+        }}</span>
+      </div>
+      <app-map-selection-menu />
+    </div>
+  }
+
   @if (showInfoOverlay) {
     <div class="info-overlay">
       <div class="overlay-header">

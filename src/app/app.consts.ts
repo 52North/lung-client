@@ -10,6 +10,13 @@ export const ROUTES: Routes = [
       ),
   },
   {
+    path: 'map-selection',
+    loadComponent: () =>
+      import('./views/map-selection-view/map-selection.component').then(
+        (m) => m.MapSelectionComponent,
+      ),
+  },
+  {
     path: '**',
     pathMatch: 'full',
     loadComponent: () =>

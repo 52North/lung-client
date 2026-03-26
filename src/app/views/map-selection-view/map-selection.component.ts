@@ -1,32 +1,24 @@
-import 'leaflet.markercluster';
+// import 'leaflet.markercluster';
 
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
   ViewEncapsulation,
   inject,
-  viewChild,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  DatasetType,
-  HelgolandParameterFilter,
-  HelgolandPlatform,
-  HelgolandServicesConnector,
-  Phenomenon,
-} from '@helgoland/core';
+import { HelgolandPlatform, HelgolandServicesConnector } from '@helgoland/core';
 import { LayerCreator, LayerOptions, MapCache } from '@helgoland/map';
-import { MultiServiceFilter } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
 import { MarkerClusterGroupOptions } from 'leaflet';
 
-import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { LayersControlComponent } from '../../components/layers-control/layers-control.component';
+import { ModalDatasetByStationSelectorComponent } from '../../components/modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
+import { MapConfig, ModalMapSettingsComponent } from '../../components/modal-map-settings/modal-map-settings.component';
 import { AppRouterService } from '../../services/app-router.service';
 import {
   AppConfig,
@@ -34,15 +26,7 @@ import {
 } from '../../services/configuration.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
-import { ChangeDataSourceComponent } from '../change-data-source/change-data-source.component';
-import { LayersControlComponent } from '../layers-control/layers-control.component';
-import { ModalDatasetByStationSelectorComponent } from '../modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
-import {
-  MapConfig,
-  ModalMapSettingsComponent,
-} from '../modal-map-settings/modal-map-settings.component';
 import { MapSelectionStateService } from './map-selection-state.service';
-import { ParameterListSelectorComponent } from './parameter-list-selector/parameter-list-selector.component';
 import { StationMapSelectorComponent } from './station-map-selector/station-map-selector.component';
 
 interface MapSelectionAppConfig extends AppConfig {
@@ -57,18 +41,13 @@ interface MapSelectionAppConfig extends AppConfig {
   imports: [
     StationMapSelectorComponent,
     MatButtonModule,
-    MatDialogModule,
     MatIconModule,
-    MatSidenavModule,
     MatTooltipModule,
-    ParameterListSelectorComponent,
     TranslateModule,
     LayersControlComponent,
-    ChangeDataSourceComponent,
-    MatSlideToggle,
   ],
 })
-export class MapSelectionComponent implements OnInit, AfterViewInit {
+export class MapSelectionComponent implements OnInit {
   protected appRouter = inject(AppRouterService);
   protected graphDatasetsSrvc = inject(DatasetsService);
   private configSrvc =
@@ -79,32 +58,15 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
   private mapCache = inject(MapCache);
   protected state = inject(MapSelectionStateService);
 
-  readonly drawer = viewChild<MatDrawer>('drawer');
-
   mapId = 'timeseries';
 
   baseMaps: Map<string, LayerOptions> = new Map<string, LayerOptions>();
 
-  stationFilter: HelgolandParameterFilter | undefined;
-
   clusterConfig: MarkerClusterGroupOptions | undefined;
-
-  phenomenonFilter: MultiServiceFilter[] = [];
 
   cluster = true;
 
   constructor(private cdr: ChangeDetectorRef) {}
-
-  ngAfterViewInit(): void {
-    this.drawer()?.openedChange.subscribe((_) => {
-      const map = this.mapCache.getMap(this.mapId);
-      if (map) {
-        map.invalidateSize();
-        this.cdr.markForCheck();
-      }
-    });
-    this.cdr.markForCheck();
-  }
 
   ngOnInit() {
     if (
@@ -120,14 +82,11 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
                 e.id ===
                 this.configSrvc.configuration?.defaultService!.serviceId,
             );
-            this.updateFilter();
             this.state.selectedService.set(service);
             this.cdr.markForCheck();
           },
           error: (error) => this.errorHandler.error(error),
         });
-    } else {
-      this.updateFilter();
     }
     this.clusterConfig =
       this.configSrvc.configuration.mapSelectionClusterConfig;
@@ -138,11 +97,6 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
         new LayerCreator().createLayerOptions(conf),
       ),
     );
-    this.cdr.markForCheck();
-  }
-
-  phenomenonToggled() {
-    this.drawer()?.toggle();
     this.cdr.markForCheck();
   }
 
@@ -170,9 +124,7 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
         if (newConf) {
           this.cluster = newConf.cluster;
           this.state.selectedService.set(newConf.selectedService);
-
           this.cdr.markForCheck();
-          this.updateFilter();
         }
       });
     }
@@ -192,42 +144,9 @@ export class MapSelectionComponent implements OnInit, AfterViewInit {
           this.cluster = newConf.cluster;
           this.state.selectedService.set(newConf.selectedService);
           this.state.selectedPhenomenonId.set(undefined);
-          this.updateFilter();
           this.cdr.markForCheck();
         }
       });
-    }
-  }
-
-  selectAllPhenomena() {
-    this.state.selectedPhenomenonId.set(undefined);
-    this.updateFilter();
-  }
-
-  onPhenomenonSelected(phenomenon: Phenomenon) {
-    this.state.selectedPhenomenonId.set(phenomenon.id);
-    this.updateFilter();
-  }
-
-  private updateFilter() {
-    if (this.state.selectedService()) {
-      const service = this.state.selectedService()!;
-      this.stationFilter = {
-        type: DatasetType.Timeseries,
-        service: service.id,
-      };
-      if (this.state.selectedPhenomenonId) {
-        this.stationFilter.phenomenon = this.state.selectedPhenomenonId();
-      }
-
-      this.phenomenonFilter = [
-        {
-          url: service.apiUrl,
-          filter: {
-            service: service.id,
-          },
-        },
-      ];
     }
   }
 }

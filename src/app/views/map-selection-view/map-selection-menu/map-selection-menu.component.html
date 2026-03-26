@@ -1,0 +1,28 @@
+<!-- <app-change-data-source></app-change-data-source> -->
+<button
+  mat-button
+  color="primary"
+  (click)="state.selectAllPhenomena()"
+  [disabled]="!state.selectedPhenomenonId()"
+  style="width: 100%"
+>
+  {{ "map-selection-view.select-all-phenomena" | translate }}
+</button>
+<div class="phenomenon-list">
+  <helgoland-common-parameter-list-selector
+    [selected]="state.selectedPhenomenonId()"
+    [showOnlyActive]="state.showActiveOnly()"
+    (onItemSelected)="state.onPhenomenonSelected($event)"
+    (selectAllPhenomena)="state.selectAllPhenomena()"
+  >
+  </helgoland-common-parameter-list-selector>
+</div>
+
+<div class="toggle-active">
+  <mat-slide-toggle
+    [checked]="state.showActiveOnly()"
+    (change)="state.setShowActiveOnly($event.checked)"
+  >
+    {{ "selection.show-only-active" | translate }}
+  </mat-slide-toggle>
+</div>

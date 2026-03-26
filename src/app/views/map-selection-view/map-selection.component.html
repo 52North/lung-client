@@ -1,0 +1,18 @@
+<div class="map">
+  <helgoland-layers-control
+    [mapId]="mapId"
+    [baseMaps]="baseMaps"
+  ></helgoland-layers-control>
+  <station-map-selector
+    [mapId]="mapId"
+    [serviceUrl]="state.selectedService()?.apiUrl"
+    [baseMaps]="baseMaps"
+    [filter]="state.stationFilter()"
+    [clusterConfig]="clusterConfig"
+    [showOnlyActive]="state.showActiveOnly()"
+    (onSelected)="onStationSelected($event)"
+    [cluster]="cluster"
+    class="vbox boxItem fullHeight"
+  >
+  </station-map-selector>
+</div>
