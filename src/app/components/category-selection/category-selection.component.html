@@ -1,73 +1,103 @@
 <div class="wrapper">
   <div class="selection">
     <div class="section">
-      <div class="header">Kategorie 1:</div>
-      @for (cat of this.srvc.categoryOneResource.value(); track cat) {
-        <div
-          (click)="this.srvc.selectCatOne(cat)"
-          class="entry"
-          [ngClass]="{ active: cat === this.srvc.selectedCategoryOne() }"
-        >
-          {{ cat }}
-        </div>
-      }
+      <div class="section-header">
+        {{ "category-selection.category1" | translate }}
+      </div>
+      <div class="entry-list">
+        @for (cat of this.srvc.categoryOneResource.value(); track cat) {
+          <button
+            mat-button
+            (click)="this.srvc.selectCatOne(cat)"
+            class="entry"
+            [class.active]="cat === this.srvc.selectedCategoryOne()"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
     </div>
 
     <div class="section">
-      <div class="header">Kategorie 2:</div>
-      @for (cat of this.srvc.categoryTwoResource.value(); track cat) {
-        <div
-          (click)="this.srvc.selectCatTwo(cat)"
-          class="entry"
-          [ngClass]="{ active: cat === this.srvc.selectedCategoryTwo() }"
-        >
-          {{ cat }}
-        </div>
-      }
+      <div class="section-header">
+        {{ "category-selection.category2" | translate }}
+      </div>
+      <div class="entry-list">
+        @for (cat of this.srvc.categoryTwoResource.value(); track cat) {
+          <button
+            mat-button
+            (click)="this.srvc.selectCatTwo(cat)"
+            class="entry"
+            [class.active]="cat === this.srvc.selectedCategoryTwo()"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
     </div>
 
     <div class="section">
-      <div class="header">Kategorie 3:</div>
-      @for (cat of this.srvc.categoryThreeResource.value(); track cat) {
-        <div
-          (click)="this.srvc.selectCatThree(cat)"
-          class="entry"
-          [ngClass]="{ active: cat === this.srvc.selectedCategoryThree() }"
-        >
-          {{ cat }}
-        </div>
-      }
+      <div class="section-header">
+        {{ "category-selection.category3" | translate }}
+      </div>
+      <div class="entry-list">
+        @for (cat of this.srvc.categoryThreeResource.value(); track cat) {
+          <button
+            mat-button
+            (click)="this.srvc.selectCatThree(cat)"
+            class="entry"
+            [class.active]="cat === this.srvc.selectedCategoryThree()"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
     </div>
 
     <div class="section">
-      <div class="header">Kategorie 4:</div>
-      @for (cat of this.srvc.categoryFourResource.value(); track cat) {
-        <div
-          (click)="this.srvc.selectCatFour(cat)"
-          class="entry"
-          [ngClass]="{ active: cat === this.srvc.selectedCategoryFour() }"
-        >
-          {{ cat }}
-        </div>
-      }
+      <div class="section-header">
+        {{ "category-selection.category4" | translate }}
+      </div>
+      <div class="entry-list">
+        @for (cat of this.srvc.categoryFourResource.value(); track cat) {
+          <button
+            mat-button
+            (click)="this.srvc.selectCatFour(cat)"
+            class="entry"
+            [class.active]="cat === this.srvc.selectedCategoryFour()"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
     </div>
   </div>
+
   <div class="stations">
-    <h2>Found {{ this.srvc.stationsResource.value()?.length }} stations</h2>
-    <mat-form-field style="width: 100%">
-      <mat-label> {{ "map-selection-view.search" | translate }}</mat-label>
+    <div class="stations-header">
+      <span class="stations-count">
+        {{
+          "category-selection.found-stations"
+            | translate: { stations: this.srvc.stationsResource.value()?.length ?? 0 }
+        }}
+      </span>
+    </div>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>{{ "map-selection-view.search" | translate }}</mat-label>
       <input
         matInput
         type="text"
-        placeholder=""
         (input)="onInput($event)"
-        class="example-input"
       />
     </mat-form-field>
-    @for (station of this.filteredStations(); track station["@iot.id"]) {
-      <div (click)="this.srvc.openStation(station)">
-        {{ station.description }}
-      </div>
-    }
+    <div class="station-list">
+      @for (station of this.filteredStations(); track station["@iot.id"]) {
+        <div class="station-entry" (click)="this.srvc.openStation(station)">
+          <mat-icon class="station-icon">location_on</mat-icon>
+          <span>{{ station.description }}</span>
+        </div>
+      }
+    </div>
   </div>
 </div>

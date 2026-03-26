@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { HelgolandDataset } from '@helgoland/core';
 import { MultiServiceFilterSelectorComponent } from '@helgoland/selector';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { TimeseriesService } from './../../services/timeseries-service.service';
 
@@ -9,7 +10,7 @@ import { TimeseriesService } from './../../services/timeseries-service.service';
   selector: 'helgoland-timeseries-list-selector',
   templateUrl: './timeseries-list-selector.component.html',
   styleUrls: ['./timeseries-list-selector.component.scss'],
-  imports: [MatListModule],
+  imports: [MatListModule, TranslateModule],
 })
 export class TimeseriesListSelectorComponent extends MultiServiceFilterSelectorComponent {
   protected timeseriesSrvc = inject(TimeseriesService);

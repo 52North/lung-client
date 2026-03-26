@@ -1,0 +1,135 @@
+:host {
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    height: 100%;
+    overflow: hidden;
+
+    .selection {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      gap: 0;
+      border-right: 1px solid #e0e2e7;
+      overflow: hidden;
+
+      .section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0.75rem;
+        border-right: 1px solid #f0f1f5;
+        overflow-y: auto;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        .section-header {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #75777b;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid #cde5ff;
+        }
+
+        .entry-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .entry {
+          width: 100%;
+          text-align: left;
+          font-size: 0.85rem;
+          border-radius: 6px;
+          border-color: #c4c6cb;
+          margin: 0;
+          color: #2e3134;
+          padding: 0 10px;
+          min-height: 36px;
+          line-height: 1.3;
+          white-space: normal;
+          height: auto;
+
+          &.active {
+            background-color: #cde5ff;
+            border-color: #0f6395;
+            color: #003351;
+            font-weight: 600;
+          }
+
+          &:hover:not(.active) {
+            background-color: #e7f2ff;
+            border-color: #367cb0;
+          }
+        }
+      }
+    }
+
+    .stations {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 0.75rem;
+
+      .stations-header {
+        margin-bottom: 0.5rem;
+
+        .stations-count {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #75777b;
+        }
+      }
+
+      .search-field {
+        width: 100%;
+      }
+
+      .station-list {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .station-entry {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        color: #2e3134;
+        transition: background-color 0.15s ease;
+
+        .station-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: #0f6395;
+          flex-shrink: 0;
+        }
+
+        &:hover {
+          background-color: #e7f2ff;
+        }
+
+        &:active {
+          background-color: #cde5ff;
+        }
+      }
+    }
+  }
+}

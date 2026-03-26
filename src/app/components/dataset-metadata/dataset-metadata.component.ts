@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SeriesGraphDataset } from '@helgoland/d3';
+import { TranslateModule } from '@ngx-translate/core';
 import { ModalMetadataPreviewComponent } from './modal-metadata-preview/modal-metadata-preview.component';
 
 const keyMapping: Record<string, string> = {
@@ -18,7 +19,7 @@ const keyMapping: Record<string, string> = {
 @Component({
   selector: 'helgoland-dataset-metadata',
   templateUrl: './dataset-metadata.component.html',
-  imports: [MatExpansionModule, MatButtonModule],
+  imports: [MatExpansionModule, MatButtonModule, TranslateModule],
   styleUrls: ['./dataset-metadata.component.scss'],
 })
 export class DatasetMetadataComponent {

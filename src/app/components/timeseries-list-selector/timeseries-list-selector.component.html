@@ -1,8 +1,8 @@
 @if (loading) {
-  <div>loading...</div>
+  <div>{{ 'timeseries-list-selector.loading' | translate }}</div>
 }
 @if (!loading && items.length === 0) {
-  <div>no results found</div>
+  <div>{{ 'timeseries-list-selector.no-results' | translate }}</div>
 }
 <mat-selection-list
   #parameters

@@ -1,15 +1,17 @@
 <button
   mat-icon-button
   [matMenuTriggerFor]="menu"
-  aria-label="Datenexport"
-  matTooltip="Datenexport"
+  [attr.aria-label]="'download-data.title' | translate"
+  [matTooltip]="'download-data.title' | translate"
 >
   <mat-icon>download</mat-icon>
 </button>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="exportCSV()">Daten als CSV exportieren</button>
+  <button mat-menu-item (click)="exportCSV()">
+    {{ "download-data.csv-export" | translate }}
+  </button>
   <button mat-menu-item (click)="exportXSLX()">
-    Daten als XSLX exportieren
+    {{ "download-data.xlsx-export" | translate }}
   </button>
 </mat-menu>

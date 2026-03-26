@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { CategorySelectionService } from './category-selection.service';
@@ -8,8 +10,8 @@ import { CategorySelectionService } from './category-selection.service';
 @Component({
   selector: 'app-category-selection',
   templateUrl: './category-selection.component.html',
-  styleUrls: ['./category-selection.component.css'],
-  imports: [CommonModule, MatFormFieldModule, TranslateModule, MatInputModule],
+  styleUrls: ['./category-selection.component.scss'],
+  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatIconModule, TranslateModule, MatInputModule],
 })
 export class CategorySelectionComponent {
   protected srvc = inject(CategorySelectionService);

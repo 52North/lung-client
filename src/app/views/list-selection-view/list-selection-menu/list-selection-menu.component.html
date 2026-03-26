@@ -1,0 +1,53 @@
+<div class="list-selection-state">
+  @if (srvc.stationsResource.value(); as stations) {
+    <div class="station-count">
+      {{
+        "category-selection.found-stations"
+          | translate: { stations: stations.length }
+      }}
+    </div>
+  }
+
+  @if (!srvc.selectedCategoryOne()) {
+    <div class="hint">
+      {{ "category-selection.select-hint" | translate }}
+    </div>
+  }
+
+  @if (srvc.selectedCategoryOne()) {
+    <div class="category-entry">
+      <span class="label"
+        >{{ "category-selection.category1" | translate }}:</span
+      >
+      <span class="value">{{ srvc.selectedCategoryOne() }}</span>
+    </div>
+  }
+  @if (srvc.selectedCategoryTwo()) {
+    <div class="category-entry">
+      <span class="label"
+        >{{ "category-selection.category2" | translate }}:</span
+      >
+      <span class="value">{{ srvc.selectedCategoryTwo() }}</span>
+    </div>
+  }
+  @if (srvc.selectedCategoryThree()) {
+    <div class="category-entry">
+      <span class="label"
+        >{{ "category-selection.category3" | translate }}:</span
+      >
+      <span class="value">{{ srvc.selectedCategoryThree() }}</span>
+    </div>
+  }
+  @if (srvc.selectedCategoryFour()) {
+    <div class="category-entry">
+      <span class="label"
+        >{{ "category-selection.category4" | translate }}:</span
+      >
+      <span class="value">{{ srvc.selectedCategoryFour() }}</span>
+    </div>
+  }
+
+  <div class="toggle-active">
+    <app-category-selection-active-toggle></app-category-selection-active-toggle>
+  </div>
+</div>

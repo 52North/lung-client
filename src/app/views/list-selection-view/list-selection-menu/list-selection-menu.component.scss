@@ -33,10 +33,10 @@
 }
 
 .station-count {
-  font-size: 13px;
+  font-size: 18px;
   color: #444;
   padding: 4px 8px;
-  border-top: 1px solid #e0e0e0;
+  text-align: center;
   margin-top: 4px;
 }
 
@@ -45,4 +45,8 @@
   color: #777;
   font-style: italic;
   padding: 4px 0;
+}
+
+.toggle-active {
+  text-align: center;
 }
