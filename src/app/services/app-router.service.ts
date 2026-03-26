@@ -1,12 +1,15 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, Signal, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
+import { filter, map, startWith } from 'rxjs';
 
 import { ListSelectionComponent } from '../components/list-selection/list-selection.component';
 import { MapSelectionComponent } from './../components/map-selection/map-selection.component';
 
 export const MAP_SELECTION_ROUTE = 'map-selection';
 export const LIST_SELECTION_ROUTE = 'list-selection';
+export const TABLE_VIEW_ROUTE = 'table';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +17,16 @@ export const LIST_SELECTION_ROUTE = 'list-selection';
 export class AppRouterService {
   private router = inject(Router);
   private dialog = inject(MatDialog);
+
+  isTableView: Signal<boolean> = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map((e) => (e as NavigationEnd).urlAfterRedirects),
+      startWith(this.router.url),
+      map((url) => url === '/' + TABLE_VIEW_ROUTE || url === TABLE_VIEW_ROUTE),
+    ),
+    { requireSync: true },
+  );
 
   constructor() {
     this.router.events.subscribe((val) => {
@@ -30,6 +43,10 @@ export class AppRouterService {
 
   toDiagram() {
     this.router.navigate(['']);
+  }
+
+  toTable() {
+    this.router.navigate([TABLE_VIEW_ROUTE]);
   }
 
   toMapSelection() {

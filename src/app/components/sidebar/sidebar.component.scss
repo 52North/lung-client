@@ -28,21 +28,26 @@
   }
 
   &.right .sidebar-panel {
+    width: 400px;
     border-right: none;
     border-left: 1px solid #ddd;
   }
 
   &.right.collapsed .sidebar-panel {
+    width: 0;
     border-left-width: 0;
   }
 
   .sidebar-content {
     width: 280px;
     height: 100%;
-    overflow: auto;
-    padding: 8px;
+    overflow: hidden;
     opacity: 1;
     transition: opacity 0.2s ease;
+  }
+
+  &.right .sidebar-content {
+    width: 400px;
   }
 
   &.collapsed .sidebar-content {
@@ -70,13 +75,6 @@
     &:hover {
       background: #f0f0f0;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
-    }
-
-    .handle-icon {
-      font-size: 18px;
-      line-height: 1;
-      user-select: none;
-      color: #444;
     }
   }
 

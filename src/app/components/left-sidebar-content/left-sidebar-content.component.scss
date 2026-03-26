@@ -1,0 +1,100 @@
+:host {
+    display: flex;
+    height: 100%;
+    width: 100%;
+
+    .left-sidebar {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 12px;
+        border-bottom: 1px solid #e0e0e0;
+
+        .logo {
+            height: 36px;
+            width: auto;
+            flex-shrink: 0;
+        }
+
+        .portal-title {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.35;
+            color: #1a3c5e;
+            letter-spacing: 0.01em;
+        }
+    }
+
+    .sidebar-main {
+        flex: 1;
+        overflow: auto;
+    }
+
+    .divider {
+        border: none;
+        border-top: 1px solid #e0e0e0;
+        margin: 0 0 1px;
+    }
+
+    .menu-group {
+        padding: 20px 20px;
+
+        .menu-item {
+            display: flex;
+            width: 100%;
+            padding: 10px 20px;
+            color: #000;
+            justify-content: left;
+        }
+    }
+
+    .info-overlay {
+        position: absolute;
+        inset: 0;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        animation: slide-in 0.2s ease;
+        z-index: 10;
+
+        .overlay-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+
+            .overlay-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #1a3c5e;
+            }
+        }
+
+        .overlay-nav {
+            overflow: auto;
+            flex: 1;
+        }
+    }
+
+    @keyframes slide-in {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
+
+}

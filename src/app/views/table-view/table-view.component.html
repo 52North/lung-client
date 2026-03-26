@@ -1,0 +1,22 @@
+<div class="table-view-container">
+  @if (graphDatasetsSrvc.datasets().length === 0) {
+    <div class="no-timeseries">
+      {{ "diagram-view.no-timeseries.hint" | translate }}
+    </div>
+  } @else {
+    <div class="table-content">
+      <helgoland-data-table
+        [datasets]="graphDatasetsSrvc.datasets()"
+        [timespan]="graphDatasetsSrvc.timespan"
+      ></helgoland-data-table>
+    </div>
+    @if (graphDatasetsSrvc.timespan) {
+      <div class="time-selection">
+        <helgoland-general-time-selection
+          [timespan]="graphDatasetsSrvc.timespan"
+          (timespanChanged)="graphDatasetsSrvc.timespan = $event"
+        ></helgoland-general-time-selection>
+      </div>
+    }
+  }
+</div>

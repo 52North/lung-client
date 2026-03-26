@@ -1,0 +1,102 @@
+<div class="right-sidebar">
+  <div class="auth-controls">
+    <app-authentication />
+    <app-username></app-username>
+  </div>
+
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <helgoland-modal-main-config-button></helgoland-modal-main-config-button>
+      @if (graphDatasetsSrvc.datasetsSelected()) {
+        <button
+          mat-icon-button
+          (click)="this.graphDatasetsSrvc.clearSelections()"
+          attr.aria-label="{{
+            'diagram-view.clear-selection.tooltip' | translate
+          }}"
+          matTooltip="{{ 'diagram-view.clear-selection.tooltip' | translate }}"
+        >
+          <mat-icon color="accent">remove_done</mat-icon>
+        </button>
+      }
+      @if (!appRouter.isTableView()) {
+        <button
+          mat-icon-button
+          attr.aria-label="{{
+            'diagram-view.table-button.tooltip' | translate
+          }}"
+          (click)="appRouter.toTable()"
+          matTooltip="{{ 'diagram-view.table-button.tooltip' | translate }}"
+        >
+          <mat-icon>view_list</mat-icon>
+        </button>
+      }
+      @if (appRouter.isTableView()) {
+        <button
+          mat-icon-button
+          attr.aria-label="{{
+            'diagram-view.chart-button.tooltip' | translate
+          }}"
+          (click)="appRouter.toDiagram()"
+          matTooltip="{{ 'diagram-view.chart-button.tooltip' | translate }}"
+        >
+          <mat-icon>show_chart</mat-icon>
+        </button>
+      }
+      <div style="flex: 1"></div>
+      <!-- <app-authentication /> -->
+      <helgoland-download-data
+        [datasets]="graphDatasetsSrvc.datasets()"
+        [timespan]="graphDatasetsSrvc.timespan"
+      ></helgoland-download-data>
+      @if (graphDatasetsSrvc.datasets().length) {
+        <button
+          mat-icon-button
+          (click)="this.graphDatasetsSrvc.deleteAllDatasets()"
+          attr.aria-label="{{
+            'diagram-view.remove-legend-entries.tooltip' | translate
+          }}"
+          matTooltip="{{
+            'diagram-view.remove-legend-entries.tooltip' | translate
+          }}"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      }
+      <helgoland-share-button
+        [generatedUrlFunction]="initStateService.generatePermalink"
+      ></helgoland-share-button>
+      <helgoland-modal-favorite-list-button style="margin-right: 10px">
+      </helgoland-modal-favorite-list-button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="legend">
+    <div class="entries">
+      <mat-accordion [multi]="true">
+        @for (dataset of graphDatasetsSrvc.allDatasets(); track dataset) {
+          @if (isLoading(dataset)) {
+            <mat-expansion-panel [disabled]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+            </mat-expansion-panel>
+          } @else {
+            <helgoland-dataset-legend-entry
+              [dataset]="dataset"
+              [timeInterval]="graphDatasetsSrvc.timespan"
+              [selected]="false"
+              (selectDate)="jumpToDate($event)"
+              (selectTimespan)="setTimespan($event)"
+              (datasetDeleted)="
+                this.graphDatasetsSrvc.deleteDataset(dataset.id, true)
+              "
+            />
+          }
+        }
+      </mat-accordion>
+    </div>
+  </div>
+</div>

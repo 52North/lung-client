@@ -4,13 +4,17 @@
   </div> -->
 
   <div class="main-area">
-    <app-sidebar position="left" [collapsible]="true"></app-sidebar>
+    <app-sidebar position="left" [collapsible]="true">
+      <app-left-sidebar-content />
+    </app-sidebar>
 
     <div class="content">
       <router-outlet></router-outlet>
     </div>
 
-    <app-sidebar position="right" [collapsible]="true"></app-sidebar>
+    <app-sidebar position="right" [collapsible]="true">
+      <app-right-sidebar-content />
+    </app-sidebar>
   </div>
 
   <div class="footer"></div>

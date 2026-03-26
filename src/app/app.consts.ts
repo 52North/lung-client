@@ -3,6 +3,13 @@ import { icon, Marker } from 'leaflet';
 
 export const ROUTES: Routes = [
   {
+    path: 'table',
+    loadComponent: () =>
+      import('./views/table-view/table-view.component').then(
+        (m) => m.TableViewComponent,
+      ),
+  },
+  {
     path: '**',
     pathMatch: 'full',
     loadComponent: () =>

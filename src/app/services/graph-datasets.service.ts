@@ -4,9 +4,8 @@ import {
   Injectable,
   WritableSignal,
   computed,
-  effect,
   inject,
-  signal,
+  signal
 } from '@angular/core';
 import { Time, Timespan, TimezoneService } from '@helgoland/core';
 import { SeriesGraphDataset } from '@helgoland/d3';
@@ -17,7 +16,6 @@ import { Subject } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
 import { NotifierService } from './notifier.service';
 import { StorageService } from './storage-service.service';
-import { TimeseriesService } from './timeseries-service.service';
 
 const TIME_CACHE_PARAM = 'timeseriesTime';
 

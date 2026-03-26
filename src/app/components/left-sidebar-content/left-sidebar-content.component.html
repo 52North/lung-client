@@ -1,0 +1,108 @@
+<div class="left-sidebar">
+  <div class="sidebar-header">
+    <img src="assets/img/mv_tut_gut_kl.png" alt="MV Logo" class="logo" />
+    <div class="portal-title">Messdatenportal<br />Umwelt</div>
+  </div>
+
+  <div class="sidebar-main">
+    <div class="menu-group">
+      <button mat-button class="menu-item" (click)="openMapSelection()">
+        <mat-icon class="menu-icon">map</mat-icon>
+        {{ "diagram-view.add-timeseries.map" | translate }}
+      </button>
+      <button mat-button class="menu-item" (click)="openListSelection()">
+        <mat-icon class="menu-icon">list</mat-icon>
+        {{ "diagram-view.add-timeseries.list" | translate }}
+      </button>
+    </div>
+    <hr class="divider" />
+  </div>
+
+  <hr class="divider" />
+
+  <nav class="menu-group">
+    <a
+      matButton
+      class="menu-item"
+      href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
+    >
+      <mat-icon class="menu-icon">bookmark</mat-icon>
+      <span>AGB</span>
+    </a>
+
+    <a matButton class="menu-item" href="#">
+      <mat-icon class="menu-icon">help_outline</mat-icon>
+      <span>Hilfe</span>
+    </a>
+
+    <button
+      matButton
+      class="menu-item"
+      type="button"
+      (click)="showInfoOverlay = true"
+    >
+      <mat-icon class="menu-icon">bookmarks</mat-icon>
+      <span>Information &amp; Kontakt</span>
+    </button>
+
+    <a
+      matButton
+      class="menu-item"
+      href="https://metaver.de/trefferanzeige?docuuid=5009D09B-6916-4E0C-B956-7039176638A6"
+    >
+      <mat-icon class="menu-icon">info</mat-icon>
+      <span>Über dieses Portal</span>
+    </a>
+  </nav>
+
+  @if (showInfoOverlay) {
+    <div class="info-overlay">
+      <div class="overlay-header">
+        <button matIconButton type="button" (click)="showInfoOverlay = false">
+          <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+        <span class="overlay-title">Information &amp; Kontakt</span>
+      </div>
+
+      <nav class="menu-group">
+        <a
+          matButton
+          class="menu-item"
+          href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
+        >
+          <mat-icon class="menu-icon">article</mat-icon>
+          <span>Impressum &amp; Kontakt</span>
+        </a>
+
+        <a
+          matButton
+          class="menu-item"
+          href="https://umweltportal.mv-regierung.de/portale/impressum.html#barrierefrei"
+        >
+          <mat-icon class="menu-icon">accessibility_new</mat-icon>
+          <span>Barrierefreiheitserklärung</span>
+        </a>
+
+        <a
+          matButton
+          class="menu-item"
+          href="https://umweltportal.mv-regierung.de/portale/datenschutz.html"
+        >
+          <mat-icon class="menu-icon">privacy_tip</mat-icon>
+          <span>Datenschutzerklärung</span>
+        </a>
+
+        <a
+          matButton
+          class="menu-item"
+          href="https://www.lung.mv-regierung.de/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <mat-icon class="menu-icon">open_in_new</mat-icon>
+          <span>Webseite des LUNG</span>
+        </a>
+      </nav>
+    </div>
+  }
+</div>

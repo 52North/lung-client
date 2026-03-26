@@ -1,4 +1,8 @@
-<div class="sidebar-wrapper" [class.collapsed]="collapsed" [class.right]="position === 'right'">
+<div
+  class="sidebar-wrapper"
+  [class.collapsed]="collapsed"
+  [class.right]="position === 'right'"
+>
   <div class="sidebar-panel">
     <div class="sidebar-content">
       <ng-content></ng-content>
@@ -10,10 +14,19 @@
       [style.top]="handleTop"
       (click)="collapsed = !collapsed"
       [attr.aria-label]="collapsed ? 'Sidebar öffnen' : 'Sidebar schließen'"
-      [attr.title]="collapsed ? 'Sidebar öffnen' : 'Sidebar schließen'">
-      <span class="handle-icon">
-        {{ position === 'left' ? (collapsed ? '›' : '‹') : (collapsed ? '‹' : '›') }}
-      </span>
+      [attr.title]="collapsed ? 'Sidebar öffnen' : 'Sidebar schließen'"
+    >
+      <mat-icon>
+        {{
+          position === "left"
+            ? collapsed
+              ? "keyboard_arrow_right"
+              : "keyboard_arrow_left"
+            : collapsed
+              ? "keyboard_arrow_left"
+              : "keyboard_arrow_right"
+        }}
+      </mat-icon>
     </button>
   }
 </div>

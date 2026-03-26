@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .right-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .auth-controls {
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    mat-toolbar {
+      flex: 0 0 auto;
+    }
+
+    .legend {
+      flex: 1;
+      overflow: auto;
+
+      .entries {
+        padding: 5px;
+      }
+    }
+  }
+}
