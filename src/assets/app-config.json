@@ -1,12 +1,12 @@
 {
     "defaultService": {
         "serviceId": "1",
-        "apiUrl": "https://mdpu.dev.52north.org/FROST-Server/v1.1/"
+        "apiUrl": "https://umweltportal.mv-regierung.de/mdpu/FROST-Server/v1.1/"
     },
     "datasetApis": [
         {
-            "name": "https://mdpu.dev.52north.org/FROST-Server/v1.1/",
-            "url": "https://mdpu.dev.52north.org/FROST-Server/v1.1/",
+            "name": "https://umweltportal.mv-regierung.de/mdpu/FROST-Server/v1.1/",
+            "url": "https://umweltportal.mv-regierung.de/mdpu/FROST-Server/v1.1/",
             "connector": "LungStaApiConnector"
         }
     ],
@@ -37,19 +37,6 @@
             }
         },
         {
-            "label": "GDI-MV DOP WMS",
-            "visible": false,
-            "type": "wms",
-            "url": " https://www.geodaten-mv.de/dienste/adv_dop?",
-            "options": {
-                "layers": "mv_dop",
-                "format": "image/png",
-                "transparent": true,
-                "minZoom": 11,
-                "attribution": "&copy; GeoBasis-DE/M-V 2025"
-            }
-        },
-        {
             "label": "Luftbild MV (20 cm)",
             "visible": false,
             "type": "tilelayer",
@@ -59,33 +46,20 @@
                 "minZoom": 10,
                 "attribution": "&copy; GeoBasis-DE/M-V 2025"
             }
-        },
-        {
-            "label": "Gebäude 2D",
-            "visible": false,
-            "type": "wms",
-            "url": "https://www.geodaten-mv.de/dienste/gebaeude_wms?",
-            "options": {
-                "layers": "gebaeude",
-                "format": "image/png",
-                "transparent": true,
-                "minZoom": 14,
-                "attribution": "&copy; GeoBasis-DE/M-V 2025"
-            }
         }
     ],
     "dataTableVisible": true,
     "keycloak": {
         "config": {
-           "url": "https://mdpu.dev.52north.org/auth" ,
+           "url": "https://umweltportal.mv-regierung.de/mdpu/auth",
            "realm": "mdpu",
            "clientId": "lung-client"
         },
         "bearerTokenCondition": {
-            "urlPattern": "mdpu.dev.52north.org(\\/.*)?$",
+            "urlPattern": "^(https:\\/\\/umweltportal.mv-regierung.de)(\\/.*)?$",
             "bearerPrefix": "Bearer"
         },
         "adminGroup": "admin",
-        "adminUrl": "https://mdpu.dev.52north.org/auth/admin/mdpu/console/"
+        "adminUrl": "https://umweltportal.mv-regierung.de/mdpu/auth/admin/mdpu/console/"
     }
 }
