@@ -125,7 +125,7 @@ const initializeApp = async () => {
         config: config.keycloak.config,
         initOptions: {
           onLoad: 'check-sso',
-          silentCheckSsoRedirectUri: `${window.location.origin}/assets/silent-check-sso.html`,
+          silentCheckSsoRedirectUri: `${window.location.origin}/mdpu/assets/silent-check-sso.html`,
         },
       }),
       {
