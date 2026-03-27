@@ -74,7 +74,7 @@
   <div class="legend">
     <div class="entries">
       <mat-accordion [multi]="true">
-        @for (dataset of graphDatasetsSrvc.allDatasets(); track dataset) {
+        @for (dataset of graphDatasetsSrvc.allDatasets(); track dataset.id) {
           @if (isLoading(dataset)) {
             <mat-expansion-panel [disabled]="true">
               <mat-expansion-panel-header>

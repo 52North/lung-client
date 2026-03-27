@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import {
   DatasetFilter,
   DatastreamExpandParams,
@@ -28,6 +29,7 @@ interface StaRefValue {
   referenceValueId: string;
 }
 
+@Injectable()
 export class LungStaApiConnector extends StaApiV1Connector {
   override name = 'LungStaApiConnector';
 
