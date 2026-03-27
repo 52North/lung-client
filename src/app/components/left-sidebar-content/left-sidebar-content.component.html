@@ -6,6 +6,19 @@
 
   <div class="sidebar-main">
     <div class="menu-group">
+      <button mat-button class="menu-item" (click)="openDatasource()">
+        <mat-icon class="menu-icon">storage</mat-icon>
+        {{ "change-data-source.button-label" | translate }}
+      </button>
+      @if (selectedDataSource.selectedService()) {
+        <div class="selected-service-label">
+          <span>{{ selectedDataSource.selectedService()!.label }}</span>
+        </div>
+        <span class="selected-service-url">{{ selectedDataSource.selectedService()!.apiUrl }}</span>
+      }
+    </div>
+    <hr class="divider" />
+    <div class="menu-group">
       <button mat-button class="menu-item" (click)="openMapSelection()">
         <mat-icon class="menu-icon">map</mat-icon>
         {{ "diagram-view.add-timeseries.map" | translate }}

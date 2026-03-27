@@ -1,10 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {
   BlacklistedService,
@@ -15,8 +11,8 @@ import {
 } from '@helgoland/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfigurationService } from '../../../services/configuration.service';
+import { SelectedDataSourceService } from '../../../services/selected-data-source.service';
 import { ServiceListSelectorComponent } from '../../service-list-selector/service-list-selector.component';
-import { ChangeDataSourceProps } from '../change-data-source.component';
 
 @Component({
   selector: 'app-change-data-source-modal',
@@ -34,7 +30,7 @@ export class ChangeDataSourceModalComponent {
   protected dialogRef =
     inject<MatDialogRef<ChangeDataSourceModalComponent>>(MatDialogRef);
   private configSrvc = inject(ConfigurationService);
-  protected props = inject<ChangeDataSourceProps>(MAT_DIALOG_DATA);
+  protected selectedDataSourceSrvc = inject(SelectedDataSourceService);
 
   protected filter: HelgolandParameterFilter = {
     type: DatasetType.Timeseries,
@@ -49,6 +45,6 @@ export class ChangeDataSourceModalComponent {
   }
 
   protected serviceSelected(srvc: HelgolandService) {
-    this.props.selectedDatasetSrvc = srvc;
+    this.selectedDataSourceSrvc.select(srvc);
   }
 }

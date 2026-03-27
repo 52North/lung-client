@@ -1,4 +1,4 @@
-@if (loadingCount > 0) {
+@if (loadingCount() > 0) {
   <mat-progress-bar mode="indeterminate" />
 }
 
@@ -6,7 +6,7 @@
   [multiple]="false"
   (selectionChange)="selectService($event.options[0].value)"
 >
-  @for (service of services; track service) {
+  @for (service of services(); track service) {
     <mat-list-option [value]="service" [selected]="isSelected(service)">
       <span matListItemTitle>
         <span>{{ service.label }}</span>
@@ -45,7 +45,7 @@
 </mat-selection-list>
 
 <div class="unresolvable-services">
-  @for (item of unResolvableServices; track item) {
+  @for (item of unResolvableServices(); track item) {
     <div style="font-size: 70%">{{ item.url }} is currently not reachable</div>
   }
 </div>

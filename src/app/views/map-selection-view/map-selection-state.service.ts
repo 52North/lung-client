@@ -1,16 +1,16 @@
-import { computed, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import {
   DatasetType,
   HelgolandParameterFilter,
-  HelgolandService,
-  Phenomenon,
+  Phenomenon
 } from '@helgoland/core';
+import { SelectedDataSourceService } from '../../services/selected-data-source.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapSelectionStateService {
-  selectedService: WritableSignal<HelgolandService | undefined> = signal(undefined);
+  private selectedDataSourceSrvc = inject(SelectedDataSourceService);
 
   selectedPhenomenonId: WritableSignal<string | undefined> = signal(undefined);
 
@@ -25,7 +25,7 @@ export class MapSelectionStateService {
   }
 
   stationFilter = computed<HelgolandParameterFilter | undefined>(() => {
-    const service = this.selectedService();
+    const service = this.selectedDataSourceSrvc.selectedService();
     if (!service) return undefined;
     return {
       type: DatasetType.Timeseries,

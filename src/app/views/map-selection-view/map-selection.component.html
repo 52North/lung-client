@@ -5,7 +5,7 @@
   ></helgoland-layers-control>
   <station-map-selector
     [mapId]="mapId"
-    [serviceUrl]="state.selectedService()?.apiUrl"
+    [serviceUrl]="selectedDataSourceSrvc.selectedService()?.apiUrl"
     [baseMaps]="baseMaps"
     [filter]="state.stationFilter()"
     [clusterConfig]="clusterConfig"

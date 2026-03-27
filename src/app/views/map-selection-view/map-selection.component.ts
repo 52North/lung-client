@@ -11,21 +11,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { HelgolandPlatform, HelgolandServicesConnector } from '@helgoland/core';
+import { HelgolandPlatform } from '@helgoland/core';
 import { LayerCreator, LayerOptions, MapCache } from '@helgoland/map';
 import { TranslateModule } from '@ngx-translate/core';
 import { MarkerClusterGroupOptions } from 'leaflet';
 
 import { LayersControlComponent } from '../../components/layers-control/layers-control.component';
 import { ModalDatasetByStationSelectorComponent } from '../../components/modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
-import { MapConfig, ModalMapSettingsComponent } from '../../components/modal-map-settings/modal-map-settings.component';
+import { MapConfig } from '../../components/modal-map-settings/modal-map-settings.component';
 import { AppRouterService } from '../../services/app-router.service';
 import {
   AppConfig,
   ConfigurationService,
 } from '../../services/configuration.service';
-import { ErrorHandlerService } from '../../services/error-handler.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
+import { SelectedDataSourceService } from '../../services/selected-data-source.service';
 import { MapSelectionStateService } from './map-selection-state.service';
 import { StationMapSelectorComponent } from './station-map-selector/station-map-selector.component';
 
@@ -52,8 +52,7 @@ export class MapSelectionComponent implements OnInit {
   protected graphDatasetsSrvc = inject(DatasetsService);
   private configSrvc =
     inject<ConfigurationService<MapSelectionAppConfig>>(ConfigurationService);
-  private serviceConnector = inject(HelgolandServicesConnector);
-  private errorHandler = inject(ErrorHandlerService);
+  protected selectedDataSourceSrvc = inject(SelectedDataSourceService);
   private dialog = inject(MatDialog);
   private mapCache = inject(MapCache);
   protected state = inject(MapSelectionStateService);
@@ -69,25 +68,6 @@ export class MapSelectionComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    if (
-      !this.state.selectedService() &&
-      this.configSrvc.configuration.defaultService
-    ) {
-      this.serviceConnector
-        .getServices(this.configSrvc.configuration?.defaultService.apiUrl)
-        .subscribe({
-          next: (services) => {
-            const service = services.find(
-              (e) =>
-                e.id ===
-                this.configSrvc.configuration?.defaultService!.serviceId,
-            );
-            this.state.selectedService.set(service);
-            this.cdr.markForCheck();
-          },
-          error: (error) => this.errorHandler.error(error),
-        });
-    }
     this.clusterConfig =
       this.configSrvc.configuration.mapSelectionClusterConfig;
 
@@ -101,7 +81,8 @@ export class MapSelectionComponent implements OnInit {
   }
 
   onStationSelected(station: HelgolandPlatform) {
-    if (this.state.selectedService()) {
+    const service = this.selectedDataSourceSrvc.selectedService();
+    if (service) {
       this.cdr.markForCheck();
       const dialogRef = this.dialog.open(
         ModalDatasetByStationSelectorComponent,
@@ -111,10 +92,7 @@ export class MapSelectionComponent implements OnInit {
         },
       );
       dialogRef.componentRef?.setInput('station', station);
-      dialogRef.componentRef?.setInput(
-        'url',
-        this.state.selectedService()!.apiUrl,
-      );
+      dialogRef.componentRef?.setInput('url', service.apiUrl);
       dialogRef.componentRef?.setInput(
         'phenomenonId',
         this.state.selectedPhenomenonId(),
@@ -123,27 +101,6 @@ export class MapSelectionComponent implements OnInit {
       dialogRef.afterClosed().subscribe((newConf: MapConfig) => {
         if (newConf) {
           this.cluster = newConf.cluster;
-          this.state.selectedService.set(newConf.selectedService);
-          this.cdr.markForCheck();
-        }
-      });
-    }
-  }
-
-  openMapSettings() {
-    if (this.state.selectedService()) {
-      const conf: MapConfig = {
-        cluster: this.cluster,
-        selectedService: this.state.selectedService()!,
-      };
-      const dialogRef = this.dialog.open(ModalMapSettingsComponent, {
-        data: conf,
-      });
-      dialogRef.afterClosed().subscribe((newConf: MapConfig) => {
-        if (newConf) {
-          this.cluster = newConf.cluster;
-          this.state.selectedService.set(newConf.selectedService);
-          this.state.selectedPhenomenonId.set(undefined);
           this.cdr.markForCheck();
         }
       });

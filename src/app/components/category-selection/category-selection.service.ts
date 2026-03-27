@@ -9,7 +9,7 @@ import {
   ThingSelectParams,
 } from '@helgoland/core';
 import { firstValueFrom, map, Observable, of } from 'rxjs';
-import { ConfigurationService } from '../../services/configuration.service';
+import { SelectedDataSourceService } from '../../services/selected-data-source.service';
 import { ModalDatasetByStationSelectorComponent } from '../modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
 
 const CAT_ONE_PROP = 'gew_art';
@@ -18,6 +18,7 @@ const CAT_THREE_PROP = 'kat2';
 const CAT_FOUR_PROP = 'matrix';
 
 interface RequestParams {
+  url: string | undefined;
   categoryOne?: string;
   categoryTwo?: string;
   categoryThree?: string;
@@ -30,10 +31,12 @@ interface RequestParams {
 })
 export class CategorySelectionService {
   private staSrvc = inject(StaInterfaceService);
-  private configSrvc = inject(ConfigurationService);
+  private selectedDataSourceSrvc = inject(SelectedDataSourceService);
   private dialog = inject(MatDialog);
 
-  private staUrl = this.configSrvc.configuration.defaultService.apiUrl;
+  private staUrl = computed(
+    () => this.selectedDataSourceSrvc.selectedService()?.apiUrl,
+  );
 
   private categoryOne = signal<string | undefined>(undefined);
   private categoryTwo = signal<string | undefined>(undefined);
@@ -56,6 +59,7 @@ export class CategorySelectionService {
 
   stationsResource = resource({
     params: computed<RequestParams>(() => ({
+      url: this.staUrl(),
       categoryOne: this.categoryOne(),
       categoryTwo: this.categoryTwo(),
       categoryThree: this.categoryThree(),
@@ -66,12 +70,16 @@ export class CategorySelectionService {
   });
 
   categoryOneResource = resource({
-    params: this._showActiveOnly,
+    params: computed(() => ({
+      url: this.staUrl(),
+      showActiveOnly: this._showActiveOnly(),
+    })),
     loader: ({ params }) => firstValueFrom(this.getCategoryOne(params)),
   });
 
   categoryTwoResource = resource({
     params: computed(() => ({
+      url: this.staUrl(),
       categoryOne: this.categoryOne(),
       showActiveOnly: this._showActiveOnly(),
     })),
@@ -80,6 +88,7 @@ export class CategorySelectionService {
 
   categoryThreeResource = resource({
     params: computed(() => ({
+      url: this.staUrl(),
       categoryOne: this.categoryOne(),
       categoryTwo: this.categoryTwo(),
       showActiveOnly: this._showActiveOnly(),
@@ -89,6 +98,7 @@ export class CategorySelectionService {
 
   categoryFourResource = resource({
     params: computed(() => ({
+      url: this.staUrl(),
       categoryOne: this.categoryOne(),
       categoryTwo: this.categoryTwo(),
       categoryThree: this.categoryThree(),
@@ -114,8 +124,10 @@ export class CategorySelectionService {
   }
 
   openStation(thing: Thing) {
+    const url = this.staUrl();
+    if (!url) return;
     this.staSrvc
-      .getThing(this.staUrl, thing['@iot.id'], {
+      .getThing(url, thing['@iot.id'], {
         $select: 'Locations',
         $expand: 'Locations($select=id)',
       })
@@ -132,7 +144,7 @@ export class CategorySelectionService {
             },
           );
           dialogRef.componentRef?.setInput('station', platform);
-          dialogRef.componentRef?.setInput('url', this.staUrl);
+          dialogRef.componentRef?.setInput('url', url);
           dialogRef.componentRef?.setInput('filterProperty', {
             property: CAT_FOUR_PROP,
             value: this.categoryFour(),
@@ -158,6 +170,7 @@ export class CategorySelectionService {
   }
 
   private getStations(params: RequestParams): Observable<Thing[]> {
+    if (!params.url) return of([]);
     const filter = this.createThingFilter(params);
 
     const queryParams: StaFilter<ThingSelectParams, ThingExpandParams> = {
@@ -167,15 +180,16 @@ export class CategorySelectionService {
     };
 
     return this.staSrvc
-      .getThings(this.staUrl, queryParams)
+      .getThings(params.url, queryParams)
       .pipe(map((res) => res.value));
   }
 
-  private getCategoryOne(showActiveOnly: boolean) {
+  private getCategoryOne(params: RequestParams) {
+    if (!params.url) return of([]);
     return this.staSrvc
-      .getThings(this.staUrl, {
+      .getThings(params.url, {
         $select: `distinct:properties/${CAT_ONE_PROP}`,
-        $filter: this.createThingFilter({ showActiveOnly }),
+        $filter: this.createThingFilter(params),
       })
       .pipe(
         map((res) =>
@@ -193,9 +207,9 @@ export class CategorySelectionService {
   }
 
   private getCategoryTwo(params: RequestParams) {
-    if (params.categoryOne) {
+    if (params.url && params.categoryOne) {
       return this.staSrvc
-        .getThings(this.staUrl, {
+        .getThings(params.url, {
           $select: `distinct:properties/${CAT_TWO_PROP}`,
           $filter: this.createThingFilter(params),
         })
@@ -218,9 +232,9 @@ export class CategorySelectionService {
   }
 
   private getCategoryThree(params: RequestParams) {
-    if (params.categoryOne && params.categoryTwo) {
+    if (params.url && params.categoryOne && params.categoryTwo) {
       return this.staSrvc
-        .getThings(this.staUrl, {
+        .getThings(params.url, {
           $select: `distinct:properties/${CAT_THREE_PROP}`,
           $filter: this.createThingFilter(params),
         })
@@ -243,9 +257,9 @@ export class CategorySelectionService {
   }
 
   private getCategoryFour(params: RequestParams): Observable<string[]> {
-    if (params.categoryOne && params.categoryTwo && params.categoryThree) {
+    if (params.url && params.categoryOne && params.categoryTwo && params.categoryThree) {
       return this.staSrvc
-        .getThings(this.staUrl, {
+        .getThings(params.url, {
           $select: `distinct:properties/${CAT_FOUR_PROP}`,
           $filter: this.createThingFilter(params),
         })

@@ -5,7 +5,7 @@
       [datasetApiList]="datasetApis"
       [filter]="filter"
       [providerBlacklist]="blacklist"
-      [selectedService]="props.selectedDatasetSrvc"
+      [selectedService]="selectedDataSourceSrvc.selectedService()"
       [supportStations]="true"
       (onServiceSelected)="serviceSelected($event)"
     ></helgoland-common-service-list-selector>
@@ -13,11 +13,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <div style="flex: 1"></div>
-  <button
-    mat-raised-button
-    [mat-dialog-close]="props.selectedDatasetSrvc"
-    cdkFocusInitial
-  >
+  <button mat-raised-button mat-dialog-close cdkFocusInitial>
     {{ "controls.ok" | translate }}
   </button>
 </mat-dialog-actions>
