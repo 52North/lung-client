@@ -1,5 +1,4 @@
 <div class="table-layout-container mat-elevation-z8">
-  
   <div class="table-scroll-wrapper">
     @if (dataSource()) {
       <table
@@ -27,15 +26,19 @@
           </ng-container>
         }
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     }
   </div>
-  <mat-paginator [length]="1000"
-        [pageSize]="100"
-        [pageSizeOptions]="[100, 1000, 2500, 10000]"
-        aria-label="Select page">
-</mat-paginator>
+  <mat-paginator
+    [length]="dataSource()?.data?.length"
+    [pageSize]="100"
+    [pageSizeOptions]="[100, 1000, 2500, 10000]"
+    aria-label="Select page"
+  >
+  </mat-paginator>
 </div>
-

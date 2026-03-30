@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   DoCheck,
@@ -10,15 +10,14 @@ import {
   IterableDiffers,
   signal,
   ViewChild,
-  WritableSignal,
+  WritableSignal
 } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator'; 
 import {
   HelgolandCoreModule,
-  Timespan,
-  TimezoneService,
+  Timespan
 } from '@helgoland/core';
 import { SeriesGraphDataset } from '@helgoland/d3';
 import { debounceTime, from, Subscription } from 'rxjs';
@@ -40,12 +39,16 @@ interface ColumnConfig {
   selector: 'helgoland-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
-  imports: [MatTableModule, HelgolandCoreModule, MatSortModule, MatPaginatorModule],
+  imports: [
+    MatTableModule,
+    HelgolandCoreModule,
+    MatSortModule,
+    MatPaginatorModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataTableComponent implements DoCheck {
+export class DataTableComponent implements DoCheck, AfterViewChecked {
   protected iterableDiffers = inject(IterableDiffers);
-  private timezoneSrvc = inject(TimezoneService);
 
   readonly datasets = input<SeriesGraphDataset[]>([]);
   private datasetsDiffer: IterableDiffer<SeriesGraphDataset>;
@@ -174,7 +177,8 @@ export class DataTableComponent implements DoCheck {
     },
   ];
 
-  dataSource: WritableSignal<MatTableDataSource<TableRow> | undefined> = signal(undefined);
+  dataSource: WritableSignal<MatTableDataSource<TableRow> | undefined> =
+    signal(undefined);
 
   protected get displayedColumns(): string[] {
     return this.visibleColumns.filter((e) => e.visible).map((e) => e.key);
@@ -189,6 +193,13 @@ export class DataTableComponent implements DoCheck {
       .subscribe((obs) => {
         this.calcData();
       });
+  }
+
+  ngAfterViewChecked(): void {
+    const ds = this.dataSource();
+    if (ds && this.sort && ds.sort !== this.sort) {
+      ds.sort = this.sort;
+    }
   }
 
   ngDoCheck(): void {
@@ -223,7 +234,7 @@ export class DataTableComponent implements DoCheck {
     const timespan = this.timespan();
     if (timespan === undefined) return;
     const datasource = new MatTableDataSource<TableRow>();
-    datasource.sort = this.sort
+    datasource.sort = this.sort;
     datasource.paginator = this.paginator;
     datasource.data = createDataTable(this.datasets(), timespan);
     this.dataSource.set(datasource);
