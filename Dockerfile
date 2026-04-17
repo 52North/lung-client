@@ -3,8 +3,9 @@ FROM node:24 AS BUILD
 RUN mkdir -p /usr/src/
 WORKDIR /usr/src/
 
-RUN git clone https://github.com/52North/helgoland-toolbox -b feature/debounce-d3
+RUN git clone https://github.com/52North/helgoland-toolbox
 WORKDIR /usr/src/helgoland-toolbox
+RUN git checkout c5b9d44fd30eecf037262335b1ef8ba588e0328c
 
 RUN npm install
 RUN npm run lib:build
@@ -28,7 +29,7 @@ FROM nginx:alpine
 
 # set default env variables
 ENV PORT=80
-ENV BASE_HREF /
+ENV BASE_HREF=/
 
 # copy nginx config
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
