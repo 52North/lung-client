@@ -16,9 +16,10 @@ WORKDIR /usr/src/app
 
 # copy package.json and install dependencies
 COPY package.json package-lock.json /usr/src/app/
+RUN npm install ../npm-builds/*
+
 RUN npm install
 
-RUN npm install ../npm-builds/*
 
 # copy the app and build it
 COPY . /usr/src/app
