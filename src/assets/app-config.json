@@ -33,7 +33,7 @@
             "options": {
                 "maxZoom": 19,
                 "minZoom": 7,
-                "attribution": "<a href=\"https://www.orka-mv.de//copyright\">Kartenbild &copy; Hanse- und Universitätsstadt Rostock (CC BY 4.0) | Kartendaten &copy; OpenStreetMap (ODbL) und LkKfS-MV</a>"
+                "attribution": "Kartenbild &copy; Hanse- und Universitätsstadt Rostock (<a href=\"https://creativecommons.org/licenses/by/4.0/deed.de\">CC BY 4.0</a>) | Kartendaten &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> (<a href=\"https://opendatacommons.org/licenses/odbl/index.html\">ODbL</a>) und LkKfS-MV</a>"
             }
         },
         {
