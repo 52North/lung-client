@@ -11,10 +11,10 @@
         {{ "change-data-source.button-label" | translate }}
       </button>
       @if (selectedDataSource.selectedService()) {
-        <div class="selected-service-label">
-          <span>{{ selectedDataSource.selectedService()!.label }}</span>
-        </div>
-        <span class="selected-service-url">{{ selectedDataSource.selectedService()!.apiUrl }}</span>
+      <div class="selected-service-label">
+        <span>{{ selectedDataSource.selectedService()!.label }}</span>
+      </div>
+      <span class="selected-service-url">{{ selectedDataSource.selectedService()!.apiUrl }}</span>
       }
     </div>
     <hr class="divider" />
@@ -34,11 +34,17 @@
   <hr class="divider" />
 
   <nav class="menu-group">
-    <a
-      matButton
-      class="menu-item"
-      href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
-    >
+    <a matButton class="menu-item" href="https://metaver.de/trefferanzeige?docuuid=AAAAAAAA">
+      <mat-icon class="menu-icon">cloud_download</mat-icon>
+      <span>Landesweiter Datendownload</span>
+    </a>
+  </nav>
+
+  <hr class="divider" />
+
+  <nav class="menu-group">
+    <a matButton class="menu-item" href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
+      target="_blank">
       <mat-icon class="menu-icon">bookmark</mat-icon>
       <span>AGB</span>
     </a>
@@ -48,102 +54,78 @@
       <span>Hilfe</span>
     </a>
 
-    <button
-      matButton
-      class="menu-item"
-      type="button"
-      (click)="showInfoOverlay = true"
-    >
+    <button matButton class="menu-item" type="button" (click)="showInfoOverlay = true">
       <mat-icon class="menu-icon">bookmarks</mat-icon>
       <span>Information &amp; Kontakt</span>
     </button>
 
-    <a
-      matButton
-      class="menu-item"
-      href="https://metaver.de/trefferanzeige?docuuid=5009D09B-6916-4E0C-B956-7039176638A6"
-    >
+    <a matButton class="menu-item" href="https://metaver.de/trefferanzeige?docuuid=AAAAAAAA"
+      target="_blank">
       <mat-icon class="menu-icon">info</mat-icon>
       <span>Über dieses Portal</span>
     </a>
   </nav>
 
   @if (appRouter.isMapSelection()) {
-    <div class="info-overlay">
-      <div class="overlay-header">
-        <button matIconButton type="button" (click)="appRouter.back()">
-          <mat-icon>keyboard_arrow_left</mat-icon>
-        </button>
-        <span class="overlay-title">{{
-          "diagram-view.add-timeseries.map" | translate
+  <div class="info-overlay">
+    <div class="overlay-header">
+      <button matIconButton type="button" (click)="appRouter.back()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <span class="overlay-title">{{
+        "diagram-view.add-timeseries.map" | translate
         }}</span>
-      </div>
-      <app-map-selection-menu />
     </div>
+    <app-map-selection-menu />
+  </div>
   }
 
   @if (appRouter.isListSelection()) {
-    <div class="info-overlay">
-      <div class="overlay-header">
-        <button matIconButton type="button" (click)="appRouter.back()">
-          <mat-icon>keyboard_arrow_left</mat-icon>
-        </button>
-        <span class="overlay-title">{{
-          "diagram-view.add-timeseries.list" | translate
+  <div class="info-overlay">
+    <div class="overlay-header">
+      <button matIconButton type="button" (click)="appRouter.back()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <span class="overlay-title">{{
+        "diagram-view.add-timeseries.list" | translate
         }}</span>
-      </div>
-      <app-list-selection-menu />
     </div>
+    <app-list-selection-menu />
+  </div>
   }
 
   @if (showInfoOverlay) {
-    <div class="info-overlay">
-      <div class="overlay-header">
-        <button matIconButton type="button" (click)="showInfoOverlay = false">
-          <mat-icon>keyboard_arrow_left</mat-icon>
-        </button>
-        <span class="overlay-title">Information &amp; Kontakt</span>
-      </div>
-
-      <nav class="menu-group">
-        <a
-          matButton
-          class="menu-item"
-          href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
-        >
-          <mat-icon class="menu-icon">article</mat-icon>
-          <span>Impressum &amp; Kontakt</span>
-        </a>
-
-        <a
-          matButton
-          class="menu-item"
-          href="https://umweltportal.mv-regierung.de/portale/impressum.html#barrierefrei"
-        >
-          <mat-icon class="menu-icon">accessibility_new</mat-icon>
-          <span>Barrierefreiheitserklärung</span>
-        </a>
-
-        <a
-          matButton
-          class="menu-item"
-          href="https://umweltportal.mv-regierung.de/portale/datenschutz.html"
-        >
-          <mat-icon class="menu-icon">privacy_tip</mat-icon>
-          <span>Datenschutzerklärung</span>
-        </a>
-
-        <a
-          matButton
-          class="menu-item"
-          href="https://www.lung.mv-regierung.de/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <mat-icon class="menu-icon">open_in_new</mat-icon>
-          <span>Webseite des LUNG</span>
-        </a>
-      </nav>
+  <div class="info-overlay">
+    <div class="overlay-header">
+      <button matIconButton type="button" (click)="showInfoOverlay = false">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <span class="overlay-title">Information &amp; Kontakt</span>
     </div>
+    <nav class="menu-group">
+      <a matButton class="menu-item" href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
+        target="_blank">
+        <mat-icon class="menu-icon">article</mat-icon>
+        <span>Impressum &amp; Kontakt</span>
+      </a>
+
+      <a matButton class="menu-item" href="https://umweltportal.mv-regierung.de/portale/impressum.html#barrierefrei"
+        target="_blank">
+        <mat-icon class="menu-icon">accessibility_new</mat-icon>
+        <span>Barrierefreiheitserklärung</span>
+      </a>
+
+      <a matButton class="menu-item" href="https://umweltportal.mv-regierung.de/portale/datenschutz.html"
+        target="_blank">
+        <mat-icon class="menu-icon">privacy_tip</mat-icon>
+        <span>Datenschutzerklärung</span>
+      </a>
+
+      <a matButton class="menu-item" href="https://www.lung.mv-regierung.de/" target="_blank" rel="noopener noreferrer">
+        <mat-icon class="menu-icon">open_in_new</mat-icon>
+        <span>Webseite des LUNG</span>
+      </a>
+    </nav>
+  </div>
   }
 </div>
