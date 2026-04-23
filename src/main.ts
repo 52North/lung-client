@@ -60,6 +60,7 @@ import {
   TimeseriesServiceImpl,
 } from './app/services/timeseries-service.service';
 import { environment } from './environments/environment';
+import { MetaverService, MetaverServiceImpl } from './app/services/metaver.service';
 
 if (environment.production) {
   enableProdMode();
@@ -181,6 +182,10 @@ const initializeApp = async () => {
       {
         provide: TimeseriesService,
         useClass: TimeseriesServiceImpl,
+      },
+      {
+        provide: MetaverService,
+        useClass: MetaverServiceImpl,
       },
       {
         provide: DATASET_STATE_SERVICE_INJECTION,

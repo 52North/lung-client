@@ -16,6 +16,7 @@
 
   <mat-dialog-content>
     <div class="abstract">
+      <h4>Beschreibung:</h4>
       {{ metadataResource.value()!.abstract }}
     </div>
 
@@ -64,13 +65,33 @@
         {{ metadataResource.value()!.revisionDate! | tzDate: "L" }}
       </div>
     }
+    @if (metadataResource.value()!.status) {
+      <h4>Aktualität der Daten:</h4>
+      <div>
+        Pflege- und Aktualierungsintervall: {{ metadataResource.value()!.status }}
+      </div>
+      <br>
+      <div>
+        Erläuterung zum Zeitbezug: {{ metadataResource.value()!.interval_description }}
+      </div>
+    }
+    @if (metadataResource.value()!.downloads) {
+      <h4>Downloads:</h4>
+      @for (dl of metadataResource.value()!.downloads; track dl) {
+      <a href='dl.linkage'>
+        {{ dl.name }}
+      </a>
+      <br>
+      }
+    }
   </mat-dialog-content>
 
   <div mat-dialog-actions>
     <div style="flex: 1"></div>
-    <button mat-button (click)="openAdditionalInformation()">
-      {{ "metadata.additional-information" | translate }}
-    </button>
+    <a matButton class="menu-item" (click)="openAdditionalInformation()" target="_blank">
+      <mat-icon class="menu-icon">link</mat-icon>
+      <span>{{ "metadata.additional-information" | translate }}</span>
+    </a>
     <button mat-button [mat-dialog-close]>
       {{ "controls.ok" | translate }}
     </button>

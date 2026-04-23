@@ -34,7 +34,7 @@
   <hr class="divider" />
 
   <nav class="menu-group">
-    <a matButton class="menu-item" href="https://metaver.de/trefferanzeige?docuuid=AAAAAAAA">
+    <a matButton class="menu-item" type="button" (click)="showDownloadOverlay.set(true)">
       <mat-icon class="menu-icon">cloud_download</mat-icon>
       <span>Landesweiter Datendownload</span>
     </a>
@@ -59,8 +59,7 @@
       <span>Information &amp; Kontakt</span>
     </button>
 
-    <a matButton class="menu-item" href="https://metaver.de/trefferanzeige?docuuid=AAAAAAAA"
-      target="_blank">
+    <a matButton class="menu-item" href="https://metaver.de/trefferanzeige?docuuid=AAAAAAAA" target="_blank">
       <mat-icon class="menu-icon">info</mat-icon>
       <span>Über dieses Portal</span>
     </a>
@@ -127,5 +126,52 @@
       </a>
     </nav>
   </div>
+  }
+
+  @if (showDownloadOverlay()) {
+  <div class="download-overlay info-overlay">
+    <div class="overlay-header">
+      <button matIconButton type="button" (click)="showDownloadOverlay.set(false)">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <span class="overlay-title">Landesweiter Datendownload</span>
+    </div>
+    <nav class="menu-group">
+      @for (uuid of this.meta_uuids.value(); track uuid) {
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Datendownload</mat-card-title>
+          <mat-card-subtitle>{{ uuid.title }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <h5>
+            Aktualisierungsintervall:
+          </h5>
+          {{ uuid.status }}
+
+          <h5>
+            Erläuterung zum Zeitbezug:
+          </h5>
+          {{ uuid.interval_description }}
+
+          <h5>Weitere Informationen:</h5>
+          <a matButton [href]="'https://metaver.de/trefferanzeige?docuuid=' + uuid.id" target="_blank">
+            <mat-icon class="menu-icon">link</mat-icon>
+            <span>MetaVer Eintrag</span>
+          </a>
+
+          <h5>Download-Links:</h5>
+          @for (dl of uuid.downloads; track dl) {
+          <a mat-button [href]="dl.linkage" target="_blank">
+            <mat-icon class="download-link">link</mat-icon>
+            <span class="btn-text" [title]="dl.name">{{dl.name}}</span>
+          </a>
+          }
+        </mat-card-content>
+      </mat-card>
+      }
+    </nav>
+  </div>
+
   }
 </div>

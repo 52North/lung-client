@@ -129,7 +129,7 @@ export class TimeseriesServiceImpl
           ) {
             // Timeseries does not appear in overviewgraph nor diagram itself
             // We can skip all processing
-            console.log("We can skip all processing")
+            // console.log("We can skip all processing")
             return;
           }
 

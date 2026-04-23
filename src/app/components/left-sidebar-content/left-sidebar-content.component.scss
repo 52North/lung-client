@@ -74,6 +74,20 @@
         }
     }
 
+    .download-overlay {
+
+        a {
+            height: auto;
+            margin-top: 1em;
+        }
+
+        .download-link {
+            flex-shrink: 0;
+        }
+    }
+
+
+
     .info-overlay {
         position: absolute;
         inset: 0;
