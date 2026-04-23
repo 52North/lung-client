@@ -68,6 +68,7 @@
 	"legend-entry.separateYAxis.tooltip": "Show timeseries with separate y-axis",
 	"legend-entry.toggle-selection-button.tooltip": "Highlight timeseries",
 	"legend-entry.toggle-visibility-button.tooltip": "Toggle visibility",
+	"legend-entry.no-data-warning": "No data available for the selected period",
 	"list-config.title": "Provider selection",
 	"main-config-button.tooltip": "Common settings",
 	"main-config.clear-storage": "Clear and restart",
