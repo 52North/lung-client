@@ -84,6 +84,25 @@
         .download-link {
             flex-shrink: 0;
         }
+
+        .subtitle {
+            font-weight: bold;
+            font-size: 0.83em;
+            margin-top: 1em;
+        }
+
+        .subcontent {
+            font-size: small;
+        }
+
+        .card-scroll-container {
+            max-height: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-right: 8px;
+        }
     }
 
 

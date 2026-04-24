@@ -28,6 +28,7 @@ export interface MetadataElement {
         linkage: string | null;
         protocol: string | null;
         name: string | null;
+        function: string | null;
     }[]
 }
 
@@ -127,6 +128,7 @@ class MetadataParser {
                     linkage: this.query(".//*[local-name()='linkage']", node),
                     protocol: this.query(".//*[local-name()='protocol']", node),
                     name: this.query(".//*[local-name()='name']", node),
+                    function: this.query(".//*[local-name()='function']", node),
                 }
             })
         };

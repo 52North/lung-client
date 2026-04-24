@@ -14,6 +14,7 @@ import { StaInterfaceService } from '@helgoland/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MetadataElement, MetaverService } from 'src/app/services/metaver.service';
+import { AppConfig, ConfigurationService } from 'src/app/services/configuration.service';
 
 @Component({
   selector: 'app-left-sidebar-content',
@@ -41,7 +42,9 @@ export class LeftSidebarContentComponent {
   private staUrl = computed(
     () => this.selectedDataSource.selectedService()?.apiUrl,
   );
-
+  private configSrvc = inject(ConfigurationService<AppConfig>) as ConfigurationService<AppConfig>;
+  
+  metaver_uuid = this.configSrvc.getSettings().metaver_uuid;
   showInfoOverlay = false;
   showDownloadOverlay = signal(false);
 

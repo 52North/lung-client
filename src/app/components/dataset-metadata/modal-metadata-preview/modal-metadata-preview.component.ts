@@ -1,5 +1,5 @@
-import { Component, computed, inject, input, resource } from '@angular/core';
-import { MatButtonModule, MatIconButton } from '@angular/material/button';
+import { Component, inject, input, resource } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -16,7 +16,6 @@ import { MetaverService } from 'src/app/services/metaver.service';
     MatProgressBarModule,
     MatButtonModule,
     HelgolandCoreModule,
-    MatIconButton,
     MatIconModule,
   ],
   styleUrls: ['./modal-metadata-preview.component.scss'],
