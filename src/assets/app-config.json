@@ -61,5 +61,6 @@
         },
         "adminGroup": "admin",
         "adminUrl": "https://umweltportal.mv-regierung.de/mdpu/auth/admin/mdpu/console/"
-    }
+    },
+    "metaver_uuid": "__"
 }
