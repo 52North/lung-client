@@ -43,7 +43,7 @@ export class CategorySelectionService {
   private categoryThree = signal<string | undefined>(undefined);
   private categoryFour = signal<string | undefined>(undefined);
 
-  private _showActiveOnly = signal(false);
+  private _showActiveOnly = signal(true);
 
   get showActiveOnly() {
     return this._showActiveOnly.asReadonly();
