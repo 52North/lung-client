@@ -20,18 +20,20 @@ import { DiagramViewInitStateService } from './views/diagram-view/diagram-view-p
   ],
 })
 export class AppComponent {
-  private initStateService = inject(DiagramViewInitStateService);
-  private appRouter = inject(AppRouterService);
+  //private initStateService = inject(DiagramViewInitStateService);
+  //private appRouter = inject(AppRouterService);
 
   title = 'helgoland';
   fullscreen = true;
 
   constructor() {
     // TODO: maybe there is a better place?
+    /*
     this.initStateService.preloadDatasets().subscribe((loadDs) => {
       if (!loadDs) {
         this.appRouter.toMapSelection();
       }
     });
+    */
   }
 }
