@@ -22,6 +22,7 @@
   <mat-slide-toggle
     [checked]="state.showActiveOnly()"
     (change)="state.setShowActiveOnly($event.checked)"
+    [matTooltip]="'selection.show-only-active-description' | translate"
   >
     {{ "selection.show-only-active" | translate }}
   </mat-slide-toggle>

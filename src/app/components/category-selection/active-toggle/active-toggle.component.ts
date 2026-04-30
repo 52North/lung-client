@@ -6,11 +6,12 @@ import {
 } from '@angular/material/slide-toggle';
 import { TranslateModule } from '@ngx-translate/core';
 import { CategorySelectionService } from '../category-selection.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-category-selection-active-toggle',
   standalone: true,
-  imports: [CommonModule, MatSlideToggleModule, TranslateModule],
+  imports: [CommonModule, MatSlideToggleModule, MatTooltipModule, TranslateModule],
   templateUrl: './active-toggle.component.html',
   styleUrls: ['./active-toggle.component.scss'],
 })

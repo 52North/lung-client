@@ -102,6 +102,7 @@
 	"permalink.copy-to-clipboard": "The link is copied to the clipboard",
 	"permalink.copy-to-clipboard-error": "An error occured, while creating the link",
 	"selection.show-only-active": "Show only active timeseries",
+	"selection.show-only-active-description": "Has at least one observation in the last 10 years",
 	"service-selector.datasets": "Datasets",
 	"service-selector.phenomena": "Phenomena",
 	"service-selector.platforms": "Stations",

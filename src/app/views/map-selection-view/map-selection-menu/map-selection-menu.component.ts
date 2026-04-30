@@ -5,6 +5,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslateModule } from '@ngx-translate/core';
 import { MapSelectionStateService } from '../map-selection-state.service';
 import { ParameterListSelectorComponent } from '../parameter-list-selector/parameter-list-selector.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-map-selection-menu',
@@ -14,6 +15,7 @@ import { ParameterListSelectorComponent } from '../parameter-list-selector/param
   imports: [
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     TranslateModule,
     MatSlideToggle,
     ParameterListSelectorComponent,
