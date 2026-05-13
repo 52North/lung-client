@@ -21,6 +21,7 @@ export interface TableRow {
   einheit: string;
   tiefe: string;
   tiefenstufe: string;
+  datum_uhrzeit: number;
 }
 
 export function createDataTable(
@@ -41,8 +42,8 @@ export function createDataTable(
           gewässername: additional?.['gew_name'] || '',
           wb_cd: additional?.['wb_cd'] || '',
           wb_type_cd: additional?.['wb_type_cd'] || '',
-          datum: ("0" + date.getDay()).slice(-2) + "." + ("0" + date.getMonth()).slice(-2) + "." + date.getFullYear(),
-          uhrzeit: ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2),
+          datum: date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+          uhrzeit: date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
           matrix: additional?.['matrix'] || '',
           methode: d.parameter?.methode || '',
           param_kurz: ds.description.phenomenonLabel || '',
@@ -51,9 +52,10 @@ export function createDataTable(
           vorzeichen: d.parameter?.vorzeichen || '',
           wert_berechnet: d.value,
           einheit: ds.description.uom,
-          tiefe: additional?.['tiefe'] || '',
-          tiefenstufe: additional?.['tiefenstufe'] || '',
-        }); 
+          tiefe: d.parameter?.['tiefe'] || '',
+          tiefenstufe: d.parameter?.['tiefenstufe'] || '',
+          datum_uhrzeit: d.timestamp
+        });
       }
     });
   });

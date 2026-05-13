@@ -74,7 +74,7 @@ export class DataTableComponent implements DoCheck, AfterViewChecked {
       sort: true,
     },
     {
-      title: 'mst_nr',
+      title: 'Messstelle',
       key: 'mst_nr',
       visible: true,
       sort: true,
@@ -86,91 +86,91 @@ export class DataTableComponent implements DoCheck, AfterViewChecked {
       sort: true,
     },
     {
-      title: 'Gewässer',
+      title: 'Gewässername',
       key: 'gewässername',
       visible: true,
       sort: true,
     },
     {
-      title: 'wb_cd',
+      title: 'Wasserkörper-Code',
       key: 'wb_cd',
       visible: true,
       sort: true,
     },
     {
-      title: 'wb_type_cd',
+      title: 'Wasserkörper-Typ',
       key: 'wb_type_cd',
       visible: true,
       sort: true,
     },
     {
-      title: 'datum',
+      title: 'Datum',
       key: 'datum',
       visible: true,
       sort: true,
     },
     {
-      title: 'uhrzeit',
+      title: 'Uhrzeit',
       key: 'uhrzeit',
       visible: true,
       sort: true,
     },
     {
-      title: 'matrix',
+      title: 'Matrix',
       key: 'matrix',
       visible: true,
       sort: true,
     },
     {
-      title: 'methode',
+      title: 'Methode',
       key: 'methode',
       visible: true,
       sort: true,
     },
     {
-      title: 'param_kurz',
+      title: 'Parameter-Kurz',
       key: 'param_kurz',
       visible: true,
       sort: true,
     },
     {
-      title: 'parameter',
+      title: 'Parameter',
       key: 'parameter',
       visible: true,
       sort: true,
     },
     {
-      title: 'par_gruppen',
+      title: 'Parameter-Gruppe',
       key: 'param_gruppen',
       visible: true,
       sort: true,
     },
     {
-      title: 'vorzeichen',
+      title: 'Vorzeichen',
       key: 'vorzeichen',
       visible: true,
       sort: true,
     },
     {
-      title: 'wert_berechnet',
+      title: 'Wert berechnet',
       key: 'wert_berechnet',
       sort: true,
       visible: true,
     },
     {
-      title: 'einheit',
+      title: 'Einheit',
       key: 'einheit',
       sort: true,
       visible: true,
     },
     {
-      title: 'tiefe',
+      title: 'Tiefe',
       key: 'tiefe',
       sort: true,
       visible: true,
     },
     {
-      title: 'tiefenstufe',
+      title: 'Tiefenstufe',
       key: 'tiefenstufe',
       sort: true,
       visible: true,
@@ -235,6 +235,13 @@ export class DataTableComponent implements DoCheck, AfterViewChecked {
     if (timespan === undefined) return;
     const datasource = new MatTableDataSource<TableRow>();
     datasource.sort = this.sort;
+    datasource.sortingDataAccessor = (item, header) => {
+      switch (header) {
+        case 'datum': return item.datum_uhrzeit;
+        case 'uhrzeit': return item.datum_uhrzeit;
+        default: return item[header as keyof TableRow];;
+      }
+    };
     datasource.paginator = this.paginator;
     datasource.data = createDataTable(this.datasets(), timespan);
     this.dataSource.set(datasource);
