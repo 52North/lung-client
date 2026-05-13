@@ -18,5 +18,21 @@
         ></helgoland-general-time-selection>
       </div>
     }
+    <div class="overview-diagram desktop-only">
+      @if (graphDatasetsSrvc.timespan) {
+        <n52-d3-series-graph
+          #overview
+          [datasets]="graphDatasetsSrvc.overviewDatasets()"
+          [timespan]="graphDatasetsSrvc.overviewTimespan"
+          [graphOptions]="overviewOptions"
+          (timespanChanged)="graphDatasetsSrvc.timespan = $event"
+        >
+          <n52-d3-graph-overview-selection
+            [selectionTimeInterval]="graphDatasetsSrvc.timespan"
+          >
+          </n52-d3-graph-overview-selection>
+        </n52-d3-series-graph>
+      }
+    </div>
   }
 </div>

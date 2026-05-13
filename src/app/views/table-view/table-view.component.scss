@@ -21,5 +21,10 @@ helgoland-table-view {
     .time-selection {
       flex: 0 0 auto;
     }
+
+    .overview-diagram {
+        flex: 0 0 120px;
+        position: relative;
+    }
   }
 }
