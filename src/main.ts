@@ -5,6 +5,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import localeDe from '@angular/common/locales/de';
 import {
   ApplicationConfig,
+  DOCUMENT,
   enableProdMode,
   importProvidersFrom,
   inject,
@@ -80,12 +81,13 @@ export function initApplication(
   configService: ConfigurationService,
   translate: TranslateService,
   localStorage: LocalStorage,
+  document: Document
 ): () => Promise<void> {
   return () => {
     configService.configuration = config;
     const localStorageLanguageKey = 'client-language';
     registerLocaleData(localeDe);
-    let lang = translate.getBrowserLang() || 'en';
+    let lang = 'de';
     const storedLang = localStorage.load(localStorageLanguageKey) as string;
     if (storedLang) {
       lang = storedLang;
@@ -103,7 +105,10 @@ export function initApplication(
     translate.setDefaultLang(lang);
     translate.onLangChange.subscribe((lce) => {
       localStorage.save(localStorageLanguageKey, lce.lang);
+      document.documentElement.lang = lang;
     });
+
+    document.documentElement.lang = lang;
     return firstValueFrom(translate.use(lang));
   };
 }
@@ -121,7 +126,7 @@ const initializeApp = async () => {
   const appConfig: ApplicationConfig = {
     providers: [
       provideZonelessChangeDetection(),
-      provideCheckNoChangesConfig({exhaustive: true, interval: 1000}),
+      // provideCheckNoChangesConfig({exhaustive: true, interval: 1000}),
       provideKeycloak({
         config: config.keycloak.config,
         initOptions: {
@@ -156,6 +161,7 @@ const initializeApp = async () => {
           inject(ConfigurationService),
           inject(TranslateService),
           inject(LocalStorage),
+          inject(DOCUMENT)
         );
         return initializerFn();
       }),
