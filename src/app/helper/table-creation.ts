@@ -33,7 +33,7 @@ export function createDataTable(
     ds.data.forEach((d) => {
       const additional = ds.description.additional;
       const date = new Date(d.timestamp)
-      if (d.timestamp > timespan.from && d.timestamp < timespan.to) {
+      if (d.timestamp >= timespan.from && d.timestamp <= timespan.to) {
         const pg = additional?.['phenomenon_group'] || [];
         const gruppen = pg.join('; ');
         data.push({
