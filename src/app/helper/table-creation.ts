@@ -34,6 +34,8 @@ export function createDataTable(
       const additional = ds.description.additional;
       const date = new Date(d.timestamp)
       if (d.timestamp > timespan.from && d.timestamp < timespan.to) {
+        const pg = additional?.['phenomenon_group'] || [];
+        const gruppen = pg.join('; ');
         data.push({
           gew_art: additional?.['gew_art'] || '',
           bundesland: additional?.['location']['bundesland'] || '',
@@ -48,7 +50,7 @@ export function createDataTable(
           methode: d.parameter?.methode || '',
           param_kurz: ds.description.phenomenonLabel || '',
           parameter: additional?.['observedProperty']?.definition || '',
-          param_gruppen: additional?.['phenomenon_group'].join('; ') || [],
+          param_gruppen: gruppen,
           vorzeichen: d.parameter?.vorzeichen || '',
           wert_berechnet: d.value,
           einheit: ds.description.uom,
