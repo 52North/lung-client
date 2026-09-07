@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import {
   DefinedTimespan,
   DefinedTimespanService,
   Timespan,
 } from '@helgoland/core';
 import { Observable, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { filter, mergeMap, switchMap, take } from 'rxjs/operators';
 
 import { NotifierService } from '../../services/notifier.service';
 import { DATASET_STATE_SERVICE_INJECTION } from '../../services/service-interfaces';
@@ -25,6 +25,7 @@ const PARAM_DEFINED_TIME = 'defined_time';
 export class DiagramViewInitStateService {
   private graphDatasetsSrvc = inject(DatasetsService);
   private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   private definedTimeintervalSrvc = inject(DefinedTimespanService);
   private storageSrvc = inject(StorageService);
   protected notifier = inject(NotifierService);
@@ -38,7 +39,10 @@ export class DiagramViewInitStateService {
   }
 
   preloadDatasets(): Observable<boolean> {
-    return this.activatedRoute.queryParams.pipe(
+    return this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      take(1),
+      switchMap(() => this.activatedRoute.queryParams),
       mergeMap((params) => this.handleParams(params)),
     );
   }
