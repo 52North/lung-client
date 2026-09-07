@@ -17,7 +17,7 @@ export interface AppConfig extends Settings {
     adminGroup: string;
     adminUrl: string;
   };
-  metaver_uuid: string
+  metaver_uuid: string;
 }
 
 @Injectable({

@@ -57,28 +57,28 @@ export class DownloadDataComponent {
 
     const mapped = data.map((d) => {
       return {
-        "Gewässerart" : d.gew_art,
-        "Bundesland" : d.bundesland,
-        "Messstelle" : d.mst_nr,
-        "Ort" : d.ort,
-        "Gewässername" : d.gewässername,
-        "Wasserkörper-Code" : d.wb_cd,
-        "Wasserkörper-Typ" : d.wb_type_cd,
-        "Datum" : d.datum,
-        "Uhrzeit" : d.uhrzeit,
-        "Matrix" : d.matrix,
-        "Methode" : d.methode,
-        "Parameter-Kurz" : d.param_kurz,
-        "Parameter" : d.parameter,
-        "Parameter-Gruppe" : d.param_gruppen,
-        "Vorzeichen" : d.vorzeichen,
-        "Wert berechnet" : d.wert_berechnet,
-        "Einheit" : d.einheit,
-        "Tiefe" : d.tiefe,
-        "Tiefenstufe" : d.tiefenstufe,
-        "Zeitstempel" : d.datum_uhrzeit
-      }
-    })
+        Gewässerart: d.gew_art,
+        Bundesland: d.bundesland,
+        Messstelle: d.mst_nr,
+        Ort: d.ort,
+        Gewässername: d.gewässername,
+        'Wasserkörper-Code': d.wb_cd,
+        'Wasserkörper-Typ': d.wb_type_cd,
+        Datum: d.datum,
+        Uhrzeit: d.uhrzeit,
+        Matrix: d.matrix,
+        Methode: d.methode,
+        'Parameter-Kurz': d.param_kurz,
+        Parameter: d.parameter,
+        'Parameter-Gruppe': d.param_gruppen,
+        Vorzeichen: d.vorzeichen,
+        'Wert berechnet': d.wert_berechnet,
+        Einheit: d.einheit,
+        Tiefe: d.tiefe,
+        Tiefenstufe: d.tiefenstufe,
+        Zeitstempel: d.datum_uhrzeit,
+      };
+    });
 
     this.downloadData(mapped, dwType);
   }

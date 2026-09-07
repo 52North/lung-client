@@ -13,7 +13,9 @@
       class="sidebar-handle"
       [style.top]="handleTop"
       (click)="collapsed = !collapsed"
-      [attr.aria-label]="(collapsed ? 'sidebar.open' : 'sidebar.close') | translate"
+      [attr.aria-label]="
+        (collapsed ? 'sidebar.open' : 'sidebar.close') | translate
+      "
       [attr.title]="(collapsed ? 'sidebar.open' : 'sidebar.close') | translate"
     >
       <mat-icon>

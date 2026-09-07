@@ -70,7 +70,11 @@ export class AppRouterService {
 
   back() {
     const prev = this.previousUrl();
-    if (prev && prev !== '/' + LIST_SELECTION_ROUTE && prev !== LIST_SELECTION_ROUTE) {
+    if (
+      prev &&
+      prev !== '/' + LIST_SELECTION_ROUTE &&
+      prev !== LIST_SELECTION_ROUTE
+    ) {
       this.router.navigateByUrl(prev);
     } else {
       this.router.navigate(['']);

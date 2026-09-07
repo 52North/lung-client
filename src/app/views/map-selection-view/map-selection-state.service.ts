@@ -1,8 +1,14 @@
-import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import {
   DatasetType,
   HelgolandParameterFilter,
-  Phenomenon
+  Phenomenon,
 } from '@helgoland/core';
 import { SelectedDataSourceService } from '../../services/selected-data-source.service';
 

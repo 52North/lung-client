@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
-import { UsernameComponent } from "../username/username.component";
+import { UsernameComponent } from '../username/username.component';
 
 @Component({
   selector: 'app-header',

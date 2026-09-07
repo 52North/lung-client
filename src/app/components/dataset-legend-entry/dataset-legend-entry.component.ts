@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -154,25 +163,28 @@ export class DatasetLegendEntryComponent {
       let timespan = new Timespan(
         dataset.description.firstValue.timestamp,
         dataset.description.lastValue.timestamp,
-      )
+      );
 
-      if (dataset.description.firstValue.timestamp == dataset.description.lastValue.timestamp) {
-        timespan.from = timespan.from - 1
+      if (
+        dataset.description.firstValue.timestamp ==
+        dataset.description.lastValue.timestamp
+      ) {
+        timespan.from = timespan.from - 1;
         timespan = this.timeSrvc.getBufferedTimespan(
           timespan,
-          duration(1, 'hour').asMilliseconds()
+          duration(1, 'hour').asMilliseconds(),
         );
       }
       this.selectTimespan.emit(timespan);
     }
   }
 
-  getTimeseriesDatasetChildren = computed(
-    () => this.dataset().children.filter((e) => e instanceof TimeseriesChild)
+  getTimeseriesDatasetChildren = computed(() =>
+    this.dataset().children.filter((e) => e instanceof TimeseriesChild),
   );
 
-  getAreaDatasetChildren = computed(
-    () => this.dataset().children.filter((e) => e instanceof AreaDatasetChild)
+  getAreaDatasetChildren = computed(() =>
+    this.dataset().children.filter((e) => e instanceof AreaDatasetChild),
   );
 
   private checkDataInTimespan() {

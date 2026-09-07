@@ -27,7 +27,7 @@ export class ModalMetadataPreviewComponent {
 
   metadataResource = resource({
     params: () => this.metadataId(),
-    loader: ({ params: id }) => this.metaverService.getMetadataResource(id)
+    loader: ({ params: id }) => this.metaverService.getMetadataResource(id),
   });
 
   openAdditionalInformation() {

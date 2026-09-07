@@ -11,8 +11,14 @@ import { DatasetStyle, SeriesGraphDataset } from '@helgoland/d3';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { AppRouterService } from '../../services/app-router.service';
-import { AppConfig, ConfigurationService } from '../../services/configuration.service';
-import { DatasetsService, LoadingDataset } from '../../services/graph-datasets.service';
+import {
+  AppConfig,
+  ConfigurationService,
+} from '../../services/configuration.service';
+import {
+  DatasetsService,
+  LoadingDataset,
+} from '../../services/graph-datasets.service';
 import { DiagramViewInitStateService } from '../../views/diagram-view/diagram-view-permalink.service';
 import { AuthenticationComponent } from '../authentication/authentication.component';
 import { DatasetLegendEntryComponent } from '../dataset-legend-entry/dataset-legend-entry.component';
@@ -50,11 +56,15 @@ export class RightSidebarContentComponent {
   protected initStateService = inject(DiagramViewInitStateService);
   protected appRouter = inject(AppRouterService);
   private time = inject(Time);
-  private configSrvc = inject(ConfigurationService<AppConfig>) as ConfigurationService<AppConfig>;
+  private configSrvc = inject(
+    ConfigurationService<AppConfig>,
+  ) as ConfigurationService<AppConfig>;
 
   dataTableVisible = this.configSrvc.getSettings().dataTableVisible || false;
 
-  isLoading(dataset: SeriesGraphDataset<DatasetStyle> | LoadingDataset): dataset is LoadingDataset {
+  isLoading(
+    dataset: SeriesGraphDataset<DatasetStyle> | LoadingDataset,
+  ): dataset is LoadingDataset {
     return dataset instanceof LoadingDataset;
   }
 

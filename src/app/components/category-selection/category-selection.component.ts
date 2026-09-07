@@ -11,7 +11,14 @@ import { CategorySelectionService } from './category-selection.service';
   selector: 'app-category-selection',
   templateUrl: './category-selection.component.html',
   styleUrls: ['./category-selection.component.scss'],
-  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatIconModule, TranslateModule, MatInputModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    TranslateModule,
+    MatInputModule,
+  ],
 })
 export class CategorySelectionComponent {
   protected srvc = inject(CategorySelectionService);

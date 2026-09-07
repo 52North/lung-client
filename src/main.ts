@@ -61,7 +61,10 @@ import {
   TimeseriesServiceImpl,
 } from './app/services/timeseries-service.service';
 import { environment } from './environments/environment';
-import { MetaverService, MetaverServiceImpl } from './app/services/metaver.service';
+import {
+  MetaverService,
+  MetaverServiceImpl,
+} from './app/services/metaver.service';
 
 if (environment.production) {
   enableProdMode();
@@ -81,7 +84,7 @@ export function initApplication(
   configService: ConfigurationService,
   translate: TranslateService,
   localStorage: LocalStorage,
-  document: Document
+  document: Document,
 ): () => Promise<void> {
   return () => {
     configService.configuration = config;
@@ -161,7 +164,7 @@ const initializeApp = async () => {
           inject(ConfigurationService),
           inject(TranslateService),
           inject(LocalStorage),
-          inject(DOCUMENT)
+          inject(DOCUMENT),
         );
         return initializerFn();
       }),

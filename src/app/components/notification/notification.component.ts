@@ -19,7 +19,7 @@ export class NotificationComponent {
 
   removeMessage(message: string) {
     this.data.messages.update((msgs: string[]) => {
-      return msgs.toSpliced(msgs.indexOf(message), 1)
+      return msgs.toSpliced(msgs.indexOf(message), 1);
     });
 
     if (this.data.messages().length === 0) {

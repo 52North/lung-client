@@ -98,77 +98,93 @@ export class TimeseriesServiceImpl
   };
 
   constructor() {
-    this.graphDatasetsSrvc.timespanChanged.subscribe((newTimespan) =>
-    {
-        //const oldTimespan = this.timespan ?? new Timespan(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
-        this.timespan = newTimespan;
-        // Only reload data if something significant has changed!
-        // find out what has actually changed
+    this.graphDatasetsSrvc.timespanChanged.subscribe((newTimespan) => {
+      //const oldTimespan = this.timespan ?? new Timespan(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+      this.timespan = newTimespan;
+      // Only reload data if something significant has changed!
+      // find out what has actually changed
 
-        // expandedBack = new Timespan starts (time-wise) earlier
-        // expandedForward = new Timespan ends (time-wise) later
-        //const expandedBack = newTimespan.from < oldTimespan.from;
-        //const expandedForward = newTimespan.to > oldTimespan.to;
+      // expandedBack = new Timespan starts (time-wise) earlier
+      // expandedForward = new Timespan ends (time-wise) later
+      //const expandedBack = newTimespan.from < oldTimespan.from;
+      //const expandedForward = newTimespan.to > oldTimespan.to;
 
-        // New timespan is smaller than previous timespan - no data-update needed
-        //if (!(expandedBack || expandedForward)) {
-        //  console.log("timespan shrank - nothing to fetch")
-        //  return;
-        //}
+      // New timespan is smaller than previous timespan - no data-update needed
+      //if (!(expandedBack || expandedForward)) {
+      //  console.log("timespan shrank - nothing to fetch")
+      //  return;
+      //}
 
-        // Check if each Dataset actually contains data in the relevant timespan
-        this.datasetMap.forEach((dataset) => {
+      // Check if each Dataset actually contains data in the relevant timespan
+      this.datasetMap.forEach((dataset) => {
+        // If the old span did include all values, the timeseries only shrank
+        const fetchSpan =
+          this.datasetFetchedMap.get(dataset.internalId) ??
+          new Timespan(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+        let needFetch = false;
 
-          // If the old span did include all values, the timeseries only shrank
-          const fetchSpan = this.datasetFetchedMap.get(dataset.internalId) ?? new Timespan(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
-          let needFetch = false;
+        if (
+          (dataset.firstValue &&
+            this.graphDatasetsSrvc.overviewTimespan!.to <
+              dataset.firstValue.timestamp) ||
+          (dataset.lastValue &&
+            this.graphDatasetsSrvc.overviewTimespan!.from >
+              dataset.lastValue.timestamp)
+        ) {
+          // Timeseries does not appear in overviewgraph nor diagram itself
+          // We can skip all processing
+          // console.log("We can skip all processing")
+          return;
+        }
 
+        // We need to fetch if the already fetched data did not include all values
+        if (
+          dataset.firstValue &&
+          dataset.firstValue.timestamp < fetchSpan.from
+        ) {
+          needFetch = true;
+        }
+        if (dataset.lastValue && dataset.lastValue.timestamp > fetchSpan.to) {
+          needFetch = true;
+        }
+
+        // Refetch data
+        if (needFetch) {
+          this.loadDatasetData(dataset.internalId);
+        } else {
+          // We cull the data to prevent out-of-view timeseries rendering
+          // As overviewDatasets are generalized, we do not cull them
           if (
-            (dataset.firstValue && this.graphDatasetsSrvc.overviewTimespan!.to < dataset.firstValue.timestamp) ||
-            (dataset.lastValue && this.graphDatasetsSrvc.overviewTimespan!.from > dataset.lastValue.timestamp)
+            this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId).visible
           ) {
-            // Timeseries does not appear in overviewgraph nor diagram itself
-            // We can skip all processing
-            // console.log("We can skip all processing")
-            return;
-          }
-
-          // We need to fetch if the already fetched data did not include all values
-          if (dataset.firstValue && dataset.firstValue.timestamp < fetchSpan.from) {
-            needFetch = true;
-          }
-          if (dataset.lastValue && dataset.lastValue.timestamp > fetchSpan.to) {
-            needFetch = true;
-          }
-
-          // Refetch data
-          if (needFetch) {
-            this.loadDatasetData(dataset.internalId);
+            this.prepareData(
+              dataset,
+              this.datasetCache.get(dataset.internalId)!,
+              newTimespan,
+            );
           } else {
-            // We cull the data to prevent out-of-view timeseries rendering
-            // As overviewDatasets are generalized, we do not cull them
-            if (this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId).visible) {
-              this.prepareData(dataset, this.datasetCache.get(dataset.internalId)!, newTimespan);
-            } else {
-              this.graphDatasetsSrvc.setDataLoading(dataset.internalId, false, false);
-            }
+            this.graphDatasetsSrvc.setDataLoading(
+              dataset.internalId,
+              false,
+              false,
+            );
           }
-        });
-    }
-    );
+        }
+      });
+    });
     if (!this.errorHandler) {
       this.errorHandler = new D3SeriesSimpleGraphErrorHandler();
     }
     this.loadFavorites();
 
-    this.graphDatasetsSrvc.datasetStateChanged.subscribe(ds => {
+    this.graphDatasetsSrvc.datasetStateChanged.subscribe((ds) => {
       this.setState(ds.id, ds.style, ds.yAxis, ds.selected, ds.visible);
       this.saveState();
-    })
+    });
 
-    this.graphDatasetsSrvc.datasetRemoved.subscribe(id => {
+    this.graphDatasetsSrvc.datasetRemoved.subscribe((id) => {
       this.removeDataset(id);
-    })
+    });
   }
 
   getDataset(internalId: string): HelgolandTimeseries | undefined {
@@ -546,16 +562,19 @@ export class TimeseriesServiceImpl
       const buffer = this.graphDatasetsSrvc.overviewTimespan;
       this.servicesConnector
         .getDatasetData(dataset, buffer, {
-          expanded:
-            this.presenterOptions.showReferenceValues
-          })
+          expanded: this.presenterOptions.showReferenceValues,
+        })
         .subscribe({
           next: (result) => {
             // Store data + requested timespan
             this.datasetCache.set(dataset.internalId, result);
             this.datasetFetchedMap.set(dataset.internalId, buffer);
 
-            this.prepareOverviewData(dataset, result, this.graphDatasetsSrvc.overviewTimespan!);
+            this.prepareOverviewData(
+              dataset,
+              result,
+              this.graphDatasetsSrvc.overviewTimespan!,
+            );
             this.prepareData(dataset, result, this.graphDatasetsSrvc.timespan!);
           },
           error: (error) => {
@@ -576,20 +595,29 @@ export class TimeseriesServiceImpl
     rawdata: HelgolandTimeseriesData,
     timespan: Timespan,
   ): void {
-    const ds = this.graphDatasetsSrvc.getDatasetEntry(dataset.internalId).clone();
-    const firstInside = rawdata.values.findIndex(tvt => tvt[0] >= timespan.from);
-    const lastInside = rawdata.values.findLastIndex(tvt => tvt[0] <= timespan.to);
+    const ds = this.graphDatasetsSrvc
+      .getDatasetEntry(dataset.internalId)
+      .clone();
+    const firstInside = rawdata.values.findIndex(
+      (tvt) => tvt[0] >= timespan.from,
+    );
+    const lastInside = rawdata.values.findLastIndex(
+      (tvt) => tvt[0] <= timespan.to,
+    );
 
     const startIndex = Math.max(0, firstInside - 1);
-    const endIndex = lastInside === -1 ? rawdata.values.length : Math.min(rawdata.values.length, lastInside + 2);
+    const endIndex =
+      lastInside === -1
+        ? rawdata.values.length
+        : Math.min(rawdata.values.length, lastInside + 2);
 
     const data: GraphDataEntry[] = rawdata.values
-    .slice(startIndex, endIndex)
-    .map((e) => ({
-      timestamp: e[0],
-      value: e[1].value,
-      parameter: e[1].parameter,
-    }));
+      .slice(startIndex, endIndex)
+      .map((e) => ({
+        timestamp: e[0],
+        value: e[1].value,
+        parameter: e[1].parameter,
+      }));
 
     if (data.length > 0) {
       ds.setData(data);
@@ -642,7 +670,10 @@ export class TimeseriesServiceImpl
       // Generalization to clean up OverviewGraph
       // We try to reduce to 25 Datapoints, or 10% if the Dataset is larger than REDUCTION_FACTOR
       const FACTOR = 25;
-      const REDUCTION_FACTOR = (rawdata.values.length < FACTOR * 10)? FACTOR : Math.floor(rawdata.values.length / 10);
+      const REDUCTION_FACTOR =
+        rawdata.values.length < FACTOR * 10
+          ? FACTOR
+          : Math.floor(rawdata.values.length / 10);
 
       const rawDataMapped = rawdata.values.map((e) => ({
         timestamp: e[0],
@@ -653,15 +684,15 @@ export class TimeseriesServiceImpl
       if (rawDataMapped.length > REDUCTION_FACTOR * 3) {
         // Pass the data and target number of points (threshold)
         const start = rawDataMapped.at(0)!.timestamp;
-        const end = rawDataMapped.at(rawDataMapped.length-1)!.timestamp;
+        const end = rawDataMapped.at(rawDataMapped.length - 1)!.timestamp;
         data = this.timeAlignedLttbdata(rawDataMapped, start, end);
       } else {
         data = rawDataMapped;
       }
 
-      const ds = this.graphDatasetsSrvc.getOverviewDatasetEntry(
-        dataset.internalId,
-      ).clone();
+      const ds = this.graphDatasetsSrvc
+        .getOverviewDatasetEntry(dataset.internalId)
+        .clone();
       ds.setData(data);
       this.graphDatasetsSrvc.updateOverviewDatasetWithData(ds.id, ds);
       this.graphDatasetsSrvc.setOverviewDataLoading(dataset.internalId, false);
@@ -669,17 +700,17 @@ export class TimeseriesServiceImpl
   }
 
   /**
- * Downsamples data using the Largest Triangle Three Buckets algorithm.
- * @param {GraphDataEntry[]} data - Array of objects: { timestamp: number, value: number }
- * @param {number} threshold - The number of data points to return
- */
-  private lttb(data: GraphDataEntry[], threshold: number): GraphDataEntry[]  {
+   * Downsamples data using the Largest Triangle Three Buckets algorithm.
+   * @param {GraphDataEntry[]} data - Array of objects: { timestamp: number, value: number }
+   * @param {number} threshold - The number of data points to return
+   */
+  private lttb(data: GraphDataEntry[], threshold: number): GraphDataEntry[] {
     const dataLength = data.length;
     if (threshold >= dataLength || threshold === 0) {
       return data;
     }
 
-    const sampled : GraphDataEntry[] = [];
+    const sampled: GraphDataEntry[] = [];
     let sampledIndex = 0;
 
     // Bucket size. Leave room for start and end data points
@@ -721,10 +752,11 @@ export class TimeseriesServiceImpl
 
       for (; rangeOffs < rangeTo; rangeOffs++) {
         // Calculate triangle area over three buckets
-        area = Math.abs(
-          (pointAX - avgX) * (data[rangeOffs].value - pointAY) -
-          (pointAX - data[rangeOffs].timestamp) * (avgY - pointAY)
-        ) * 0.5;
+        area =
+          Math.abs(
+            (pointAX - avgX) * (data[rangeOffs].value - pointAY) -
+              (pointAX - data[rangeOffs].timestamp) * (avgY - pointAY),
+          ) * 0.5;
 
         if (area > maxArea) {
           maxArea = area;
@@ -743,13 +775,17 @@ export class TimeseriesServiceImpl
   }
 
   /**
- * Downsamples data using LTTB, anchored to 50 absolute time buckets.
- * @param {Array} data - Array of objects: { timestamp: number, value: number }
- * @param {number} timeStart - The absolute start UNIX timestamp of the view window
- * @param {number} timeEnd - The absolute end UNIX timestamp of the view window
- * @returns {Array} - The downsampled data
- */
-  private timeAlignedLttbdata(data: GraphDataEntry[], timeStart: number, timeEnd: number): GraphDataEntry[] {
+   * Downsamples data using LTTB, anchored to 50 absolute time buckets.
+   * @param {Array} data - Array of objects: { timestamp: number, value: number }
+   * @param {number} timeStart - The absolute start UNIX timestamp of the view window
+   * @param {number} timeEnd - The absolute end UNIX timestamp of the view window
+   * @returns {Array} - The downsampled data
+   */
+  private timeAlignedLttbdata(
+    data: GraphDataEntry[],
+    timeStart: number,
+    timeEnd: number,
+  ): GraphDataEntry[] {
     // Edge case: not enough data to downsample
     if (!data || data.length <= 2) return data;
 
@@ -757,26 +793,29 @@ export class TimeseriesServiceImpl
     const bucketDuration = (timeEnd - timeStart) / BUCKET_COUNT;
 
     // 1. Initialize 50 empty buckets
-    const buckets = Array.from({ length: BUCKET_COUNT }, () => [] as GraphDataEntry[]);
+    const buckets = Array.from(
+      { length: BUCKET_COUNT },
+      () => [] as GraphDataEntry[],
+    );
 
     // 2. Assign each datapoint to a fixed time bucket
     for (let i = 0; i < data.length; i++) {
       const pt = data[i];
-      
+
       // Ignore data that falls outside the current viewing window
       if (pt.timestamp < timeStart || pt.timestamp > timeEnd) continue;
 
       // Calculate absolute bucket index (0 to 49)
       let bucketIdx = Math.floor((pt.timestamp - timeStart) / bucketDuration);
-      
+
       // Safeguard: Ensure a point exactly on timeEnd goes into the last bucket
-      if (bucketIdx >= BUCKET_COUNT) bucketIdx = BUCKET_COUNT - 1; 
+      if (bucketIdx >= BUCKET_COUNT) bucketIdx = BUCKET_COUNT - 1;
 
       buckets[bucketIdx].push(pt);
     }
 
     // 3. Filter out empty buckets to handle massive data gaps safely
-    const validBuckets = buckets.filter(bucket => bucket.length > 0);
+    const validBuckets = buckets.filter((bucket) => bucket.length > 0);
 
     // If the data is so sparse we only populated 1 or 2 buckets, just return the extremes
     if (validBuckets.length <= 2) {
@@ -787,10 +826,10 @@ export class TimeseriesServiceImpl
     }
 
     // 4. Apply LTTB math across the contiguous non-empty buckets
-    const sampled : GraphDataEntry[] = [];
-    
+    const sampled: GraphDataEntry[] = [];
+
     // Always select the first point of the first valid bucket
-    let a = validBuckets[0][0]; 
+    let a = validBuckets[0][0];
     sampled.push(a);
 
     // Loop through middle buckets
@@ -817,10 +856,11 @@ export class TimeseriesServiceImpl
       // Find the point in the CURRENT bucket that creates the largest triangle
       for (let j = 0; j < currentBucket.length; j++) {
         const pt = currentBucket[j];
-        const area = Math.abs(
-          (pointAX - avgX) * (pt.value - pointAY) -
-          (pointAX - pt.timestamp) * (avgY - pointAY)
-        ) * 0.5;
+        const area =
+          Math.abs(
+            (pointAX - avgX) * (pt.value - pointAY) -
+              (pointAX - pt.timestamp) * (avgY - pointAY),
+          ) * 0.5;
 
         if (area > maxArea) {
           maxArea = area;

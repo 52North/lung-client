@@ -1,4 +1,10 @@
-import { Component, OnInit, WritableSignal, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  WritableSignal,
+  inject,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -47,7 +53,8 @@ export class ListSelectionComponent implements OnInit {
   private configSrvc = inject(ConfigurationService);
   private errorHandler = inject(ErrorHandlerService);
 
-  selectedService: WritableSignal<HelgolandService | undefined> = signal(undefined);
+  selectedService: WritableSignal<HelgolandService | undefined> =
+    signal(undefined);
 
   filterList: ParameterListEntry[] = [];
 
@@ -57,11 +64,13 @@ export class ListSelectionComponent implements OnInit {
         .getServices(this.configSrvc.configuration.defaultService.apiUrl)
         .subscribe({
           next: (services) => {
-            this.selectedService.set(services.find(
-              (e) =>
-                e.id ===
-                this.configSrvc.configuration.defaultService!.serviceId,
-            )!);
+            this.selectedService.set(
+              services.find(
+                (e) =>
+                  e.id ===
+                  this.configSrvc.configuration.defaultService!.serviceId,
+              )!,
+            );
             this.resetView(this.selectedService()!);
           },
           error: (error) => this.errorHandler.error(error),

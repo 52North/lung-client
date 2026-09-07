@@ -16,11 +16,12 @@ export class NotifierService {
   notify(message: string, duration: number = 2000): void {
     this.messages.update((msg) => {
       if (this.messages().length < 5) {
-        return [...msg, message]
+        return [...msg, message];
       } else {
         let existing = [...msg];
         this.supressedCount++;
-        existing[existing.length-1] = this.supressedCount + " more notifications...";
+        existing[existing.length - 1] =
+          this.supressedCount + ' more notifications...';
         return existing;
       }
     });

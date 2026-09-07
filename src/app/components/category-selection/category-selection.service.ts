@@ -257,7 +257,12 @@ export class CategorySelectionService {
   }
 
   private getCategoryFour(params: RequestParams): Observable<string[]> {
-    if (params.url && params.categoryOne && params.categoryTwo && params.categoryThree) {
+    if (
+      params.url &&
+      params.categoryOne &&
+      params.categoryTwo &&
+      params.categoryThree
+    ) {
       return this.staSrvc
         .getThings(params.url, {
           $select: `distinct:properties/${CAT_FOUR_PROP}`,

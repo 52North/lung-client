@@ -45,7 +45,8 @@ import {
 })
 export class StationMapSelectorComponent
   extends MapSelectorComponent<HelgolandPlatform>
-  implements OnChanges, AfterViewInit {
+  implements OnChanges, AfterViewInit
+{
   protected statusIntervalResolver = inject(StatusIntervalResolverService);
   protected servicesConnector = inject(HelgolandServicesConnector);
   private staSrvc = inject(StaInterfaceService);
@@ -118,8 +119,8 @@ export class StationMapSelectorComponent
                   ts.lastValue?.timestamp &&
                   ts.lastValue.value &&
                   ts.lastValue.timestamp >
-                  new Date().getTime() -
-                  this.ignoreStatusIntervalIfBeforeDuration()
+                    new Date().getTime() -
+                      this.ignoreStatusIntervalIfBeforeDuration()
                 ) {
                   const interval =
                     this.statusIntervalResolver.getMatchingInterval(

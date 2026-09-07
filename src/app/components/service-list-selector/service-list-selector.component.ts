@@ -1,4 +1,11 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  signal,
+  OnInit,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -29,7 +36,7 @@ interface ExtendedHelgolandService extends HelgolandService {
     TranslateModule,
   ],
 })
-export class ServiceListSelectorComponent {
+export class ServiceListSelectorComponent implements OnInit {
   protected serviceSelectorService = inject(ServiceSelectorService);
 
   readonly datasetApiList = input<DatasetApi[]>([]);

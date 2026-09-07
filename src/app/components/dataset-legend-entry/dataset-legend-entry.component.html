@@ -5,8 +5,13 @@
   <mat-expansion-panel-header>
     <mat-panel-title>
       @if (!error) {
-        <div class="title" [ngClass]="{ noData: !hasData }" 
-        [attr.title]="!hasData ? ('legend-entry.no-data-warning' | translate) : null">
+        <div
+          class="title"
+          [ngClass]="{ noData: !hasData }"
+          [attr.title]="
+            !hasData ? ('legend-entry.no-data-warning' | translate) : null
+          "
+        >
           @if (dataset().description.phenomenonLabel) {
             <n52-label-mapper
               label="{{ dataset().description.phenomenonLabel }}"
@@ -199,7 +204,10 @@
           <div>
             <mat-slide-toggle
               [checked]="child.visible"
-              (change)="child.setVisible($event.checked); ds.refreshDiagram(this.dataset().id);"
+              (change)="
+                child.setVisible($event.checked);
+                ds.refreshDiagram(this.dataset().id)
+              "
             >
               <span [ngStyle]="{ color: child.color }">{{ child.label }}</span>
             </mat-slide-toggle>

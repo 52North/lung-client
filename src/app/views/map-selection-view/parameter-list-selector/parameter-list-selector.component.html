@@ -22,7 +22,10 @@
   <mat-accordion>
     @for (group of observedPropertyGroups(); track group[0]) {
       <mat-expansion-panel>
-        <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+        <mat-expansion-panel-header
+          [collapsedHeight]="'auto'"
+          [expandedHeight]="'auto'"
+        >
           <mat-panel-title>
             <span>{{ group[0] }}</span>
             <span style="color: grey; padding-left: 6px"

@@ -79,7 +79,7 @@ export class ModalEditTimeseriesOptionsComponent implements AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    setTimeout(() => (this.loaded.set(true)), 100);
+    setTimeout(() => this.loaded.set(true), 100);
   }
 
   confirmColor(color: string) {

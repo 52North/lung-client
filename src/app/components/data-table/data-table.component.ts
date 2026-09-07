@@ -10,15 +10,12 @@ import {
   IterableDiffers,
   signal,
   ViewChild,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import {
-  HelgolandCoreModule,
-  Timespan
-} from '@helgoland/core';
+import { HelgolandCoreModule, Timespan } from '@helgoland/core';
 import { SeriesGraphDataset } from '@helgoland/d3';
 import { debounceTime, from, Subscription } from 'rxjs';
 import { createDataTable, TableRow } from '../../helper/table-creation';
@@ -237,9 +234,12 @@ export class DataTableComponent implements DoCheck, AfterViewChecked {
     datasource.sort = this.sort;
     datasource.sortingDataAccessor = (item, header) => {
       switch (header) {
-        case 'datum': return item.datum_uhrzeit;
-        case 'uhrzeit': return item.datum_uhrzeit;
-        default: return item[header as keyof TableRow];;
+        case 'datum':
+          return item.datum_uhrzeit;
+        case 'uhrzeit':
+          return item.datum_uhrzeit;
+        default:
+          return item[header as keyof TableRow];
       }
     };
     datasource.paginator = this.paginator;

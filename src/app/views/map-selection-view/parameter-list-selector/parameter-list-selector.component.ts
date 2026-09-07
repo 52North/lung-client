@@ -68,7 +68,8 @@ export class ParameterListSelectorComponent implements OnInit {
   readonly selected = input<string>();
   readonly showOnlyActive = input.required<boolean>();
 
-  observedPropertyGroups: WritableSignal<Map<string, ObservedProperty[]>> = signal(new Map());
+  observedPropertyGroups: WritableSignal<Map<string, ObservedProperty[]>> =
+    signal(new Map());
   items: WritableSignal<ObservedProperty[]> = signal([]);
   loading: WritableSignal<boolean> = signal(false);
 
@@ -153,7 +154,7 @@ export class ParameterListSelectorComponent implements OnInit {
           k,
           entries.sort((a, b) => (a.name! < b.name! ? -1 : 1)),
         );
-      })
+      });
     }
   }
 

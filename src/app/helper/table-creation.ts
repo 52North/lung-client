@@ -32,7 +32,7 @@ export function createDataTable(
   datasets.forEach((ds) => {
     ds.data.forEach((d) => {
       const additional = ds.description.additional;
-      const date = new Date(d.timestamp)
+      const date = new Date(d.timestamp);
       if (d.timestamp >= timespan.from && d.timestamp <= timespan.to) {
         const pg = additional?.['phenomenon_group'] || [];
         const gruppen = pg.join('; ');
@@ -44,8 +44,15 @@ export function createDataTable(
           gewässername: additional?.['gew_name'] || '',
           wb_cd: additional?.['wb_cd'] || '',
           wb_type_cd: additional?.['wb_type_cd'] || '',
-          datum: date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-          uhrzeit: date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+          datum: date.toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          }),
+          uhrzeit: date.toLocaleTimeString('de-DE', {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
           matrix: additional?.['matrix'] || '',
           methode: d.parameter?.methode || '',
           param_kurz: ds.description.phenomenonLabel || '',
@@ -56,7 +63,7 @@ export function createDataTable(
           einheit: ds.description.uom,
           tiefe: d.parameter?.['tiefe'] || '',
           tiefenstufe: d.parameter?.['tiefenstufe'] || '',
-          datum_uhrzeit: d.timestamp
+          datum_uhrzeit: d.timestamp,
         });
       }
     });

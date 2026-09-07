@@ -1,4 +1,7 @@
-<mat-slide-toggle [checked]="showActive()" (change)="onChange($event)"
-  [matTooltip]="'selection.show-only-active-description' | translate">
+<mat-slide-toggle
+  [checked]="showActive()"
+  (change)="onChange($event)"
+  [matTooltip]="'selection.show-only-active-description' | translate"
+>
   {{ "selection.show-only-active" | translate }}
 </mat-slide-toggle>
