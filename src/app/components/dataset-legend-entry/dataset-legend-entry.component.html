@@ -13,6 +13,13 @@
             !hasData ? ('legend-entry.no-data-warning' | translate) : null
           "
         >
+          @if (!hasData) {
+            <mat-icon
+              class="no-data-icon"
+              attr.aria-label="{{ 'legend-entry.no-data-warning' | translate }}"
+              >error_outline</mat-icon
+            >
+          }
           @if (dataset().description.phenomenonLabel) {
             <n52-label-mapper
               label="{{ dataset().description.phenomenonLabel }}"

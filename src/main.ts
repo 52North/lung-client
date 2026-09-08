@@ -25,6 +25,7 @@ import { provideRouter, TitleStrategy } from '@angular/router';
 import { BasicAuthInformer, HelgolandBasicAuthModule } from '@helgoland/auth';
 import { HelgolandCachingModule } from '@helgoland/caching';
 import {
+  ColorService,
   DatasetApiInterface,
   DatasetStaConnectorProvider,
   HelgolandCoreModule,
@@ -60,6 +61,7 @@ import {
   DATASET_FAVORITE_SERVICE_INJECTION,
   DATASET_STATE_SERVICE_INJECTION,
 } from './app/services/service-interfaces';
+import { SeriesStyleService } from './app/services/series-style.service';
 import {
   TimeseriesService,
   TimeseriesServiceImpl,
@@ -183,6 +185,9 @@ const initializeApp = async () => {
         useExisting: ConfigurationService,
       },
       importProvidersFrom(HelgolandCoreModule),
+      // must come after HelgolandCoreModule to win over its ColorService
+      SeriesStyleService,
+      { provide: ColorService, useExisting: SeriesStyleService },
       importProvidersFrom(MatSnackBarModule),
       importProvidersFrom(MatDialogModule),
       importProvidersFrom(HelgolandBasicAuthModule),

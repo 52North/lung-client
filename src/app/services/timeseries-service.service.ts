@@ -2,7 +2,6 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Injectable, inject } from '@angular/core';
 import {
   BarRenderingHints,
-  ColorService,
   DatasetType,
   HelgolandDataset,
   HelgolandServicesConnector,
@@ -31,6 +30,7 @@ import { Duration, duration, unitOfTime } from 'moment';
 
 import { Favorite } from './favorite.service';
 import { DatasetsService } from './graph-datasets.service';
+import { SeriesStyleService } from './series-style.service';
 import { NotifierService } from './notifier.service';
 import {
   DatasetFavoriteService,
@@ -71,7 +71,7 @@ export class TimeseriesServiceImpl
   protected localStorage = inject(LocalStorage);
   protected timeSrvc = inject(Time);
   protected sumValues = inject(SumValuesService);
-  protected colorService = inject(ColorService);
+  protected colorService = inject(SeriesStyleService);
   protected translate = inject(TranslateService);
   protected graphDatasetsSrvc = inject(DatasetsService);
   protected errorHandler = inject(D3SeriesGraphErrorHandler, {
@@ -469,7 +469,12 @@ export class TimeseriesServiceImpl
           );
       }
     }
-    return new LineStyle(this.colorService.getColor(), 2, 2);
+    return new LineStyle(
+      this.colorService.getColor(),
+      2,
+      2,
+      this.colorService.getPointSymbol(),
+    );
   }
 
   private getStyleOfObject(style: any): DatasetStyle {

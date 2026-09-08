@@ -290,7 +290,7 @@ export class StationMapSelectorComponent
     const size = count < 10 ? 'small' : count < 100 ? 'medium' : 'large';
     const label = this.translate.instant('map-selection-view.cluster-label');
     return L.divIcon({
-      html: `<div><span>${count}<span class="visually-hidden"> ${label}</span></span></div>`,
+      html: `<div style="box-shadow: 0 0 0 2px #fff"><span>${count}<span class="visually-hidden"> ${label}</span></span></div>`,
       className: `marker-cluster marker-cluster-${size}`,
       iconSize: L.point(40, 40),
     });
