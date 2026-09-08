@@ -1,0 +1,32 @@
+name: Accessibility
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  axe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      # --no-data leaves out the scenarios that pull timeseries from the live
+      # FROST API - a runner without access to it cannot reach those states
+      - run: npm run a11y -- --no-data
+
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: a11y-report
+          path: a11y/report.json
+          if-no-files-found: ignore

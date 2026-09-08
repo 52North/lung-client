@@ -27,6 +27,7 @@
     "projects/**"
   ],
   "scripts": {
+    "a11y": "node a11y/run.mjs",
     "build:client": "ng build lung-client",
     "lint": "ng lint",
     "license-report": "license-report --output=json --config license/license-report-config.json > license/license-report.json && tablemark license/license-report.json > license/license-report.md && rm license/license-report.json",
@@ -87,6 +88,7 @@
     "@angular/build": "^20.0.5",
     "@angular/cli": "^20.0.5",
     "@angular/compiler-cli": "^20.0.6",
+    "@axe-core/playwright": "^4.11.0",
     "@cyclonedx/cyclonedx-npm": "^4.2.1",
     "@types/d3": "^7.4.0",
     "@types/d3-delaunay": "^6.0.1",
@@ -104,6 +106,7 @@
     "eslint-plugin-prettier": "^5.1.2",
     "license-report": "^6.3.0",
     "ng-packagr": "^20.0.1",
+    "playwright": "^1.56.0",
     "prettier": "^3.1.1",
     "prettier-eslint": "^16.2.0",
     "syncpack": "11.2.1",
