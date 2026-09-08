@@ -1,6 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { LeftSidebarContentComponent } from './components/left-sidebar-content/left-sidebar-content.component';
 import { RightSidebarContentComponent } from './components/right-sidebar-content/right-sidebar-content.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -17,11 +18,13 @@ import { DiagramViewInitStateService } from './views/diagram-view/diagram-view-p
     LeftSidebarContentComponent,
     RightSidebarContentComponent,
     SidebarComponent,
+    TranslateModule,
   ],
 })
 export class AppComponent {
   private initStateService = inject(DiagramViewInitStateService);
   private appRouter = inject(AppRouterService);
+  private document = inject(DOCUMENT);
 
   title = 'helgoland';
   fullscreen = true;
@@ -33,5 +36,15 @@ export class AppComponent {
         this.appRouter.toMapSelection();
       }
     });
+  }
+
+  /**
+   * Moves the focus into the main area instead of letting the browser jump to
+   * the fragment - that would put `#main-content` into the url and into every
+   * permalink created afterwards.
+   */
+  skipToContent(event: Event) {
+    event.preventDefault();
+    this.document.getElementById('main-content')?.focus();
   }
 }

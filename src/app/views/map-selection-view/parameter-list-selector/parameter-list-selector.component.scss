@@ -5,6 +5,10 @@
   height: 100%;
   overflow: hidden;
 
+  .no-results {
+    text-align: center;
+  }
+
   .list-scroll {
     flex: 1;
     overflow-y: auto;

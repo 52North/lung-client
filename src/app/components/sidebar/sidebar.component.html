@@ -2,6 +2,11 @@
   class="sidebar-wrapper"
   [class.collapsed]="collapsed"
   [class.right]="position === 'right'"
+  role="complementary"
+  [attr.aria-label]="
+    (position === 'left' ? 'sidebar.left.label' : 'sidebar.right.label')
+      | translate
+  "
 >
   <div class="sidebar-panel">
     <div class="sidebar-content" [inert]="collapsed">

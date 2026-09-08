@@ -1,4 +1,8 @@
 <div class="wrapper mat-elevation-z3" [ngClass]="{ fullscreen: fullscreen }">
+  <a class="skip-link" href="#main-content" (click)="skipToContent($event)">{{
+    "skip-link.to-content" | translate
+  }}</a>
+
   <!-- <div class="header">
     <app-header />
   </div> -->
@@ -8,9 +12,9 @@
       <app-left-sidebar-content />
     </app-sidebar>
 
-    <div class="content">
+    <main class="content" id="main-content" tabindex="-1">
       <router-outlet></router-outlet>
-    </div>
+    </main>
 
     <app-sidebar position="right" [collapsible]="true">
       <app-right-sidebar-content />

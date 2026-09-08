@@ -7,7 +7,9 @@
   </div>
 }
 @if (!loading() && items().length === 0) {
-  <div style="text-align: center">no results found</div>
+  <p class="no-results" role="status">
+    {{ "selection.no-results" | translate }}
+  </p>
 }
 
 <mat-form-field style="width: 100%">
@@ -61,8 +63,6 @@
           </mat-selection-list>
         </ng-template>
       </mat-expansion-panel>
-    } @empty {
-      <h3>There are no items.</h3>
     }
   </mat-accordion>
 </div>

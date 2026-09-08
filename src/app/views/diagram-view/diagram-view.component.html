@@ -1,4 +1,5 @@
 <div class="view-wrapper">
+  <h1 class="visually-hidden">{{ "view.diagram.title" | translate }}</h1>
   @if (graphDatasetsSrvc.datasets().length === 0) {
     <div class="no-timeseries">
       {{ "diagram-view.no-timeseries.hint" | translate }}

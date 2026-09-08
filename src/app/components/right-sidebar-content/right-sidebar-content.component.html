@@ -72,6 +72,7 @@
   </mat-toolbar>
 
   <div class="legend">
+    <h2 class="visually-hidden">{{ "legend.title" | translate }}</h2>
     <div class="entries">
       <mat-accordion [multi]="true">
         @for (dataset of graphDatasetsSrvc.allDatasets(); track dataset.id) {

@@ -18,7 +18,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { provideRouter, TitleStrategy } from '@angular/router';
 import { BasicAuthInformer, HelgolandBasicAuthModule } from '@helgoland/auth';
 import { HelgolandCachingModule } from '@helgoland/caching';
 import {
@@ -46,6 +46,7 @@ import {
 } from 'keycloak-angular';
 import { AppComponent } from './app/app.component';
 import { ROUTES } from './app/app.consts';
+import { AppTitleStrategy } from './app/services/app-title.strategy';
 import { BasicAuthInformerImplService } from './app/services/basic-auth-informer-impl.service';
 import {
   AppConfig,
@@ -148,6 +149,7 @@ const initializeApp = async () => {
       },
       provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
       provideRouter(ROUTES),
+      { provide: TitleStrategy, useClass: AppTitleStrategy },
       provideHttpClient(),
       provideAnimations(),
       importProvidersFrom(
