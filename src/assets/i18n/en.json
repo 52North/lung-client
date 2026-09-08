@@ -80,6 +80,7 @@
 	"map-config.cluster-marker": "Cluster marker",
 	"map-config.title": "Map configuration",
 	"map-selection-view.adjust-map-button.tooltip": "Adjust Map",
+	"map-selection-view.base-map.label": "Base map",
 	"map-selection-view.depth": "Depth",
 	"map-selection-view.method": "Method",
 	"map-selection-view.phenomenon-selection-list": "List of phenomena",

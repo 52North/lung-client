@@ -80,6 +80,7 @@
 	"map-config.cluster-marker": "Marker gruppieren",
 	"map-config.title": "Kartenkonfiguration",
 	"map-selection-view.adjust-map-button.tooltip": "Karte anpassen",
+	"map-selection-view.base-map.label": "Hintergrundkarte",
 	"map-selection-view.depth": "Tiefenstufe",
 	"map-selection-view.method": "Methode",
 	"map-selection-view.phenomenon-selection-list": "Phänomenliste",

@@ -90,8 +90,9 @@
       <a
         matButton
         class="menu-item"
-        (click)="openAdditionalInformation()"
+        [href]="additionalInformationUrl()"
         target="_blank"
+        rel="noopener"
       >
         <mat-icon class="menu-icon">link</mat-icon>
         <span>{{ "metadata.additional-information" | translate }}</span>
@@ -113,8 +114,9 @@
     <a
       matButton
       class="menu-item"
-      (click)="openAdditionalInformation()"
+      [href]="additionalInformationUrl()"
       target="_blank"
+      rel="noopener"
     >
       <mat-icon class="menu-icon">link</mat-icon>
       <span>{{ "metadata.additional-information" | translate }}</span>

@@ -8,6 +8,8 @@
 }
 
 .layer-list {
+    display: flex;
+    flex-direction: column;
     border: solid 1px #ccc;
     border-radius: 5px;
     background: #fff;

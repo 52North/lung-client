@@ -134,7 +134,8 @@
         ></helgoland-favorite-toggle-button>
       </div>
       @if (dataset().description.firstValue) {
-        <div
+        <button
+          type="button"
           class="entry-line clickable"
           (click)="jumpToFirstTimeStamp(); $event.stopPropagation()"
           matTooltip="{{
@@ -143,7 +144,7 @@
           style="display: flex; align-items: center"
         >
           <mat-icon>chevron_right</mat-icon>
-          <div>
+          <span>
             <span>
               {{ "diagram-view.legend.entry.first-value-at" | translate }}:
             </span>
@@ -156,11 +157,12 @@
                 {{ dataset().description.uom }})
               </span>
             }
-          </div>
-        </div>
+          </span>
+        </button>
       }
       @if (dataset().description.lastValue) {
-        <div
+        <button
+          type="button"
           class="entry-line clickable"
           (click)="jumpToLastTimeStamp(); $event.stopPropagation()"
           matTooltip="{{
@@ -169,7 +171,7 @@
           style="display: flex; align-items: center"
         >
           <mat-icon>chevron_right</mat-icon>
-          <div>
+          <span>
             <span>
               {{ "diagram-view.legend.entry.last-value-at" | translate }}:
             </span>
@@ -182,21 +184,22 @@
                 {{ dataset().description.uom }})
               </span>
             }
-          </div>
-        </div>
+          </span>
+        </button>
       }
-      <div
+      <button
+        type="button"
         class="entry-line clickable"
         (click)="showCompleteTimespan(); $event.stopPropagation()"
         style="display: flex; align-items: center"
       >
         <mat-icon>chevron_right</mat-icon>
-        <div>
+        <span>
           <span>
             {{ "diagram-view.legend.entry.show-complete-timespan" | translate }}
           </span>
-        </div>
-      </div>
+        </span>
+      </button>
       <!-- Reference values -->
       @if (getTimeseriesDatasetChildren().length > 0) {
         <div>{{ "diagram-view.legend-reference-values" | translate }}:</div>

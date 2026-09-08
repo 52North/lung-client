@@ -90,10 +90,14 @@
     </mat-form-field>
     <div class="station-list">
       @for (station of this.filteredStations(); track station["@iot.id"]) {
-        <div class="station-entry" (click)="this.srvc.openStation(station)">
+        <button
+          type="button"
+          class="station-entry"
+          (click)="this.srvc.openStation(station)"
+        >
           <mat-icon class="station-icon">location_on</mat-icon>
           <span>{{ station.description }}</span>
-        </div>
+        </button>
       }
     </div>
   </div>

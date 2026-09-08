@@ -1,4 +1,4 @@
-import { Component, inject, input, resource } from '@angular/core';
+import { Component, computed, inject, input, resource } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,10 +30,7 @@ export class ModalMetadataPreviewComponent {
     loader: ({ params: id }) => this.metaverService.getMetadataResource(id),
   });
 
-  openAdditionalInformation() {
-    window.open(
-      `https://metaver.de/trefferanzeige?docuuid=${this.metadataId()}`,
-      '_blank',
-    );
-  }
+  readonly additionalInformationUrl = computed(
+    () => `https://metaver.de/trefferanzeige?docuuid=${this.metadataId()}`,
+  );
 }

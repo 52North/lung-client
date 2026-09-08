@@ -20,15 +20,18 @@
   ]"
   (detach)="isOpen = false"
 >
-  <div class="layer-list">
+  <mat-radio-group
+    class="layer-list"
+    attr.aria-label="{{ 'map-selection-view.base-map.label' | translate }}"
+  >
     @for (item of baseMaps(); track $index) {
-      <div class="layers-entry" (click)="switchBaseVisibility(item[1])">
-        <mat-radio-button
-          class="example-radio-button"
-          [checked]="item[1].visible"
-          >{{ item[1].label }}</mat-radio-button
-        >
-      </div>
+      <mat-radio-button
+        class="layers-entry"
+        [value]="item[0]"
+        [checked]="item[1].visible"
+        (change)="switchBaseVisibility(item[1])"
+        >{{ item[1].label }}</mat-radio-button
+      >
     }
-  </div>
+  </mat-radio-group>
 </ng-template>
