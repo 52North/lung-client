@@ -47,6 +47,9 @@ testem.log
 Thumbs.db
 .vscode/settings.json
 
+# accessibility check output
+a11y/report.json
+
 # compiled documentation
 documentation
 

@@ -22,6 +22,21 @@ npm start          # serve at http://localhost:4200
 npm run build:client
 ```
 
+## Accessibility
+
+The client targets WCAG 2.1 AA. The automated part of that is checked by the run below;
+keyboard operation, screen reader output, contrast inside SVG and zoom behaviour need a
+manual pass.
+
+```bash
+npx playwright install chromium   # once
+npm run a11y                      # axe-core over all views, dialogs and overlays
+npm run a11y -- --no-data         # without the scenarios that need the live API (CI)
+```
+
+See [`a11y/README.md`](a11y/README.md) for the options, the baseline of accepted findings
+and how to add scenarios.
+
 ## Deployment (Docker)
 
 The [`Dockerfile`](Dockerfile) clones and builds the custom helgoland-toolbox, builds the
