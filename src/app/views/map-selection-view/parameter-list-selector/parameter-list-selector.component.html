@@ -1,6 +1,9 @@
 @if (loading()) {
   <div>
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar
+      mode="indeterminate"
+      attr.aria-label="{{ 'controls.loading' | translate }}"
+    ></mat-progress-bar>
   </div>
 }
 @if (!loading() && items().length === 0) {

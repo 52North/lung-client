@@ -1,10 +1,14 @@
 @if (loadingCount() > 0) {
-  <mat-progress-bar mode="indeterminate" />
+  <mat-progress-bar
+    mode="indeterminate"
+    attr.aria-label="{{ 'controls.loading' | translate }}"
+  />
 }
 
 <mat-selection-list
   [multiple]="false"
   (selectionChange)="selectService($event.options[0].value)"
+  attr.aria-label="{{ 'service-selector.service-list-label' | translate }}"
 >
   @for (service of services(); track service) {
     <mat-list-option [value]="service" [selected]="isSelected(service)">

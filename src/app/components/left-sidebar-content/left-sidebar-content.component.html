@@ -91,7 +91,12 @@
   @if (appRouter.isMapSelection()) {
     <div class="info-overlay">
       <div class="overlay-header">
-        <button matIconButton type="button" (click)="appRouter.back()">
+        <button
+          matIconButton
+          type="button"
+          (click)="appRouter.back()"
+          attr.aria-label="{{ 'controls.back' | translate }}"
+        >
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
         <span class="overlay-title">{{
@@ -105,7 +110,12 @@
   @if (appRouter.isListSelection()) {
     <div class="info-overlay">
       <div class="overlay-header">
-        <button matIconButton type="button" (click)="appRouter.back()">
+        <button
+          matIconButton
+          type="button"
+          (click)="appRouter.back()"
+          attr.aria-label="{{ 'controls.back' | translate }}"
+        >
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
         <span class="overlay-title">{{
@@ -123,6 +133,7 @@
           matIconButton
           type="button"
           (click)="showInfoOverlay.set(false)"
+          attr.aria-label="{{ 'controls.back' | translate }}"
         >
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
@@ -180,6 +191,7 @@
           matIconButton
           type="button"
           (click)="showDownloadOverlay.set(false)"
+          attr.aria-label="{{ 'controls.back' | translate }}"
         >
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>

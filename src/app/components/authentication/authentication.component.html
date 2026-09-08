@@ -3,6 +3,7 @@
     mat-icon-button
     (click)="logout()"
     matTooltip="{{ 'authentication.logout.tooltip' | translate }}"
+    attr.aria-label="{{ 'authentication.logout.tooltip' | translate }}"
   >
     <mat-icon>logout</mat-icon>
   </button>
@@ -11,6 +12,7 @@
     mat-icon-button
     (click)="login()"
     matTooltip="{{ 'authentication.login.tooltip' | translate }}"
+    attr.aria-label="{{ 'authentication.login.tooltip' | translate }}"
   >
     <mat-icon>login</mat-icon>
   </button>

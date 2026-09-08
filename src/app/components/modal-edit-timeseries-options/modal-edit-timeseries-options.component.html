@@ -33,6 +33,9 @@
           'mat-focus-indicator mat-raised-button mat-button-base'
         "
         [ngStyle]="{ 'background-color': data.dataset().style.baseColor }"
+        attr.aria-label="{{
+          'modal-edit-timeseries-options.adjust-color' | translate
+        }}"
       >
         &nbsp;
       </button>
@@ -48,7 +51,7 @@
     }
 
     @if (!config.configuration.supportTimeseriesSymbols && loaded()) {
-      <div>
+      <div id="point-radius-label">
         {{ "modal-edit-timeseries-options.point-radius" | translate }}
       </div>
       <div style="display: flex">
@@ -57,6 +60,7 @@
             [value]="asLineStyle().pointRadius"
             (valueChange)="setPointRadius($event)"
             matSliderThumb
+            aria-labelledby="point-radius-label"
           />
         </mat-slider>
       </div>
@@ -69,7 +73,7 @@
       [(ngModel)]="options.lineWidth">
     </mat-slider> -->
     @if (loaded()) {
-      <div>
+      <div id="line-width-label">
         {{ "modal-edit-timeseries-options.line-width" | translate }}
       </div>
       <div style="display: flex">
@@ -78,6 +82,7 @@
             [value]="asLineStyle().lineWidth"
             (valueChange)="setLineWidth($event)"
             matSliderThumb
+            aria-labelledby="line-width-label"
           />
         </mat-slider>
       </div>

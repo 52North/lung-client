@@ -1,4 +1,7 @@
-<mat-selection-list (selectionChange)="adjustSelection($event)">
+<mat-selection-list
+  (selectionChange)="adjustSelection($event)"
+  attr.aria-label="{{ 'dataset-by-station.dataset-list-label' | translate }}"
+>
   @for (ds of datasets() | sort; track ds.id) {
     <mat-list-option
       color="primary"

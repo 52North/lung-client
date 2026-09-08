@@ -1,7 +1,10 @@
 <h1 mat-dialog-title>{{ station().label }} | {{ phenomenonLabel }}</h1>
 <mat-dialog-content>
   @if (counter) {
-    <mat-progress-bar mode="indeterminate" />
+    <mat-progress-bar
+      mode="indeterminate"
+      attr.aria-label="{{ 'controls.loading' | translate }}"
+    />
   }
   <div class="full-height">
     @if (datasets().length === 0) {
