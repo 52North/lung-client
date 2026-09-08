@@ -3,6 +3,20 @@
     .map-viewer {
         width: 100%;
         height: 100%;
+
+        &:focus-visible {
+            outline: 3px solid #0f6395;
+            outline-offset: -3px;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border: 3px solid #0f6395;
+                pointer-events: none;
+                z-index: 1200;
+            }
+        }
     }
     .map-notifier {
         position: absolute;

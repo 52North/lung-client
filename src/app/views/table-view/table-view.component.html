@@ -23,6 +23,10 @@
       @if (graphDatasetsSrvc.timespan) {
         <n52-d3-series-graph
           #overview
+          role="img"
+          attr.aria-label="{{
+            'diagram-view.overview-description' | translate
+          }}"
           [datasets]="graphDatasetsSrvc.overviewDatasets()"
           [timespan]="graphDatasetsSrvc.overviewTimespan"
           [graphOptions]="overviewOptions"

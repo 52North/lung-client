@@ -81,6 +81,21 @@ export class DiagramViewComponent implements OnInit {
     hoverstyle: signal(HoveringStyle.point),
   };
 
+  protected seriesDescription = computed(() =>
+    this.graphDatasetsSrvc
+      .datasets()
+      .map((d) =>
+        [
+          d.description.phenomenonLabel,
+          d.description.uom ? `(${d.description.uom})` : '',
+          d.description.platformLabel,
+        ]
+          .filter((part) => !!part)
+          .join(' '),
+      )
+      .join('; '),
+  );
+
   graphOptions: Signal<D3SeriesGraphOptions> = computed<D3SeriesGraphOptions>(
     () => {
       return {

@@ -1,3 +1,12 @@
 <div class="map-wrapper" style="height: 100%">
-  <div [attr.id]="mapId()" class="map-viewer"></div>
+  <div
+    [attr.id]="mapId()"
+    class="map-viewer"
+    role="region"
+    attr.aria-label="{{ 'map-selection-view.map.label' | translate }}"
+    aria-describedby="map-keyboard-hint"
+  ></div>
+  <p id="map-keyboard-hint" class="visually-hidden">
+    {{ "map-selection-view.map.keyboard-hint" | translate }}
+  </p>
 </div>

@@ -1,17 +1,13 @@
 import 'leaflet.markercluster';
 
 import {
-  afterNextRender,
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   effect,
-  ElementRef,
   inject,
   input,
   OnChanges,
-  SimpleChanges,
-  ViewChild,
+  SimpleChanges
 } from '@angular/core';
 import {
   DatasetType,
@@ -28,6 +24,7 @@ import {
   TimeseriesExtras,
 } from '@helgoland/core';
 import { HelgolandMapModule, MapSelectorComponent } from '@helgoland/map';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import GeoJSON from 'geojson';
 import L, { Layer } from 'leaflet';
 import { forkJoin, map, Observable } from 'rxjs';
@@ -40,7 +37,7 @@ import {
   selector: 'station-map-selector',
   templateUrl: 'station-map-selector.component.html',
   styleUrls: ['station-map-selector.component.scss'],
-  imports: [HelgolandMapModule],
+  imports: [HelgolandMapModule, TranslateModule],
   standalone: true,
 })
 export class StationMapSelectorComponent
@@ -52,6 +49,7 @@ export class StationMapSelectorComponent
   private staSrvc = inject(StaInterfaceService);
   private configSrvc =
     inject<ConfigurationService<AppConfig>>(ConfigurationService);
+  private translate = inject(TranslateService);
 
   readonly cluster = input<boolean>();
 
@@ -265,6 +263,7 @@ export class StationMapSelectorComponent
     if (this.cluster()) {
       this.markerFeatureGroup = L.markerClusterGroup({
         animate: true,
+        iconCreateFunction: (cluster) => this.createClusterIcon(cluster),
         ...this.clusterConfig(),
       });
     } else {
@@ -286,6 +285,17 @@ export class StationMapSelectorComponent
     this.onContentLoading.emit(false);
   }
 
+  private createClusterIcon(cluster: L.MarkerCluster): L.DivIcon {
+    const count = cluster.getChildCount();
+    const size = count < 10 ? 'small' : count < 100 ? 'medium' : 'large';
+    const label = this.translate.instant('map-selection-view.cluster-label');
+    return L.divIcon({
+      html: `<div><span>${count}<span class="visually-hidden"> ${label}</span></span></div>`,
+      className: `marker-cluster marker-cluster-${size}`,
+      iconSize: L.point(40, 40),
+    });
+  }
+
   private errorPlatformLoad(error: any, lmap: L.Map) {
     console.error(error);
     lmap.setView([0, 0], 1);
@@ -303,13 +313,23 @@ export class StationMapSelectorComponent
     ) {
       layer = markerSelectorGenerator.createDefaultGeometry(station);
     } else if (station.geometry) {
-      layer = L.geoJSON(station.geometry);
+      layer = L.geoJSON(station.geometry, {
+        pointToLayer: (_feature, latlng) =>
+          L.marker(latlng, { alt: station.label, title: station.label }),
+      });
     } else {
       console.error(station.id + ' has no geometry');
     }
     // register click event
     if (layer) {
       layer.on('click', () => this.onSelected.emit(station));
+      layer.on('keydown', (event) => {
+        const originalEvent = (event as L.LeafletKeyboardEvent).originalEvent;
+        if (originalEvent.key === 'Enter' || originalEvent.key === ' ') {
+          originalEvent.preventDefault();
+          this.onSelected.emit(station);
+        }
+      });
     }
     return layer;
   }
