@@ -1,26 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { StaInterfaceService } from '@helgoland/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { Observable, firstValueFrom, forkJoin, map, of, switchMap } from 'rxjs';
+import {
+  AppConfig,
+  ConfigurationService,
+} from 'src/app/services/configuration.service';
+import {
+  MetadataElement,
+  MetaverService,
+} from 'src/app/services/metaver.service';
 import { AppRouterService } from '../../services/app-router.service';
 import { SelectedDataSourceService } from '../../services/selected-data-source.service';
 import { ListSelectionMenuComponent } from '../../views/list-selection-view/list-selection-menu/list-selection-menu.component';
 import { MapSelectionMenuComponent } from '../../views/map-selection-view/map-selection-menu/map-selection-menu.component';
 import { ChangeDataSourceModalComponent } from '../change-data-source/change-data-source-modal/change-data-source-modal.component';
-import { firstValueFrom, of, map, switchMap, Observable, forkJoin } from 'rxjs';
-import { StaInterfaceService } from '@helgoland/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import {
-  MetadataElement,
-  MetaverService,
-} from 'src/app/services/metaver.service';
-import {
-  AppConfig,
-  ConfigurationService,
-} from 'src/app/services/configuration.service';
 
 @Component({
   selector: 'app-left-sidebar-content',
@@ -53,8 +53,16 @@ export class LeftSidebarContentComponent {
   ) as ConfigurationService<AppConfig>;
 
   metaver_uuid = this.configSrvc.getSettings().metaver_uuid;
-  showInfoOverlay = false;
+  showInfoOverlay = signal(false);
   showDownloadOverlay = signal(false);
+
+  protected overlayVisible = computed(
+    () =>
+      this.appRouter.isMapSelection() ||
+      this.appRouter.isListSelection() ||
+      this.showInfoOverlay() ||
+      this.showDownloadOverlay(),
+  );
 
   openMapSelection() {
     this.appRouter.toMapSelection();

@@ -1,90 +1,92 @@
 <div class="left-sidebar">
-  <div class="sidebar-header">
-    <img src="assets/img/mv_tut_gut_kl.png" alt="MV Logo" class="logo" />
-    <div class="portal-title">Messdatenportal<br />Umwelt</div>
-  </div>
-
-  <div class="sidebar-main">
-    <div class="menu-group">
-      <button mat-button class="menu-item" (click)="openDatasource()">
-        <mat-icon class="menu-icon">storage</mat-icon>
-        {{ "change-data-source.button-label" | translate }}
-      </button>
-      @if (selectedDataSource.selectedService()) {
-        <div class="selected-service-label">
-          <span>{{ selectedDataSource.selectedService()!.label }}</span>
-        </div>
-        <span class="selected-service-url">{{
-          selectedDataSource.selectedService()!.apiUrl
-        }}</span>
-      }
+  <div class="sidebar-base" [inert]="overlayVisible()">
+    <div class="sidebar-header">
+      <img src="assets/img/mv_tut_gut_kl.png" alt="MV Logo" class="logo" />
+      <div class="portal-title">Messdatenportal<br />Umwelt</div>
     </div>
+
+    <div class="sidebar-main">
+      <div class="menu-group">
+        <button mat-button class="menu-item" (click)="openDatasource()">
+          <mat-icon class="menu-icon">storage</mat-icon>
+          {{ "change-data-source.button-label" | translate }}
+        </button>
+        @if (selectedDataSource.selectedService()) {
+          <div class="selected-service-label">
+            <span>{{ selectedDataSource.selectedService()!.label }}</span>
+          </div>
+          <span class="selected-service-url">{{
+            selectedDataSource.selectedService()!.apiUrl
+          }}</span>
+        }
+      </div>
+      <hr class="divider" />
+      <div class="menu-group">
+        <button mat-button class="menu-item" (click)="openMapSelection()">
+          <mat-icon class="menu-icon">map</mat-icon>
+          {{ "diagram-view.add-timeseries.map" | translate }}
+        </button>
+        <button mat-button class="menu-item" (click)="openListSelection()">
+          <mat-icon class="menu-icon">list</mat-icon>
+          {{ "diagram-view.add-timeseries.list" | translate }}
+        </button>
+      </div>
+      <hr class="divider" />
+    </div>
+
     <hr class="divider" />
+
     <div class="menu-group">
-      <button mat-button class="menu-item" (click)="openMapSelection()">
-        <mat-icon class="menu-icon">map</mat-icon>
-        {{ "diagram-view.add-timeseries.map" | translate }}
-      </button>
-      <button mat-button class="menu-item" (click)="openListSelection()">
-        <mat-icon class="menu-icon">list</mat-icon>
-        {{ "diagram-view.add-timeseries.list" | translate }}
+      <button
+        matButton
+        class="menu-item"
+        type="button"
+        (click)="showDownloadOverlay.set(true)"
+      >
+        <mat-icon class="menu-icon">cloud_download</mat-icon>
+        <span>Landesweiter Datendownload</span>
       </button>
     </div>
+
     <hr class="divider" />
+
+    <nav class="menu-group">
+      <a
+        matButton
+        class="menu-item"
+        href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
+        target="_blank"
+      >
+        <mat-icon class="menu-icon">bookmark</mat-icon>
+        <span>AGB</span>
+      </a>
+
+      <a matButton class="menu-item" href="#">
+        <mat-icon class="menu-icon">help_outline</mat-icon>
+        <span>Hilfe</span>
+      </a>
+
+      <button
+        matButton
+        class="menu-item"
+        type="button"
+        (click)="showInfoOverlay.set(true)"
+      >
+        <mat-icon class="menu-icon">bookmarks</mat-icon>
+        <span>Information &amp; Kontakt</span>
+      </button>
+
+      <a
+        matButton
+        class="menu-item"
+        [href]="'https://metaver.de/trefferanzeige?docuuid=' + metaver_uuid"
+        target="_blank"
+      >
+        <mat-icon class="menu-icon">info</mat-icon>
+        <span>Über dieses Portal</span>
+      </a>
+    </nav>
   </div>
-
-  <hr class="divider" />
-
-  <div class="menu-group">
-    <button
-      matButton
-      class="menu-item"
-      type="button"
-      (click)="showDownloadOverlay.set(true)"
-    >
-      <mat-icon class="menu-icon">cloud_download</mat-icon>
-      <span>Landesweiter Datendownload</span>
-    </button>
-  </div>
-
-  <hr class="divider" />
-
-  <nav class="menu-group">
-    <a
-      matButton
-      class="menu-item"
-      href="https://umweltportal.mv-regierung.de/portale/impressum.html#agb"
-      target="_blank"
-    >
-      <mat-icon class="menu-icon">bookmark</mat-icon>
-      <span>AGB</span>
-    </a>
-
-    <a matButton class="menu-item" href="#">
-      <mat-icon class="menu-icon">help_outline</mat-icon>
-      <span>Hilfe</span>
-    </a>
-
-    <button
-      matButton
-      class="menu-item"
-      type="button"
-      (click)="showInfoOverlay = true"
-    >
-      <mat-icon class="menu-icon">bookmarks</mat-icon>
-      <span>Information &amp; Kontakt</span>
-    </button>
-
-    <a
-      matButton
-      class="menu-item"
-      [href]="'https://metaver.de/trefferanzeige?docuuid=' + metaver_uuid"
-      target="_blank"
-    >
-      <mat-icon class="menu-icon">info</mat-icon>
-      <span>Über dieses Portal</span>
-    </a>
-  </nav>
 
   @if (appRouter.isMapSelection()) {
     <div class="info-overlay">
@@ -114,10 +116,14 @@
     </div>
   }
 
-  @if (showInfoOverlay) {
+  @if (showInfoOverlay()) {
     <div class="info-overlay">
       <div class="overlay-header">
-        <button matIconButton type="button" (click)="showInfoOverlay = false">
+        <button
+          matIconButton
+          type="button"
+          (click)="showInfoOverlay.set(false)"
+        >
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
         <span class="overlay-title">Information &amp; Kontakt</span>

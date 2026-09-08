@@ -4,6 +4,7 @@
   color="none"
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
+  [attr.aria-expanded]="isOpen"
   attr.aria-label="{{
     'map-selection-view.adjust-map-button.tooltip' | translate
   }}"
@@ -22,6 +23,8 @@
 >
   <mat-radio-group
     class="layer-list"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
     attr.aria-label="{{ 'map-selection-view.base-map.label' | translate }}"
   >
     @for (item of baseMaps(); track $index) {

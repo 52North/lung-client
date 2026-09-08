@@ -108,7 +108,7 @@ export function initApplication(
     translate.setDefaultLang(lang);
     translate.onLangChange.subscribe((lce) => {
       localStorage.save(localStorageLanguageKey, lce.lang);
-      document.documentElement.lang = lang;
+      document.documentElement.lang = lce.lang;
     });
 
     document.documentElement.lang = lang;

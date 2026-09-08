@@ -1,3 +1,4 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
@@ -27,6 +28,7 @@ import {
     MatButtonModule,
     MatRadioModule,
     CommonModule,
+    CdkTrapFocus,
   ],
 })
 export class LayersControlComponent extends MapControlComponent {

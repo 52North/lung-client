@@ -12,6 +12,13 @@
         overflow: hidden;
     }
 
+    .sidebar-base {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+    }
+
     .sidebar-header {
         display: flex;
         align-items: center;

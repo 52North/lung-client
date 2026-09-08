@@ -4,7 +4,7 @@
   [class.right]="position === 'right'"
 >
   <div class="sidebar-panel">
-    <div class="sidebar-content">
+    <div class="sidebar-content" [inert]="collapsed">
       <ng-content></ng-content>
     </div>
   </div>
