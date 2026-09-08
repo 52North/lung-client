@@ -17,6 +17,7 @@ import * as d3 from 'd3';
   templateUrl: './timeseries-entry-symbol.component.html',
   styleUrls: ['./timeseries-entry-symbol.component.scss'],
   standalone: true,
+  host: { 'aria-hidden': 'true' },
 })
 export class TimeseriesEntrySymbolComponent
   implements AfterViewInit, DoCheck, OnInit

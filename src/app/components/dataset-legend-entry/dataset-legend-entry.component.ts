@@ -37,6 +37,8 @@ import { ModalEditTimeseriesOptionsComponent } from '../modal-edit-timeseries-op
 import { TimeseriesEntrySymbolComponent } from '../timeseries-entry-symbol/timeseries-entry-symbol.component';
 import { duration } from 'moment';
 
+let nextLegendEntryId = 0;
+
 @Component({
   selector: 'helgoland-dataset-legend-entry',
   templateUrl: './dataset-legend-entry.component.html',
@@ -58,6 +60,12 @@ import { duration } from 'moment';
   ],
 })
 export class DatasetLegendEntryComponent {
+  /**
+   * Without this the panel header takes its name from everything inside it -
+   * including the two icon buttons (WCAG 4.1.2, 2.5.3).
+   */
+  protected readonly titleId = `legend-entry-title-${nextLegendEntryId++}`;
+
   protected translateSrvc = inject(TranslateService);
   protected graphDatasetsSrvc = inject(DatasetsService);
   protected timeSrvc = inject(Time);

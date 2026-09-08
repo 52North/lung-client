@@ -2,11 +2,12 @@
   [ngStyle]="{ 'border-color': dataset().style.baseColor }"
   [expanded]="dataset().visible"
 >
-  <mat-expansion-panel-header>
+  <mat-expansion-panel-header [attr.aria-labelledby]="titleId">
     <mat-panel-title>
       @if (!error) {
         <div
           class="title"
+          [id]="titleId"
           [ngClass]="{ noData: !hasData }"
           [attr.title]="
             !hasData ? ('legend-entry.no-data-warning' | translate) : null
@@ -45,7 +46,7 @@
           }}</mat-icon>
         </button>
       } @else {
-        <div class="title error">
+        <div class="title error" [id]="titleId">
           Error occured, while loading {{ dataset().id }}
         </div>
       }
