@@ -1,6 +1,6 @@
 <div
   class="sidebar-wrapper"
-  [class.collapsed]="collapsed"
+  [class.collapsed]="collapsed()"
   [class.right]="position === 'right'"
   role="complementary"
   [attr.aria-label]="
@@ -9,7 +9,7 @@
   "
 >
   <div class="sidebar-panel">
-    <div class="sidebar-content" [inert]="collapsed">
+    <div class="sidebar-content" [inert]="collapsed()">
       <ng-content></ng-content>
     </div>
   </div>
@@ -17,19 +17,21 @@
     <button
       class="sidebar-handle"
       [style.top]="handleTop"
-      (click)="collapsed = !collapsed"
+      (click)="collapsed.set(!collapsed())"
       [attr.aria-label]="
-        (collapsed ? 'sidebar.open' : 'sidebar.close') | translate
+        (collapsed() ? 'sidebar.open' : 'sidebar.close') | translate
       "
-      [attr.title]="(collapsed ? 'sidebar.open' : 'sidebar.close') | translate"
+      [attr.title]="
+        (collapsed() ? 'sidebar.open' : 'sidebar.close') | translate
+      "
     >
       <mat-icon>
         {{
           position === "left"
-            ? collapsed
+            ? collapsed()
               ? "keyboard_arrow_right"
               : "keyboard_arrow_left"
-            : collapsed
+            : collapsed()
               ? "keyboard_arrow_left"
               : "keyboard_arrow_right"
         }}

@@ -1,6 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Component, HostBinding, inject, Input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+
+export const SIDEBAR_OVERLAY_BREAKPOINT = '(max-width: 1024px)';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,5 +18,18 @@ export class SidebarComponent {
   @Input() position: 'left' | 'right' = 'left';
   @Input() handleTop: string = '50%';
 
-  collapsed = false;
+  readonly collapsed = signal(false);
+
+  @HostBinding('class.right') get isRight() {
+    return this.position === 'right';
+  }
+
+  private breakpointObserver = inject(BreakpointObserver);
+
+  constructor() {
+    this.breakpointObserver
+      .observe(SIDEBAR_OVERLAY_BREAKPOINT)
+      .pipe(takeUntilDestroyed())
+      .subscribe((state) => this.collapsed.set(state.matches));
+  }
 }

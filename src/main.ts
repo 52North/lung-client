@@ -17,7 +17,10 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapte
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import {
+  provideAnimations,
+  provideNoopAnimations,
+} from '@angular/platform-browser/animations';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import { BasicAuthInformer, HelgolandBasicAuthModule } from '@helgoland/auth';
 import { HelgolandCachingModule } from '@helgoland/caching';
@@ -151,7 +154,11 @@ const initializeApp = async () => {
       provideRouter(ROUTES),
       { provide: TitleStrategy, useClass: AppTitleStrategy },
       provideHttpClient(),
-      provideAnimations(),
+      // the css override in styles.scss cannot reach the angular animations
+      // engine, so material animations are switched off here as well
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? provideNoopAnimations()
+        : provideAnimations(),
       importProvidersFrom(
         TranslateModule.forRoot({
           loader: {

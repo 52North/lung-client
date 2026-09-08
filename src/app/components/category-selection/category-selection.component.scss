@@ -55,6 +55,7 @@
           min-height: 36px;
           line-height: 1.3;
           white-space: normal;
+          overflow-wrap: anywhere;
           height: auto;
 
           &.active {
@@ -135,6 +136,34 @@
           background-color: #cde5ff;
         }
       }
+    }
+  }
+}
+
+// Below this width the four category columns next to the station list are so
+// narrow that their labels get cut off (WCAG 1.4.4, 1.4.10) - stack instead.
+@media (max-width: 800px) {
+  :host .wrapper {
+    flex-direction: column;
+    overflow-y: auto;
+
+    .selection {
+      flex: none;
+      flex-direction: column;
+      border-right: none;
+      overflow: visible;
+
+      .section {
+        flex: none;
+        border-right: none;
+        border-bottom: 1px solid #f0f1f5;
+        overflow: visible;
+      }
+    }
+
+    .stations {
+      flex: none;
+      min-height: 50vh;
     }
   }
 }

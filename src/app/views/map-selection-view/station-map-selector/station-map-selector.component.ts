@@ -7,7 +7,7 @@ import {
   inject,
   input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import {
   DatasetType,
