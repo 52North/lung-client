@@ -93,6 +93,7 @@
 	"map-selection-view.depth": "Depth",
 	"map-selection-view.map.keyboard-hint": "Map: pan with the arrow keys, zoom with plus and minus. The measuring stations can be reached one by one with the tab key and opened with enter. The same stations are also available in the list selection.",
 	"map-selection-view.map.label": "Map of the measuring stations",
+	"map-selection-view.map.skip": "Skip the map",
 	"map-selection-view.method": "Method",
 	"map-selection-view.phenomenon-selection-list": "List of phenomena",
 	"map-selection-view.search": "Search",

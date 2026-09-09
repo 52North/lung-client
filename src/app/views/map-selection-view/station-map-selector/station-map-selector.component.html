@@ -1,4 +1,11 @@
 <div class="map-wrapper" style="height: 100%">
+  <a
+    class="skip-map-link"
+    [href]="'#' + mapId() + '-end'"
+    (click)="skipMap($event)"
+  >
+    {{ "map-selection-view.map.skip" | translate }}
+  </a>
   <div
     [attr.id]="mapId()"
     class="map-viewer"
@@ -9,4 +16,5 @@
   <p id="map-keyboard-hint" class="visually-hidden">
     {{ "map-selection-view.map.keyboard-hint" | translate }}
   </p>
+  <span #mapEnd [attr.id]="mapId() + '-end'" tabindex="-1"></span>
 </div>

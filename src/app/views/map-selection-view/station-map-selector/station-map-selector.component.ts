@@ -4,10 +4,12 @@ import {
   AfterViewInit,
   Component,
   effect,
+  ElementRef,
   inject,
   input,
   OnChanges,
   SimpleChanges,
+  viewChild,
 } from '@angular/core';
 import {
   DatasetType,
@@ -72,6 +74,15 @@ export class StationMapSelectorComponent
   }
 
   protected markerFeatureGroup: L.FeatureGroup | undefined;
+
+  private mapEnd = viewChild<ElementRef<HTMLElement>>('mapEnd');
+
+  // Moves focus past the map without touching the url - the fragment of a plain
+  // anchor would end up in the permalink parameters.
+  protected skipMap(event: Event) {
+    event.preventDefault();
+    this.mapEnd()?.nativeElement.focus();
+  }
 
   override ngOnChanges(changes: SimpleChanges) {
     super.ngOnChanges(changes);

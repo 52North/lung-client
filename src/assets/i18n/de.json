@@ -93,6 +93,7 @@
 	"map-selection-view.depth": "Tiefenstufe",
 	"map-selection-view.map.keyboard-hint": "Karte: mit den Pfeiltasten verschieben, mit Plus und Minus zoomen. Die Messstationen sind einzeln mit der Tabulatortaste erreichbar und mit der Eingabetaste zu öffnen. Dieselben Stationen stehen auch in der Listenauswahl.",
 	"map-selection-view.map.label": "Karte der Messstationen",
+	"map-selection-view.map.skip": "Karte überspringen",
 	"map-selection-view.method": "Methode",
 	"map-selection-view.phenomenon-selection-list": "Phänomenliste",
 	"map-selection-view.search": "Suche",
