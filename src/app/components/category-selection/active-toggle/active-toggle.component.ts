@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatSlideToggleChange,
   MatSlideToggleModule,
@@ -21,9 +21,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrls: ['./active-toggle.component.scss'],
 })
 export class CategorySelectionActiveToggleComponent {
-  readonly showActive = this.categorySelection.showActiveOnly;
+  private categorySelection = inject(CategorySelectionService);
 
-  constructor(private categorySelection: CategorySelectionService) {}
+  readonly showActive = this.categorySelection.showActiveOnly;
 
   onChange(event: MatSlideToggleChange) {
     this.categorySelection.setShowActiveOnly(event.checked);

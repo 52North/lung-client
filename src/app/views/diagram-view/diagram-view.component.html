@@ -48,7 +48,7 @@
             }}
           </mat-toolbar>
         }
-        @if (graphDatasetsSrvc.visibleDatasetCount() == 0) {
+        @if (graphDatasetsSrvc.visibleDatasetCount() === 0) {
           <mat-toolbar
             color="warn"
             class="yellow-alert"
@@ -64,7 +64,7 @@
         <div
           [style.height]="
             graphDatasetsSrvc.visibilityLimitReached() ||
-            graphDatasetsSrvc.visibleDatasetCount() == 0
+            graphDatasetsSrvc.visibleDatasetCount() === 0
               ? '95%'
               : '100%'
           "

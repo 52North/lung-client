@@ -28,6 +28,7 @@
   ],
   "scripts": {
     "a11y": "node a11y/run.mjs",
+    "prea11y": "npm run versions-script",
     "build:client": "ng build lung-client",
     "lint": "ng lint",
     "license-report": "license-report --output=json --config license/license-report-config.json > license/license-report.json && tablemark license/license-report.json > license/license-report.md && rm license/license-report.json",

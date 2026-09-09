@@ -56,6 +56,7 @@ export class MapSelectionComponent implements OnInit {
   private dialog = inject(MatDialog);
   private mapCache = inject(MapCache);
   protected state = inject(MapSelectionStateService);
+  private cdr = inject(ChangeDetectorRef);
 
   mapId = 'timeseries';
 
@@ -64,8 +65,6 @@ export class MapSelectionComponent implements OnInit {
   clusterConfig: MarkerClusterGroupOptions | undefined;
 
   cluster = true;
-
-  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.clusterConfig =

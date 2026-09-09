@@ -67,6 +67,7 @@ export class DiagramViewComponent implements OnInit {
   protected appRouter = inject(AppRouterService);
   protected graphDatasetsSrvc = inject(DatasetsService);
   private breakpointObserver = inject(BreakpointObserver);
+  private ref = inject(ChangeDetectorRef);
 
   private isMobile$ = this.breakpointObserver
     .observe(Breakpoints.Handset)
@@ -120,8 +121,6 @@ export class DiagramViewComponent implements OnInit {
   overviewLoading: boolean = false;
 
   count = LIMIT_VISIBLE_DATASETS;
-
-  constructor(private ref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.graphDatasetsSrvc.loadingVisibleDataStatus.subscribe((ld) => {

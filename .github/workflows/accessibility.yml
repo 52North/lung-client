@@ -6,6 +6,23 @@ on:
   pull_request:
 
 jobs:
+  # Die 11 Template-Regeln aus plugin:@angular-eslint/template/accessibility
+  # laufen hier als Gate - eigener Job, damit ein Lintfehler nicht den
+  # axe-Bericht verhindert und man beide Befunde in einem Push sieht
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
   axe:
     runs-on: ubuntu-latest
     steps:
