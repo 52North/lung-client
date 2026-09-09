@@ -100,17 +100,35 @@
       <mat-label>{{ "map-selection-view.search" | translate }}</mat-label>
       <input matInput type="text" (input)="onInput($event)" />
     </mat-form-field>
-    <div class="station-list">
-      @for (station of this.filteredStations(); track station["@iot.id"]) {
-        <button
-          type="button"
-          class="station-entry"
-          (click)="this.srvc.openStation(station)"
-        >
-          <mat-icon class="station-icon">location_on</mat-icon>
-          <span>{{ station.description }}</span>
-        </button>
+    <p id="station-list-hint" class="visually-hidden">
+      {{ "category-selection.list-keyboard-hint" | translate }}
+    </p>
+    <ul
+      #stationList
+      class="station-list"
+      role="list"
+      tabindex="-1"
+      aria-describedby="station-list-hint"
+      (keydown)="onListKeydown($event)"
+    >
+      @for (
+        station of this.filteredStations();
+        track station["@iot.id"];
+        let i = $index
+      ) {
+        <li>
+          <button
+            type="button"
+            class="station-entry"
+            [attr.tabindex]="i === rovingIndex() ? 0 : -1"
+            (focus)="onEntryFocus(i)"
+            (click)="this.srvc.openStation(station)"
+          >
+            <mat-icon class="station-icon">location_on</mat-icon>
+            <span>{{ station.description }}</span>
+          </button>
+        </li>
       }
-    </div>
+    </ul>
   </div>
 </div>

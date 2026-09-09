@@ -12,6 +12,7 @@
 	"category-selection.category4": "Category 4",
 	"category-selection.filtered-stations": "{{stations}} stations match the search",
 	"category-selection.found-stations": "Found {{stations}} stations",
+	"category-selection.list-keyboard-hint": "Station list: navigate with the arrow keys, jump to the start or end with Home and End, open with Enter. Tab leaves the list.",
 	"category-selection.select-hint": "",
 	"change-data-source-modal.title": "Change data source",
 	"change-data-source.button-label": "Change data source",

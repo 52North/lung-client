@@ -12,6 +12,7 @@
 	"category-selection.category4": "Kategorie 4",
 	"category-selection.filtered-stations": "{{stations}} Stationen entsprechen der Suche",
 	"category-selection.found-stations": "{{stations}} Stationen gefunden",
+	"category-selection.list-keyboard-hint": "Stationsliste: mit den Pfeiltasten navigieren, mit Pos 1 und Ende an den Anfang oder das Ende springen, mit der Eingabetaste öffnen. Die Tabulatortaste führt aus der Liste heraus.",
 	"category-selection.select-hint": "Bitte durch Auswahl der Kategorien einschränken",
 	"change-data-source-modal.title": "Datenquelle wechseln",
 	"change-data-source.button-label": "Datenquelle wechseln",
