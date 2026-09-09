@@ -2,6 +2,10 @@
   class="sidebar-wrapper"
   [class.collapsed]="collapsed()"
   [class.right]="position === 'right'"
+  [cdkTrapFocus]="modal()"
+  [cdkTrapFocusAutoCapture]="modal()"
+  (keydown)="onKeydown($event)"
+  tabindex="-1"
   role="complementary"
   [attr.aria-label]="
     (position === 'left' ? 'sidebar.left.label' : 'sidebar.right.label')
@@ -15,6 +19,7 @@
   </div>
   @if (collapsible) {
     <button
+      #handle
       class="sidebar-handle"
       [style.top]="handleTop"
       (click)="collapsed.set(!collapsed())"
