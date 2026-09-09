@@ -77,6 +77,7 @@
 	"legend-entry.toggle-visibility-button.hide.tooltip": "Zeitreihe verbergen",
 	"legend-entry.toggle-visibility-button.show.tooltip": "Zeitreihe anzeigen",
 	"legend-entry.no-data-warning": "Keine Daten im ausgewählten Zeitraum verfügbar",
+	"legend-entry.no-data-warning-short": "keine Daten im Zeitraum",
 	"legend.title": "Ausgewählte Zeitreihen",
 	"list-config.title": "Anbieterauswahl",
 	"main-config-button.tooltip": "Allgemeine Einstellungen",

@@ -6,9 +6,9 @@ on:
   pull_request:
 
 jobs:
-  # Die 11 Template-Regeln aus plugin:@angular-eslint/template/accessibility
-  # laufen hier als Gate - eigener Job, damit ein Lintfehler nicht den
-  # axe-Bericht verhindert und man beide Befunde in einem Push sieht
+  # Gate for the 11 template rules from
+  # plugin:@angular-eslint/template/accessibility. Its own job so a lint error
+  # does not stop the axe report from being uploaded - both show up in one push
   lint:
     runs-on: ubuntu-latest
     steps:

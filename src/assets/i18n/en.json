@@ -77,6 +77,7 @@
 	"legend-entry.toggle-visibility-button.hide.tooltip": "Hide timeseries",
 	"legend-entry.toggle-visibility-button.show.tooltip": "Show timeseries",
 	"legend-entry.no-data-warning": "No data available for the selected period",
+	"legend-entry.no-data-warning-short": "no data in period",
 	"legend.title": "Selected timeseries",
 	"list-config.title": "Provider selection",
 	"main-config-button.tooltip": "Common settings",

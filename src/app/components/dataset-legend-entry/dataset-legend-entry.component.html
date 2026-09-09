@@ -18,11 +18,12 @@
           "
         >
           @if (!hasData) {
-            <mat-icon
-              class="no-data-icon"
-              attr.aria-label="{{ 'legend-entry.no-data-warning' | translate }}"
-              >error_outline</mat-icon
-            >
+            <!--
+              Decorative only: mat-icon sets aria-hidden="true" unless the
+              attribute is set statically, so an aria-label here would have no
+              effect. The hidden span at the end of the title carries the text.
+            -->
+            <mat-icon class="no-data-icon">error_outline</mat-icon>
           }
           @if (dataset().description.phenomenonLabel) {
             <n52-label-mapper
@@ -37,6 +38,11 @@
           }
           @if (dataset().description.platformLabel) {
             <div>{{ subheader }}</div>
+          }
+          @if (!hasData) {
+            <span class="visually-hidden">
+              {{ "legend-entry.no-data-warning-short" | translate }}
+            </span>
           }
         </div>
       } @else {

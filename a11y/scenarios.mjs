@@ -142,9 +142,9 @@ export const SCENARIOS = [
     wait: 8000,
   },
   {
-    // Der einzige Zustand, in dem ein Legendeneintrag zugeklappt ist: sichtbare
-    // Zeitreihen halten ihr Panel offen ([expanded]="dataset().visible"). Genau
-    // um diesen Zustand ging Entscheidung E5, also wird er auch geprueft.
+    // The only state in which a legend entry is collapsed: visible series keep
+    // their panel open ([expanded]="dataset().visible"). Decision E5 was about
+    // exactly that state, so it gets scanned too
     name: 'legend-entry-collapsed',
     title: 'Diagrammansicht mit zugeklapptem Legendeneintrag',
     path: '/',
