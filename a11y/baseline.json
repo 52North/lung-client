@@ -1,8 +1,3 @@
 {
-  "accepted": {
-    "nested-interactive": {
-      "reason": "mat-expansion-panel-header der Legendeneinträge enthält zwei Icon-Buttons; ein Umbau würde den Schnellzugriff bei zugeklapptem Eintrag kosten und braucht deshalb eine Layout-Entscheidung",
-      "maxNodes": 6
-    }
-  }
+  "accepted": {}
 }

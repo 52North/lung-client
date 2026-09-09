@@ -2,7 +2,11 @@
   [ngStyle]="{ 'border-color': dataset().style.baseColor }"
   [expanded]="dataset().visible"
 >
-  <mat-expansion-panel-header [attr.aria-labelledby]="titleId">
+  <mat-expansion-panel-header
+    [attr.aria-labelledby]="titleId"
+    [collapsedHeight]="'auto'"
+    [expandedHeight]="'auto'"
+  >
     <mat-panel-title>
       @if (!error) {
         <div
@@ -35,41 +39,11 @@
             <div>{{ subheader }}</div>
           }
         </div>
-        <button
-          mat-icon-button
-          (click)="toggleVisibility(); $event.stopPropagation()"
-          attr.aria-label="{{
-            'legend-entry.toggle-visibility-button.tooltip' | translate
-          }}"
-          matTooltip="{{
-            'legend-entry.toggle-visibility-button.tooltip' | translate
-          }}"
-          [disabled]="
-            graphDatasetsSrvc.visibilityLimitReached() && !dataset().visible
-          "
-        >
-          <mat-icon>{{
-            dataset().visible ? "visibility" : "visibility_off"
-          }}</mat-icon>
-        </button>
       } @else {
         <div class="title error" [id]="titleId">
           Error occured, while loading {{ dataset().id }}
         </div>
       }
-      <div style="flex: 1"></div>
-      <button
-        mat-icon-button
-        (click)="removeDataset(); $event.stopPropagation()"
-        attr.aria-label="{{
-          'legend-entry.remove-entry-button.tooltip' | translate
-        }}"
-        matTooltip="{{
-          'legend-entry.remove-entry-button.tooltip' | translate
-        }}"
-      >
-        <mat-icon>clear</mat-icon>
-      </button>
     </mat-panel-title>
   </mat-expansion-panel-header>
   @if (!error && dataset()) {
@@ -94,12 +68,19 @@
         </button>
         <button
           mat-icon-button
+          class="toggle-visibility"
           (click)="toggleVisibility(); $event.stopPropagation()"
           attr.aria-label="{{
-            'legend-entry.toggle-visibility-button.tooltip' | translate
+            (dataset().visible
+              ? 'legend-entry.toggle-visibility-button.hide.tooltip'
+              : 'legend-entry.toggle-visibility-button.show.tooltip'
+            ) | translate
           }}"
           matTooltip="{{
-            'legend-entry.toggle-visibility-button.tooltip' | translate
+            (dataset().visible
+              ? 'legend-entry.toggle-visibility-button.hide.tooltip'
+              : 'legend-entry.toggle-visibility-button.show.tooltip'
+            ) | translate
           }}"
           [disabled]="
             graphDatasetsSrvc.visibilityLimitReached() && !dataset().visible
@@ -140,6 +121,19 @@
         <helgoland-favorite-toggle-button
           [dataset]="dataset()"
         ></helgoland-favorite-toggle-button>
+        <button
+          mat-icon-button
+          class="remove-entry"
+          (click)="removeDataset()"
+          attr.aria-label="{{
+            'legend-entry.remove-entry-button.tooltip' | translate
+          }}"
+          matTooltip="{{
+            'legend-entry.remove-entry-button.tooltip' | translate
+          }}"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
       </div>
       @if (dataset().description.firstValue) {
         <button

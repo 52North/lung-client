@@ -2,8 +2,14 @@ mat-expansion-panel {
     border-radius: 0px !important;
     border-right: 5px solid;
 
-    mat-expansion-panel-header {
-        height: min-content;
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .remove-entry {
+            margin-left: auto;
+        }
     }
 
     mat-panel-title {

@@ -61,8 +61,10 @@ let nextLegendEntryId = 0;
 })
 export class DatasetLegendEntryComponent {
   /**
-   * Without this the panel header takes its name from everything inside it -
-   * including the two icon buttons (WCAG 4.1.2, 2.5.3).
+   * Pins the panel header's accessible name to the title. The header is itself
+   * a button, so anything interactive placed inside it nests a control in a
+   * control and leaks its name into the header's (WCAG 4.1.2, 2.5.3) - keep
+   * actions in the panel body, in .controls.
    */
   protected readonly titleId = `legend-entry-title-${nextLegendEntryId++}`;
 

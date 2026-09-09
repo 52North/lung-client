@@ -47,6 +47,11 @@ Höchstzahl betroffener Knoten je Szenario:
 Ein Eintrag hier ist eine Entscheidung, kein Ablageort: jede Zeile braucht eine Begründung,
 die erklärt, warum der Befund offen bleibt.
 
+Der Block oben ist ein Syntaxbeispiel. **Die Baseline ist derzeit leer** (`{ "accepted": {} }`)
+— der letzte Eintrag, `nested-interactive` an den Legendeneinträgen, ist mit Entscheidung E5
+behoben. Neue Einträge nicht mit `--update-baseline` erzeugen: das Flag akzeptiert
+stillschweigend alles, was es gerade findet.
+
 ## Szenarien ergänzen
 
 `scenarios.mjs` erweitern:
