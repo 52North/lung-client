@@ -243,7 +243,7 @@
                     <a mat-button [href]="dl.linkage" target="_blank">
                       <mat-icon class="download-link">link</mat-icon>
                       <span class="btn-text" [title]="dl.name">{{
-                        dl.name
+                        dl.name || ("metadata.unnamed-link" | translate)
                       }}</span>
                     </a>
                   }
@@ -256,7 +256,7 @@
                     <a mat-button [href]="dl.linkage" target="_blank">
                       <mat-icon class="download-link">link</mat-icon>
                       <span class="btn-text" [title]="dl.name">{{
-                        dl.name
+                        dl.name || ("metadata.unnamed-link" | translate)
                       }}</span>
                     </a>
                   }

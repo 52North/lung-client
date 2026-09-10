@@ -1,8 +1,8 @@
 import {
   Component,
-  OnDestroy,
   inject,
   input,
+  OnDestroy,
   output,
   viewChild,
 } from '@angular/core';

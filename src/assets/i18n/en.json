@@ -1,4 +1,5 @@
 {
+	"authentication.admin-link": "Open user administration for {{user}} (new window)",
 	"authentication.error": "Login failed",
 	"authentication.failed": "Authentication failed",
 	"authentication.login.tooltip": "Log in",
@@ -134,6 +135,7 @@
 	"metadata.panel-title": "Metadata",
 	"metadata.revisionDate": "Last change",
 	"metadata.show-metaver": "Show metadata from MetaVer",
+	"metadata.unnamed-link": "Link without a name",
 	"metadata.update-interval": "Maintenance and update interval:",
 	"modal-edit-timeseries-options.adjust-color": "Change color",
 	"modal-edit-timeseries-options.adjust-color-confirm-button": "Ok",
