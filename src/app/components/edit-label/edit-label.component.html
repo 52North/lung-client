@@ -1,4 +1,5 @@
 <mat-form-field>
+  <mat-label>{{ "edit-label.field-label" | translate }}</mat-label>
   <input
     #input
     matInput
@@ -6,11 +7,23 @@
     (ngModelChange)="changeLabel($event)"
   />
   @if (label() !== editedLabel) {
-    <button matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
+    <button
+      matSuffix
+      mat-icon-button
+      [attr.aria-label]="'edit-label.discard' | translate"
+      [matTooltip]="'edit-label.discard' | translate"
+      (click)="clear()"
+    >
       <mat-icon>close</mat-icon>
     </button>
   }
-  <button matSuffix mat-icon-button aria-label="Clear" (click)="confirm()">
+  <button
+    matSuffix
+    mat-icon-button
+    [attr.aria-label]="'edit-label.confirm' | translate"
+    [matTooltip]="'edit-label.confirm' | translate"
+    (click)="confirm()"
+  >
     <mat-icon>check</mat-icon>
   </button>
 </mat-form-field>

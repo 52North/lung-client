@@ -103,6 +103,30 @@ export const SCENARIOS = [
     },
   },
   {
+    // The state that slipped through until 2026-09-10: the dialog above only
+    // ever showed the read-only card, so the edit mode - an input field and two
+    // buttons - was never scanned. It needs a favorite, hence needsData.
+    name: 'favorites-edit-mode',
+    title: 'Dialog „Favoriten" im Bearbeiten-Modus',
+    path: '/',
+    needsData: true,
+    wait: 8000,
+    setup: async (page) => {
+      await page
+        .locator('button[aria-label*="Favoriten hinzufügen"]')
+        .first()
+        .click();
+      await page.waitForTimeout(1500);
+      await page.locator('helgoland-modal-favorite-list-button button').click();
+      await page.waitForTimeout(2500);
+      await page
+        .locator('mat-dialog-container mat-card .fav-title button')
+        .first()
+        .click();
+      await page.waitForTimeout(1500);
+    },
+  },
+  {
     name: 'data-source-dialog',
     title: 'Dialog „Datenquelle wechseln"',
     path: '/',
