@@ -38,6 +38,11 @@
   padding: 4px 8px;
   text-align: center;
   margin-top: 4px;
+
+  &.error {
+    color: var(--mat-sys-error, #ba1a1a);
+    font-size: 15px;
+  }
 }
 
 .hint {

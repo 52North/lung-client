@@ -35,6 +35,7 @@ import {
   AppConfig,
   ConfigurationService,
 } from '../../../services/configuration.service';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'station-map-selector',
@@ -53,6 +54,7 @@ export class StationMapSelectorComponent
   private configSrvc =
     inject<ConfigurationService<AppConfig>>(ConfigurationService);
   private translate = inject(TranslateService);
+  private errorHandler = inject(ErrorHandlerService);
 
   readonly cluster = input<boolean>();
 
@@ -341,7 +343,10 @@ export class StationMapSelectorComponent
   }
 
   private errorPlatformLoad(error: any, lmap: L.Map) {
-    console.error(error);
+    this.errorHandler.error(
+      this.translate.instant('map-selection-view.error-loading-stations'),
+      error,
+    );
     lmap.setView([0, 0], 1);
     this.onContentLoading.emit(false);
   }

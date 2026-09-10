@@ -1,4 +1,11 @@
-import { Component, inject, input, output, viewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormControl,
@@ -22,7 +29,10 @@ import {
   Time,
   Timespan,
 } from '@helgoland/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+
+import { NotifierService } from '../../../services/notifier.service';
 
 @Component({
   selector: 'helgoland-general-time-selection',
@@ -42,9 +52,11 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
   ],
 })
-export class GeneralTimeSelectionComponent {
+export class GeneralTimeSelectionComponent implements OnDestroy {
   protected timeSrvc = inject(Time);
   protected definedTimeSrvc = inject(DefinedTimespanService);
+  private notifier = inject(NotifierService);
+  private translate = inject(TranslateService);
 
   LASTHOUR = DefinedTimespan.LASTHOUR;
   TODAY = DefinedTimespan.TODAY;
@@ -64,6 +76,8 @@ export class GeneralTimeSelectionComponent {
     start: new UntypedFormControl(),
     end: new UntypedFormControl(),
   });
+
+  private pickerClosed?: Subscription;
 
   readonly trigger = viewChild(MatMenuTrigger);
 
@@ -91,13 +105,28 @@ export class GeneralTimeSelectionComponent {
       start: new Date(this.timespan()!.from),
       end: new Date(this.timespan()!.to),
     });
-    picker.closedStream.subscribe((res) => {
-      const ts = new Timespan(
-        this.range.value.start.toDate(),
-        this.range.value.end.toDate(),
+    if (!this.pickerClosed) {
+      this.pickerClosed = picker.closedStream.subscribe(() =>
+        this.applyRange(),
       );
-      this.timespanChanged.emit(ts);
+    }
+  }
+
+  private applyRange() {
+    const { start, end } = this.range.value;
+    if (!start || !end) {
+      this.notifier.notify(
+        this.translate.instant('time-selection.incomplete-range'),
+        { kind: 'important' },
+      );
       this.trigger()!.closeMenu();
-    });
+      return;
+    }
+    this.timespanChanged.emit(new Timespan(start.toDate(), end.toDate()));
+    this.trigger()!.closeMenu();
+  }
+
+  ngOnDestroy() {
+    this.pickerClosed?.unsubscribe();
   }
 }

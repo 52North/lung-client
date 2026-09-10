@@ -8,7 +8,9 @@ import {
   ThingExpandParams,
   ThingSelectParams,
 } from '@helgoland/core';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, of } from 'rxjs';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 import { SelectedDataSourceService } from '../../services/selected-data-source.service';
 import { ModalDatasetByStationSelectorComponent } from '../modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
 
@@ -33,6 +35,8 @@ export class CategorySelectionService {
   private staSrvc = inject(StaInterfaceService);
   private selectedDataSourceSrvc = inject(SelectedDataSourceService);
   private dialog = inject(MatDialog);
+  private errorHandler = inject(ErrorHandlerService);
+  private translate = inject(TranslateService);
 
   private staUrl = computed(
     () => this.selectedDataSourceSrvc.selectedService()?.apiUrl,
@@ -125,14 +129,30 @@ export class CategorySelectionService {
 
   openStation(thing: Thing) {
     const url = this.staUrl();
-    if (!url) return;
+    if (!url) {
+      this.errorHandler.error(
+        this.translate.instant('category-selection.no-data-source'),
+      );
+      return;
+    }
     this.staSrvc
       .getThing(url, thing['@iot.id'], {
         $select: 'Locations',
         $expand: 'Locations($select=id)',
       })
-      .subscribe((thingLoc) => {
-        if (thingLoc.Locations && thingLoc.Locations.length === 1) {
+      .subscribe({
+        next: (thingLoc) => {
+          if (!thingLoc.Locations || thingLoc.Locations.length !== 1) {
+            this.errorHandler.error(
+              this.translate.instant(
+                'category-selection.station-not-openable',
+                {
+                  station: thing.description || thing['@iot.id'],
+                },
+              ),
+            );
+            return;
+          }
           const label = thing.description || '';
           const locId = thingLoc.Locations[0]['@iot.id'];
           const platform = new HelgolandPlatform(locId, label, []);
@@ -149,7 +169,14 @@ export class CategorySelectionService {
             property: CAT_FOUR_PROP,
             value: this.categoryFour(),
           });
-        }
+        },
+        error: (error) =>
+          this.errorHandler.error(
+            this.translate.instant('category-selection.error-loading-station', {
+              station: thing.description || thing['@iot.id'],
+            }),
+            error,
+          ),
       });
   }
 

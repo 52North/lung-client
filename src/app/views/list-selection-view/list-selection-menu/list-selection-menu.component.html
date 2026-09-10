@@ -6,6 +6,10 @@
           | translate: { stations: stations.length }
       }}
     </div>
+  } @else if (srvc.stationsResource.error()) {
+    <div class="station-count error" role="status">
+      {{ "category-selection.error-loading-stations" | translate }}
+    </div>
   }
 
   @if (!srvc.selectedCategoryOne()) {

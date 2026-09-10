@@ -15,7 +15,7 @@ import {
   HelgolandServicesConnector,
   Parameter,
 } from '@helgoland/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { AppRouterService } from '../../services/app-router.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
@@ -52,6 +52,7 @@ export class ListSelectionComponent implements OnInit {
   protected graphDatasetsSrvc = inject(DatasetsService);
   private configSrvc = inject(ConfigurationService);
   private errorHandler = inject(ErrorHandlerService);
+  private translate = inject(TranslateService);
 
   selectedService: WritableSignal<HelgolandService | undefined> =
     signal(undefined);
@@ -73,7 +74,11 @@ export class ListSelectionComponent implements OnInit {
             );
             this.resetView(this.selectedService()!);
           },
-          error: (error) => this.errorHandler.error(error),
+          error: (error) =>
+            this.errorHandler.error(
+              this.translate.instant('list-selection.error-loading-services'),
+              error,
+            ),
         });
     }
   }

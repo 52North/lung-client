@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { BasicAuthInformer, BasicAuthService } from '@helgoland/auth';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Observer } from 'rxjs';
 
 import { BasicAuthLoginComponent } from '../components/basic-auth-login/basic-auth-login.component';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ import { BasicAuthLoginComponent } from '../components/basic-auth-login/basic-au
 export class BasicAuthInformerImplService implements BasicAuthInformer {
   private basicAuthSrvc = inject(BasicAuthService);
   private dialog = inject(MatDialog);
-  private snackbar = inject(MatSnackBar);
+  private errorHandler = inject(ErrorHandlerService);
   private translate = inject(TranslateService);
 
   doBasicAuth(url: string): Observable<boolean> {
@@ -32,14 +32,17 @@ export class BasicAuthInformerImplService implements BasicAuthInformer {
               observer.next(true);
               observer.complete();
             },
-            error: (error: any) => {
-              if (error instanceof HttpErrorResponse && error.status === 401) {
-                this.snackbar.open(
-                  this.translate.instant('authentication.failed'),
-                  undefined,
-                  { duration: 3000 },
-                );
-              }
+            error: (error: unknown) => {
+              const wrongCredentials =
+                error instanceof HttpErrorResponse && error.status === 401;
+              this.errorHandler.error(
+                this.translate.instant(
+                  wrongCredentials
+                    ? 'authentication.failed'
+                    : 'authentication.error',
+                ),
+                wrongCredentials ? undefined : error,
+              );
               observer.next(false);
               observer.complete();
             },

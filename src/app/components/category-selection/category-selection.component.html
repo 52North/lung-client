@@ -79,20 +79,26 @@
 
   <div class="stations">
     <div class="stations-header" role="status">
-      <span class="stations-count">
-        {{
-          "category-selection.found-stations"
-            | translate
-              : { stations: this.srvc.stationsResource.value()?.length ?? 0 }
-        }}
-      </span>
-      @if (filter()) {
-        <span class="visually-hidden">
+      @if (srvc.stationsResource.error()) {
+        <span class="stations-error">
+          {{ "category-selection.error-loading-stations" | translate }}
+        </span>
+      } @else {
+        <span class="stations-count">
           {{
-            "category-selection.filtered-stations"
-              | translate: { stations: filteredStations()?.length ?? 0 }
+            "category-selection.found-stations"
+              | translate
+                : { stations: this.srvc.stationsResource.value()?.length ?? 0 }
           }}
         </span>
+        @if (filter()) {
+          <span class="visually-hidden">
+            {{
+              "category-selection.filtered-stations"
+                | translate: { stations: filteredStations()?.length ?? 0 }
+            }}
+          </span>
+        }
       }
     </div>
     <mat-form-field appearance="outline" class="search-field">

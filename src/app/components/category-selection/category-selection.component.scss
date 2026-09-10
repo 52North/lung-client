@@ -90,6 +90,12 @@
           letter-spacing: 0.05em;
           color: #5c5f63;
         }
+
+        .stations-error {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: var(--mat-sys-error, #ba1a1a);
+        }
       }
 
       .search-field {

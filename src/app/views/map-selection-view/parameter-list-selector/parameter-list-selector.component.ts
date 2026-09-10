@@ -33,8 +33,9 @@ import {
 } from '@helgoland/core';
 import { LabelMapperComponent } from '@helgoland/depiction';
 import { FilteredParameter } from '@helgoland/selector';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfigurationService } from '../../../services/configuration.service';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'helgoland-common-parameter-list-selector',
@@ -59,6 +60,8 @@ export class ParameterListSelectorComponent implements OnInit {
   readonly list = viewChild(MatSelectionList);
   private staSrvc = inject(StaInterfaceService);
   private configSrvc = inject(ConfigurationService);
+  private errorHandler = inject(ErrorHandlerService);
+  private translate = inject(TranslateService);
   // private idHandler = inject(InternalIdHandler);
   private staUrl = this.configSrvc.configuration.defaultService.apiUrl;
 
@@ -111,7 +114,15 @@ export class ParameterListSelectorComponent implements OnInit {
           this.parseIntoGroups('');
           this.loading.set(false);
         },
-        error: (error) => console.log(error),
+        error: (error) => {
+          this.loading.set(false);
+          this.errorHandler.error(
+            this.translate.instant(
+              'map-selection-view.error-loading-phenomena',
+            ),
+            error,
+          );
+        },
       });
   }
 

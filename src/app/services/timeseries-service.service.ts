@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   BarRenderingHints,
   DatasetType,
@@ -10,8 +10,7 @@ import {
   LocalStorage,
   SumValuesService,
   Time,
-  Timespan,
-  TimeValueTuple,
+  Timespan
 } from '@helgoland/core';
 import {
   AxisSettings,
@@ -29,8 +28,8 @@ import { Duration, duration, unitOfTime } from 'moment';
 
 import { Favorite } from './favorite.service';
 import { DatasetsService } from './graph-datasets.service';
-import { SeriesStyleService } from './series-style.service';
 import { NotifierService } from './notifier.service';
+import { SeriesStyleService } from './series-style.service';
 import {
   DatasetFavoriteService,
   DatasetStateService,
@@ -387,6 +386,10 @@ export class TimeseriesServiceImpl
           this.loadAddedDataset(res, style, axis, visible, selected),
         error: (error) => {
           this.graphDatasetsSrvc.stopLoadingDatasetOnError(id);
+          this.notifier.notify(
+            this.translate.instant('diagram-view.error-loading-dataset'),
+            { kind: 'important' },
+          );
           return this.errorHandler.handleDatasetLoadError(error);
         },
       });
