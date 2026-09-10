@@ -36,6 +36,7 @@ import { LoadingOverlayProgressBarComponent } from '../loading-overlay-progress-
 import { ModalEditTimeseriesOptionsComponent } from '../modal-edit-timeseries-options/modal-edit-timeseries-options.component';
 import { TimeseriesEntrySymbolComponent } from '../timeseries-entry-symbol/timeseries-entry-symbol.component';
 import { duration } from 'moment';
+import { DataLanguageDirective } from '../../helper/data-language.directive';
 
 let nextLegendEntryId = 0;
 
@@ -44,6 +45,7 @@ let nextLegendEntryId = 0;
   templateUrl: './dataset-legend-entry.component.html',
   styleUrls: ['./dataset-legend-entry.component.scss'],
   imports: [
+    DataLanguageDirective,
     CommonModule,
     FavoriteToggleButtonComponent,
     HelgolandLabelMapperModule,

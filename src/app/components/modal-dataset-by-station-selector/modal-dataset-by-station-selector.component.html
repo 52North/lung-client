@@ -1,4 +1,6 @@
-<h1 mat-dialog-title>{{ station().label }} | {{ phenomenonLabel }}</h1>
+<h1 mat-dialog-title dataLanguage>
+  {{ station().label }} | {{ phenomenonLabel }}
+</h1>
 <mat-dialog-content>
   @if (counter) {
     <mat-progress-bar

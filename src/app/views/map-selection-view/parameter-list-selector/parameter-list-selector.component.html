@@ -32,7 +32,7 @@
           [expandedHeight]="'auto'"
         >
           <mat-panel-title>
-            <span>{{ group[0] }}</span>
+            <span dataLanguage>{{ group[0] }}</span>
             <span class="entry-count">({{ group[1].length }})</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -50,10 +50,14 @@
                 [value]="item.name"
                 [selected]="item.name === selected()"
               >
-                <div matListItemTitle>
+                <div matListItemTitle dataLanguage>
                   <n52-label-mapper [label]="item.name"></n52-label-mapper>
                 </div>
-                <div matListItemLine matTooltip="{{ item.description }}">
+                <div
+                  matListItemLine
+                  dataLanguage
+                  matTooltip="{{ item.description }}"
+                >
                   {{ item.description }}
                 </div>
               </mat-list-option>

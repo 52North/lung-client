@@ -6,11 +6,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { HelgolandCoreModule } from '@helgoland/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MetaverService } from 'src/app/services/metaver.service';
+import { DataLanguageDirective } from '../../../helper/data-language.directive';
 
 @Component({
   selector: 'app-modal-metadata-preview',
   templateUrl: './modal-metadata-preview.component.html',
   imports: [
+    DataLanguageDirective,
     TranslateModule,
     MatDialogModule,
     MatProgressBarModule,

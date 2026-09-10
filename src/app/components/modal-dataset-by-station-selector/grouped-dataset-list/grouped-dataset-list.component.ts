@@ -30,6 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { TimeseriesService } from '../../../services/timeseries-service.service';
 import { StringFilterComponent } from '../../string-filter/string-filter.component';
+import { DataLanguageDirective } from '../../../helper/data-language.directive';
 
 interface Entry {
   title: string;
@@ -57,6 +58,7 @@ export class SortPipe implements PipeTransform {
   templateUrl: './grouped-dataset-list.component.html',
   styleUrls: ['./grouped-dataset-list.component.scss'],
   imports: [
+    DataLanguageDirective,
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,

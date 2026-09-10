@@ -13,7 +13,9 @@
         </button>
         @if (selectedDataSource.selectedService()) {
           <div class="selected-service-label">
-            <span>{{ selectedDataSource.selectedService()!.label }}</span>
+            <span dataLanguage>{{
+              selectedDataSource.selectedService()!.label
+            }}</span>
           </div>
           <span class="selected-service-url">{{
             selectedDataSource.selectedService()!.apiUrl
@@ -44,7 +46,7 @@
         (click)="showDownloadOverlay.set(true)"
       >
         <mat-icon class="menu-icon">cloud_download</mat-icon>
-        <span>Landesweiter Datendownload</span>
+        <span>{{ "sidebar.statewide-download" | translate }}</span>
       </button>
     </div>
 
@@ -58,7 +60,7 @@
         target="_blank"
       >
         <mat-icon class="menu-icon">bookmark</mat-icon>
-        <span>AGB</span>
+        <span>{{ "sidebar.terms" | translate }}</span>
       </a>
 
       <a matButton class="menu-item" href="#">
@@ -73,7 +75,7 @@
         (click)="showInfoOverlay.set(true)"
       >
         <mat-icon class="menu-icon">bookmarks</mat-icon>
-        <span>Information &amp; Kontakt</span>
+        <span>{{ "sidebar.info-contact" | translate }}</span>
       </button>
 
       <a
@@ -83,7 +85,7 @@
         target="_blank"
       >
         <mat-icon class="menu-icon">info</mat-icon>
-        <span>Über dieses Portal</span>
+        <span>{{ "sidebar.about-portal" | translate }}</span>
       </a>
     </nav>
   </div>
@@ -137,7 +139,7 @@
         >
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
-        <h2 class="overlay-title">Information &amp; Kontakt</h2>
+        <h2 class="overlay-title">{{ "sidebar.info-contact" | translate }}</h2>
       </div>
       <nav class="menu-group">
         <a
@@ -147,7 +149,7 @@
           target="_blank"
         >
           <mat-icon class="menu-icon">article</mat-icon>
-          <span>Impressum &amp; Kontakt</span>
+          <span>{{ "sidebar.imprint" | translate }}</span>
         </a>
 
         <a
@@ -157,7 +159,7 @@
           target="_blank"
         >
           <mat-icon class="menu-icon">accessibility_new</mat-icon>
-          <span>Barrierefreiheitserklärung</span>
+          <span>{{ "sidebar.accessibility-statement" | translate }}</span>
         </a>
 
         <a
@@ -167,7 +169,7 @@
           target="_blank"
         >
           <mat-icon class="menu-icon">privacy_tip</mat-icon>
-          <span>Datenschutzerklärung</span>
+          <span>{{ "sidebar.privacy" | translate }}</span>
         </a>
 
         <a
@@ -178,7 +180,7 @@
           rel="noopener noreferrer"
         >
           <mat-icon class="menu-icon">open_in_new</mat-icon>
-          <span>Webseite des LUNG</span>
+          <span>{{ "sidebar.lung-website" | translate }}</span>
         </a>
       </nav>
     </div>
@@ -195,25 +197,37 @@
         >
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
-        <h2 class="overlay-title">Landesweiter Datendownload</h2>
+        <h2 class="overlay-title">
+          {{ "sidebar.statewide-download" | translate }}
+        </h2>
       </div>
       <nav class="menu-group">
         <div class="card-scroll-container">
           @for (uuid of this.meta_uuids.value(); track uuid) {
             <mat-card appearance="outlined">
               <mat-card-header>
-                <mat-card-title>Datendownload</mat-card-title>
-                <mat-card-subtitle>{{ uuid.title }}</mat-card-subtitle>
+                <mat-card-title>{{
+                  "metadata.data-download" | translate
+                }}</mat-card-title>
+                <mat-card-subtitle dataLanguage>{{
+                  uuid.title
+                }}</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
-                <div class="subtitle">Aktualisierungsintervall:</div>
+                <div class="subtitle">
+                  {{ "metadata.update-interval" | translate }}
+                </div>
                 {{ uuid.status! | translate }}
                 <br />
 
-                <div class="subtitle">Erläuterung zum Zeitbezug:</div>
-                {{ uuid.interval_description }}
+                <div class="subtitle">
+                  {{ "metadata.interval-description" | translate }}
+                </div>
+                <span dataLanguage>{{ uuid.interval_description }}</span>
                 <br />
-                <div class="subtitle">Weitere Informationen:</div>
+                <div class="subtitle">
+                  {{ "metadata.further-information" | translate }}
+                </div>
                 <a
                   matButton
                   [href]="
@@ -222,7 +236,7 @@
                   target="_blank"
                 >
                   <mat-icon class="menu-icon">link</mat-icon>
-                  <span>MetaVer Eintrag</span>
+                  <span>{{ "metadata.metaver-entry" | translate }}</span>
                 </a>
                 @for (dl of uuid.downloads; track dl) {
                   @if (dl.function === "information") {
@@ -234,7 +248,9 @@
                     </a>
                   }
                 }
-                <div class="subtitle">Daten-Downloads:</div>
+                <div class="subtitle">
+                  {{ "metadata.data-downloads" | translate }}
+                </div>
                 @for (dl of uuid.downloads; track dl) {
                   @if (dl.function === "download") {
                     <a mat-button [href]="dl.linkage" target="_blank">

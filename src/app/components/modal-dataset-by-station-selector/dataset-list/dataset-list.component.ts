@@ -12,6 +12,7 @@ import { SelectableDataset } from '@helgoland/selector';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { TimeseriesService } from '../../../services/timeseries-service.service';
+import { DataLanguageDirective } from '../../../helper/data-language.directive';
 
 @Pipe({ name: 'sort' })
 export class SortPipe implements PipeTransform {
@@ -31,6 +32,7 @@ export class SortPipe implements PipeTransform {
   templateUrl: './dataset-list.component.html',
   styleUrls: ['./dataset-list.component.scss'],
   imports: [
+    DataLanguageDirective,
     SortPipe,
     LabelMapperComponent,
     TranslateModule,

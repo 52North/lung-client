@@ -21,6 +21,7 @@ import { SelectedDataSourceService } from '../../services/selected-data-source.s
 import { ListSelectionMenuComponent } from '../../views/list-selection-view/list-selection-menu/list-selection-menu.component';
 import { MapSelectionMenuComponent } from '../../views/map-selection-view/map-selection-menu/map-selection-menu.component';
 import { ChangeDataSourceModalComponent } from '../change-data-source/change-data-source-modal/change-data-source-modal.component';
+import { DataLanguageDirective } from '../../helper/data-language.directive';
 
 @Component({
   selector: 'app-left-sidebar-content',
@@ -28,6 +29,7 @@ import { ChangeDataSourceModalComponent } from '../change-data-source/change-dat
   styleUrls: ['./left-sidebar-content.component.scss'],
   standalone: true,
   imports: [
+    DataLanguageDirective,
     CommonModule,
     MatIconModule,
     MatButton,

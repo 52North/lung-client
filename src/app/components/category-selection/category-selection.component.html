@@ -13,7 +13,7 @@
             [class.active]="cat === this.srvc.selectedCategoryOne()"
             [attr.aria-pressed]="cat === this.srvc.selectedCategoryOne()"
           >
-            {{ cat }}
+            <span dataLanguage>{{ cat }}</span>
           </button>
         }
       </div>
@@ -32,7 +32,7 @@
             [class.active]="cat === this.srvc.selectedCategoryTwo()"
             [attr.aria-pressed]="cat === this.srvc.selectedCategoryTwo()"
           >
-            {{ cat }}
+            <span dataLanguage>{{ cat }}</span>
           </button>
         }
       </div>
@@ -51,7 +51,7 @@
             [class.active]="cat === this.srvc.selectedCategoryThree()"
             [attr.aria-pressed]="cat === this.srvc.selectedCategoryThree()"
           >
-            {{ cat }}
+            <span dataLanguage>{{ cat }}</span>
           </button>
         }
       </div>
@@ -70,7 +70,7 @@
             [class.active]="cat === this.srvc.selectedCategoryFour()"
             [attr.aria-pressed]="cat === this.srvc.selectedCategoryFour()"
           >
-            {{ cat }}
+            <span dataLanguage>{{ cat }}</span>
           </button>
         }
       </div>
@@ -131,7 +131,7 @@
             (click)="this.srvc.openStation(station)"
           >
             <mat-icon class="station-icon">location_on</mat-icon>
-            <span>{{ station.description }}</span>
+            <span dataLanguage>{{ station.description }}</span>
           </button>
         </li>
       }

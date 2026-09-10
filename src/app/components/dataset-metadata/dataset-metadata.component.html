@@ -12,7 +12,7 @@
       (closed)="panelOpenState.set(false)"
     >
       <mat-expansion-panel-header>
-        <mat-panel-title>Metadata</mat-panel-title>
+        <mat-panel-title>{{ "metadata.panel-title" | translate }}</mat-panel-title>
       </mat-expansion-panel-header>
       <div>
         @for (item of metadata(); track $index) {

@@ -26,12 +26,14 @@ import { DatasetsService } from '../../services/graph-datasets.service';
 import { TimeseriesService } from './../../services/timeseries-service.service';
 import { DatasetListComponent } from './dataset-list/dataset-list.component';
 import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-dataset-list.component';
+import { DataLanguageDirective } from '../../helper/data-language.directive';
 
 @Component({
   selector: 'helgoland-modal-dataset-by-station-selector',
   templateUrl: './modal-dataset-by-station-selector.component.html',
   styleUrls: ['./modal-dataset-by-station-selector.component.scss'],
   imports: [
+    DataLanguageDirective,
     HelgolandCoreModule,
     HelgolandLabelMapperModule,
     MatBadgeModule,

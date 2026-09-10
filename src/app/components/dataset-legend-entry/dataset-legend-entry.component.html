@@ -27,17 +27,19 @@
           }
           @if (dataset().description.phenomenonLabel) {
             <n52-label-mapper
+              dataLanguage
               label="{{ dataset().description.phenomenonLabel }}"
             ></n52-label-mapper>
           }
           @if (dataset().description.uom) {
             <span> - </span>
             <n52-label-mapper
+              dataLanguage
               label="{{ dataset().description.uom }}"
             ></n52-label-mapper>
           }
           @if (dataset().description.platformLabel) {
-            <div>{{ subheader }}</div>
+            <div dataLanguage>{{ subheader }}</div>
           }
           @if (!hasData) {
             <span class="visually-hidden">
@@ -47,7 +49,8 @@
         </div>
       } @else {
         <div class="title error" [id]="titleId">
-          Error occured, while loading {{ dataset().id }}
+          {{ "legend-entry.load-error" | translate }}
+          <span dataLanguage>{{ dataset().id }}</span>
         </div>
       }
     </mat-panel-title>

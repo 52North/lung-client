@@ -6,9 +6,8 @@ import {
   OnInit,
   output,
   signal,
-  Signal,
   viewChild,
-  WritableSignal,
+  WritableSignal
 } from '@angular/core';
 import {
   MatExpansionModule,
@@ -34,6 +33,7 @@ import {
 import { LabelMapperComponent } from '@helgoland/depiction';
 import { FilteredParameter } from '@helgoland/selector';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DataLanguageDirective } from '../../../helper/data-language.directive';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
 
@@ -42,6 +42,7 @@ import { ErrorHandlerService } from '../../../services/error-handler.service';
   templateUrl: './parameter-list-selector.component.html',
   styleUrls: ['./parameter-list-selector.component.scss'],
   imports: [
+    DataLanguageDirective,
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,

@@ -15,28 +15,28 @@
     </div>
   </mat-dialog-content>
 } @else if (metadataResource.value()) {
-  <h1 mat-dialog-title>{{ metadataResource.value()!.title }}</h1>
+  <h1 mat-dialog-title dataLanguage>{{ metadataResource.value()!.title }}</h1>
 
   <mat-dialog-content>
     <div class="abstract">
-      <h4>Beschreibung:</h4>
-      {{ metadataResource.value()!.abstract }}
+      <h4>{{ "metadata.description" | translate }}</h4>
+      <span dataLanguage>{{ metadataResource.value()!.abstract }}</span>
     </div>
 
     <div class="contact">
       <div class="contact-header">{{ "metadata.contact" | translate }}</div>
       @if (metadataResource.value()!.contact.organisation) {
-        <div class="contact-item">
+        <div class="contact-item" dataLanguage>
           {{ metadataResource.value()!.contact.organisation }}
         </div>
       }
       @if (metadataResource.value()!.contact.positionName) {
-        <div class="contact-item">
+        <div class="contact-item" dataLanguage>
           {{ metadataResource.value()!.contact.positionName }}
         </div>
       }
       @if (metadataResource.value()!.contact.address.deliveryPoint) {
-        <div class="contact-item">
+        <div class="contact-item" dataLanguage>
           {{ metadataResource.value()!.contact.address.deliveryPoint }}
         </div>
       }
@@ -44,13 +44,13 @@
         metadataResource.value()!.contact.address.city &&
         metadataResource.value()!.contact.address.postalCode
       ) {
-        <div class="contact-item">
+        <div class="contact-item" dataLanguage>
           {{ metadataResource.value()!.contact.address.postalCode }}
           {{ metadataResource.value()!.contact.address.city }}
         </div>
       }
       @if (metadataResource.value()!.contact.address.email) {
-        <div class="contact-item">
+        <div class="contact-item" dataLanguage>
           {{ metadataResource.value()!.contact.address.email }}
         </div>
       }
@@ -69,19 +69,21 @@
       </div>
     }
     @if (metadataResource.value()!.status) {
-      <h4>Aktualität der Daten:</h4>
+      <h4>{{ "metadata.data-currency" | translate }}</h4>
       <div>
-        Pflege- und Aktualierungsintervall:
+        {{ "metadata.update-interval" | translate }}
         {{ metadataResource.value()!.status! | translate }}
       </div>
       <br />
       <div>
-        Erläuterung zum Zeitbezug:
-        {{ metadataResource.value()!.interval_description }}
+        {{ "metadata.interval-description" | translate }}
+        <span dataLanguage>{{
+          metadataResource.value()!.interval_description
+        }}</span>
       </div>
     }
     @if (metadataResource.value()!.downloads) {
-      <h5>Weitere Informationen:</h5>
+      <h5>{{ "metadata.further-information" | translate }}</h5>
       @for (dl of metadataResource.value()!.downloads; track dl) {
         @if (dl.function === "information") {
           <a mat-button [href]="dl.linkage" target="_blank">
@@ -100,7 +102,7 @@
         <mat-icon class="menu-icon">link</mat-icon>
         <span>{{ "metadata.additional-information" | translate }}</span>
       </a>
-      <h5>Daten-Downloads:</h5>
+      <h5>{{ "metadata.data-downloads" | translate }}</h5>
       @for (dl of metadataResource.value()!.downloads; track dl) {
         @if (dl.function === "download") {
           <a mat-button [href]="dl.linkage" target="_blank">

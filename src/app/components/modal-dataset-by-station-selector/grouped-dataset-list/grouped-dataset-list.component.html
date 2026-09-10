@@ -4,7 +4,7 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <span>{{ item.title }}</span>
+          <span dataLanguage>{{ item.title }}</span>
           <span class="entry-count">({{ item.datasets.length }})</span>
           <div style="flex: 1"></div>
         </mat-panel-title>
@@ -34,6 +34,7 @@
             >
               <div matListItemTitle>
                 <n52-label-mapper
+                  dataLanguage
                   [label]="ds.parameters.phenomenon!.label"
                   matTooltip="{{ ds.parameters.phenomenon!.label }}"
                 ></n52-label-mapper>
@@ -41,6 +42,7 @@
               <div matListItemLine>
                 {{ "map-selection-view.method" | translate }}:
                 <n52-label-mapper
+                  dataLanguage
                   [label]="ds.additional.methode"
                   matTooltip="{{ ds.additional.methode }}"
                 ></n52-label-mapper>
@@ -49,6 +51,7 @@
                 <div matListItemLine>
                   {{ "map-selection-view.depth" | translate }}:
                   <n52-label-mapper
+                    dataLanguage
                     [label]="ds.additional.tiefe"
                   ></n52-label-mapper>
                 </div>

@@ -13,12 +13,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { CategorySelectionService } from './category-selection.service';
+import { DataLanguageDirective } from '../../helper/data-language.directive';
 
 @Component({
   selector: 'app-category-selection',
   templateUrl: './category-selection.component.html',
   styleUrls: ['./category-selection.component.scss'],
   imports: [
+    DataLanguageDirective,
     CommonModule,
     MatButtonModule,
     MatFormFieldModule,
