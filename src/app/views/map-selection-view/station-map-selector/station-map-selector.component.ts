@@ -11,6 +11,7 @@ import {
   SimpleChanges,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   DatasetType,
   HelgolandParameterFilter,
@@ -71,6 +72,38 @@ export class StationMapSelectorComponent
         this.drawGeometries(this.map, this.serviceUrl()!);
       }
     });
+    // the button titles are the accessible names leaflet puts on the two links,
+    // so they have to follow the language switch
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.addZoomControl());
+  }
+
+  override ngAfterViewInit() {
+    super.ngAfterViewInit();
+    this.addZoomControl();
+  }
+
+  // @helgoland/map creates the map with `zoomControl: false` and only adds the
+  // control when its `zoomControlOptions` input *changes* - which never happens
+  // here, because the first change detection runs before ngAfterViewInit creates
+  // the map. Without the buttons, pinch is the only way to zoom out on a touch
+  // device: a multipoint gesture with no single-pointer alternative (WCAG 2.5.1).
+  // The keyboard does not count for that criterion.
+  private addZoomControl() {
+    const map = this.map;
+    if (!map) {
+      return;
+    }
+    if (this.zoomControl) {
+      map.removeControl(this.zoomControl);
+    }
+    this.zoomControl = L.control
+      .zoom({
+        zoomInTitle: this.translate.instant('map-selection-view.map.zoom-in'),
+        zoomOutTitle: this.translate.instant('map-selection-view.map.zoom-out'),
+      })
+      .addTo(map);
   }
 
   protected markerFeatureGroup: L.FeatureGroup | undefined;
