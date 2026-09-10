@@ -207,9 +207,9 @@ export class DatasetsService {
     }
 
     if (notify) {
-      this.la.announce(this.translate.instant('events.remove-timeseries'));
       this.notifier.notify(
-        this.translate.instant('events.remove-timeseries') + ' ' + id,
+        this.translate.instant('events.remove-timeseries') +
+          this.describeDataset(this._datasets()[idx]),
       );
     }
     this._datasets.update((ds) => ds.toSpliced(idx, 1));
@@ -227,7 +227,6 @@ export class DatasetsService {
       .map((e) => e.id)
       .forEach((id) => this.deleteDataset(id, false));
     if (!quiet) {
-      this.la.announce(this.translate.instant('events.all-timeseries-removed'));
       this.notifier.notify(
         this.translate.instant('events.all-timeseries-removed'),
       );
@@ -275,7 +274,9 @@ export class DatasetsService {
       const current = timespan.to > old;
       if (!current) {
         const message = this.translate.instant('events.timespan-to-old');
-        this.notifier.notify(message, 8000);
+        // the application moves the timespan on its own; whoever misses the
+        // reason cannot make sense of the view. stays put (WCAG 2.2.1)
+        this.notifier.notify(message, { kind: 'important' });
         const diff = timespan.to - timespan.from;
         if (diff < 2 * 60 * 60 * 1000) {
           // timespan smaller 2 hours, then show at least 2 hours
@@ -286,6 +287,23 @@ export class DatasetsService {
       }
     }
     return timespan;
+  }
+
+  /**
+   * Suffix for notifications: ": phenomenon @ station". The internal id is not
+   * usable for that - it is a full service url.
+   */
+  private describeDataset(entry: SeriesGraphDataset | LoadingDataset): string {
+    if (!(entry instanceof SeriesGraphDataset)) {
+      return '';
+    }
+    const { phenomenonLabel, platformLabel } = entry.description;
+    if (!phenomenonLabel) {
+      return '';
+    }
+    return platformLabel
+      ? `: ${phenomenonLabel} @ ${platformLabel}`
+      : `: ${phenomenonLabel}`;
   }
 
   private getDatasetEntryIndex(id: string): number {

@@ -31,6 +31,24 @@ steht. Der ausführliche Bericht landet in `report.json` (nicht versioniert).
 `--no-data` ist die Variante für CI: die Szenarien mit Zeitreihen laden Daten über die echte
 FROST-API, was auf einem Runner ohne Netzzugang nicht funktioniert.
 
+## Verhaltensprüfung des Notifiers
+
+`check-notifier.mjs` steht neben dem axe-Lauf und prüft etwas, das axe nicht sehen kann: dass
+Meldungen, die Information tragen, nicht von selbst verschwinden (WCAG 2.2.1, Entscheidung E7).
+
+```bash
+npm start                                                  # Server in einem zweiten Terminal
+node a11y/check-notifier.mjs --base http://localhost:4200
+```
+
+Nicht in `npm run a11y` eingehängt und nicht in CI: der Lauf braucht geladene Zeitreihen über
+die echte FROST-API und wartet zwischen den Prüfungen bewusst Sekunden ab, um Ausblendzeiten zu
+messen. Er ist das Werkzeug, mit dem sich E7 nachprüfen lässt, kein Gate.
+
+Die wichtige Meldung wird über `daysForOldTimespanCheck` ausgelöst, das der Lauf per
+Route-Interception in `app-config.json` einschaltet — im ausgelieferten Stand ist die Option
+nicht gesetzt und die Meldung damit unerreichbar.
+
 ## Baseline
 
 `baseline.json` listet bekannte, bewusst nicht behobene Befunde mit Begründung und der

@@ -1,13 +1,23 @@
-@for (message of data.messages(); track message) {
+@for (entry of data.entries(); track entry.id) {
   <div class="message-container">
-    <span class="message">{{ message }}</span>
+    @if (entry.kind === "important") {
+      <mat-icon class="important-icon">error_outline</mat-icon>
+    }
+    <span class="message">{{ entry.text }}</span>
     <button
       mat-icon-button
-      (click)="removeMessage(message)"
+      (click)="dismiss(entry.id)"
       class="small-clear-button"
       attr.aria-label="{{ 'notification.dismiss' | translate }}"
     >
       <mat-icon>close</mat-icon>
     </button>
+  </div>
+}
+@if (data.suppressed() > 0) {
+  <div class="message-container">
+    <span class="message">{{
+      "notification.suppressed" | translate: { count: data.suppressed() }
+    }}</span>
   </div>
 }

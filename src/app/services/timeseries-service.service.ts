@@ -1,4 +1,3 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Injectable, inject } from '@angular/core';
 import {
   BarRenderingHints,
@@ -78,7 +77,6 @@ export class TimeseriesServiceImpl
     optional: true,
   })!;
   protected notifier = inject(NotifierService);
-  protected la = inject(LiveAnnouncer);
 
   private state = new Map<string, SaveState>();
   private favorites: {
@@ -405,7 +403,6 @@ export class TimeseriesServiceImpl
       const message = `${this.translate.instant('events.add-timeseries')}: ${
         ts.label
       }`;
-      this.la.announce(message);
       this.notifier.notify(message);
       this.datasetMap.set(ts.internalId, ts);
       const style = dsStyle ? dsStyle : this.createStyle(ts);
@@ -587,7 +584,7 @@ export class TimeseriesServiceImpl
               'diagram-view.error-loading-overview-data',
             );
             const label = `${dataset.parameters.phenomenon?.label} @ ${dataset.platform.label}`;
-            this.notifier.notify(`${message} ${label}`);
+            this.notifier.notify(`${message} ${label}`, { kind: 'important' });
             this.graphDatasetsSrvc.setOverviewDataLoading(id, false);
             this.errorHandler.handleDataLoadError(error, dataset);
           },

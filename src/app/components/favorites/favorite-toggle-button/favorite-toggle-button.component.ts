@@ -1,5 +1,3 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-
 import { Component, OnInit, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +18,6 @@ export class FavoriteToggleButtonComponent implements OnInit {
   protected favSrvc = inject(FavoriteService);
   protected translate = inject(TranslateService);
   protected notifier = inject(NotifierService);
-  protected liveAnnouncer = inject(LiveAnnouncer);
 
   readonly dataset = input.required<SeriesGraphDataset>();
 
@@ -66,7 +63,6 @@ export class FavoriteToggleButtonComponent implements OnInit {
   }
 
   private inform(message: string) {
-    this.liveAnnouncer.announce(message);
     this.notifier.notify(message);
   }
 }

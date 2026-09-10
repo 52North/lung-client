@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     padding: 5px 0px;
-    
+
     .message {
         flex: 1;
     }
@@ -11,9 +11,36 @@
         border-top: grey 1px solid;
     }
 
+    // The snack bar sits on an inverted surface. Without these tokens the icon
+    // button inherits the on-surface-variant color of the light surface and stood
+    // at 1.39:1 on the dark one (measured) - WCAG 1.4.11 asks for 3:1.
     .small-clear-button {
         width: 30px !important;
         height: 30px !important;
         padding: 4px;
+
+        --mat-icon-button-icon-color: var(
+            --mat-snack-bar-supporting-text-color,
+            var(--mat-sys-inverse-on-surface)
+        );
+        --mat-icon-button-state-layer-color: currentColor;
+        --mat-icon-button-ripple-color: currentColor;
+
+        // The state layer alone does not carry: 0.12 opacity white on the dark
+        // surface is 1.42:1 (measured). An explicit ring instead.
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 1px;
+        }
+    }
+
+    // Icon of the important messages, the ones that stay until dismissed.
+    // Decorative (mat-icon sets aria-hidden), the text carries the information.
+    .important-icon {
+        flex: none;
+        margin-right: 8px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
     }
 }
