@@ -11,6 +11,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   selector: 'helgoland-share-button',
   templateUrl: './share-button.component.html',
   styleUrls: ['./share-button.component.scss'],
+  // Lets the labelled variant fill its column without the parent having to
+  // reach through view encapsulation.
+  host: { '[class.has-label]': '!!label()' },
   imports: [MatIconModule, TranslateModule, MatTooltipModule, MatButtonModule],
 })
 export class ShareButtonComponent {
@@ -20,6 +23,9 @@ export class ShareButtonComponent {
   private liveAnnouncer = inject(LiveAnnouncer);
 
   readonly generatedUrlFunction = input<() => string>();
+
+  /** i18n key of a visible label. Without it the button stays icon-only. */
+  readonly label = input<string>();
 
   private readonly snackBarConfig: MatSnackBarConfig = {
     duration: 2000,

@@ -160,6 +160,8 @@
 	"service-selector.phenomena": "Phenomena",
 	"service-selector.platforms": "Stations",
 	"service-selector.service-list-label": "Data sources",
+	"share-button.share-list-selection": "Share list selection",
+	"share-button.share-map-selection": "Share map selection",
 	"share-button.tooltip": "Share current state",
 	"sidebar.about-portal": "About this portal",
 	"sidebar.accessibility-statement": "Accessibility statement",

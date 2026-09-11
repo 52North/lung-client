@@ -73,8 +73,9 @@ export class ParameterListSelectorComponent implements OnInit {
   readonly searchTerm = input<string>('');
   readonly searchTermChange = output<string>();
 
-  protected observedPropertyGroups: WritableSignal<Map<string, ObservedProperty[]>> =
-    signal(new Map());
+  protected observedPropertyGroups: WritableSignal<
+    Map<string, ObservedProperty[]>
+  > = signal(new Map());
   protected items: WritableSignal<ObservedProperty[]> = signal([]);
   protected loading: WritableSignal<boolean> = signal(false);
 
