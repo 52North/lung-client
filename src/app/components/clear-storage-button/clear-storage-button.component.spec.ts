@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { HelgolandCoreModule } from '@helgoland/core';
 
 import { TranslateTestingModule } from '../../../../../testing/translate.testing.module';
@@ -12,6 +13,7 @@ describe('ClearStorageButtonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HelgolandCoreModule,
+        MatDialogModule,
         TranslateTestingModule,
         ClearStorageButtonComponent,
       ],

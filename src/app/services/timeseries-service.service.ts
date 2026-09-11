@@ -10,7 +10,7 @@ import {
   LocalStorage,
   SumValuesService,
   Time,
-  Timespan
+  Timespan,
 } from '@helgoland/core';
 import {
   AxisSettings,

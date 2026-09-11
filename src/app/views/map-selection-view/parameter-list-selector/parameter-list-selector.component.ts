@@ -7,7 +7,7 @@ import {
   output,
   signal,
   viewChild,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 import {
   MatExpansionModule,

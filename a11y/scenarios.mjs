@@ -94,6 +94,23 @@ export const SCENARIOS = [
     },
   },
   {
+    // E8: the confirmation in front of the reset. A second dialog on top of the
+    // settings dialog - a state no scenario reached before, the same kind of
+    // hole `favorites-edit-mode` closed on 2026-09-10.
+    name: 'clear-storage-confirm',
+    title: 'Rückfrage vor dem Zurücksetzen',
+    path: '/',
+    setup: async (page) => {
+      await page.locator('helgoland-modal-main-config-button button').click();
+      await page.waitForTimeout(2000);
+      await page.locator('helgoland-clear-storage-button button').click();
+      // Without this the scan would silently fall back to the settings dialog
+      // and report a green tick for a state it never reached.
+      await page.locator('helgoland-modal-confirm-clear-storage').waitFor();
+      await page.waitForTimeout(1500);
+    },
+  },
+  {
     name: 'favorites-dialog',
     title: 'Dialog „Favoriten"',
     path: '/',

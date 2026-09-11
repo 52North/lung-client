@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>
+  {{ "main-config.clear-storage.confirm.title" | translate }}
+</h1>
+<mat-dialog-content>
+  <p id="clear-storage-confirm-message">
+    {{ "main-config.clear-storage.confirm.message" | translate }}
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div style="flex: 1"></div>
+  <!-- Cancel takes the initial focus, not the action: holding Enter must not
+       delete what the question is there to protect. -->
+  <button mat-button mat-dialog-close cdkFocusInitial>
+    {{ "controls.cancel" | translate }}
+  </button>
+  <button mat-raised-button [mat-dialog-close]="true">
+    {{ "main-config.clear-storage.confirm.confirm" | translate }}
+  </button>
+</mat-dialog-actions>
