@@ -7,6 +7,11 @@ export const MAP_SELECTION_ROUTE = 'map-selection';
 export const LIST_SELECTION_ROUTE = 'list-selection';
 export const TABLE_VIEW_ROUTE = 'table';
 
+/** Strips query string, fragment and the leading slash from a router url. */
+function toPath(url: string): string {
+  return url.split(/[?#;]/)[0].replace(/^\//, '');
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -33,20 +38,16 @@ export class AppRouterService {
     { initialValue: '' },
   );
 
-  isTableView = computed(() => {
-    const url = this.currentUrl();
-    return url === '/' + TABLE_VIEW_ROUTE || url === TABLE_VIEW_ROUTE;
-  });
+  // A share link carries query parameters, so the plain route has to be compared
+  // without them - otherwise `/list-selection?cat1=...` would not count as the
+  // list selection and its sidebar menu would never be rendered.
+  private currentPath = computed(() => toPath(this.currentUrl()));
 
-  isMapSelection = computed(() => {
-    const url = this.currentUrl();
-    return url === '/' + MAP_SELECTION_ROUTE || url === MAP_SELECTION_ROUTE;
-  });
+  isTableView = computed(() => this.currentPath() === TABLE_VIEW_ROUTE);
 
-  isListSelection = computed(() => {
-    const url = this.currentUrl();
-    return url === '/' + LIST_SELECTION_ROUTE || url === LIST_SELECTION_ROUTE;
-  });
+  isMapSelection = computed(() => this.currentPath() === MAP_SELECTION_ROUTE);
+
+  isListSelection = computed(() => this.currentPath() === LIST_SELECTION_ROUTE);
 
   toDiagram() {
     this.router.navigate(['']);
@@ -70,11 +71,7 @@ export class AppRouterService {
 
   back() {
     const prev = this.previousUrl();
-    if (
-      prev &&
-      prev !== '/' + LIST_SELECTION_ROUTE &&
-      prev !== LIST_SELECTION_ROUTE
-    ) {
+    if (prev && toPath(prev) !== LIST_SELECTION_ROUTE) {
       this.router.navigateByUrl(prev);
     } else {
       this.router.navigate(['']);

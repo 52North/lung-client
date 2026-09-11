@@ -32,10 +32,9 @@ import { DataLanguageDirective } from '../../helper/data-language.directive';
 export class CategorySelectionComponent {
   protected srvc = inject(CategorySelectionService);
 
-  protected filter = signal('');
   protected filteredStations = computed(() => {
     const stations = this.srvc.stationsResource.value();
-    const filter = this._normalizeValue(this.filter());
+    const filter = this._normalizeValue(this.srvc.searchTerm());
     return stations?.filter(
       (i) =>
         i.description && this._normalizeValue(i.description).includes(filter),
@@ -59,7 +58,7 @@ export class CategorySelectionComponent {
   });
 
   protected onInput(event: Event) {
-    this.filter.set((event.target as HTMLInputElement).value);
+    this.srvc.setSearchTerm((event.target as HTMLInputElement).value);
     // Start over at the top of the new result set rather than somewhere in its
     // middle, where the clamped index would point at an unrelated station.
     this._rovingIndex.set(0);

@@ -1,6 +1,7 @@
 :host {
   display: block;
   padding: 12px;
+  overflow: auto;
 }
 
 .list-selection-state {
@@ -53,5 +54,9 @@
 }
 
 .toggle-active {
+  text-align: center;
+}
+
+.share {
   text-align: center;
 }

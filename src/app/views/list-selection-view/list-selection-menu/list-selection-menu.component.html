@@ -54,4 +54,10 @@
   <div class="toggle-active">
     <app-category-selection-active-toggle></app-category-selection-active-toggle>
   </div>
+
+  <div class="share">
+    <helgoland-share-button
+      [generatedUrlFunction]="permalink.generatePermalink"
+    ></helgoland-share-button>
+  </div>
 </div>

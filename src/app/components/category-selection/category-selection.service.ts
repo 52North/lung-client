@@ -19,6 +19,15 @@ const CAT_TWO_PROP = 'kat1';
 const CAT_THREE_PROP = 'kat2';
 const CAT_FOUR_PROP = 'matrix';
 
+export interface CategorySelectionState {
+  showActiveOnly?: boolean;
+  categoryOne?: string;
+  categoryTwo?: string;
+  categoryThree?: string;
+  categoryFour?: string;
+  searchTerm?: string;
+}
+
 interface RequestParams {
   url: string | undefined;
   categoryOne?: string;
@@ -49,8 +58,14 @@ export class CategorySelectionService {
 
   private _showActiveOnly = signal(true);
 
+  private _searchTerm = signal('');
+
   get showActiveOnly() {
     return this._showActiveOnly.asReadonly();
+  }
+
+  get searchTerm() {
+    return this._searchTerm.asReadonly();
   }
 
   setShowActiveOnly(value: boolean) {
@@ -59,6 +74,10 @@ export class CategorySelectionService {
     this.categoryThree.set(undefined);
     this.categoryFour.set(undefined);
     this._showActiveOnly.set(value);
+  }
+
+  setSearchTerm(value: string) {
+    this._searchTerm.set(value);
   }
 
   stationsResource = resource({
@@ -178,6 +197,35 @@ export class CategorySelectionService {
             error,
           ),
       });
+  }
+
+  /**
+   * Applies a whole selection at once, as it arrives from a shared link.
+   *
+   * Writes the signals directly instead of going through `setShowActiveOnly`,
+   * whose category reset would make the result depend on the order of the
+   * assignments here. A level is only taken over when the one above it is
+   * present as well: a link carrying a second category but no first one would
+   * otherwise filter against a value that is nowhere visible in the ui.
+   */
+  restoreState(state: CategorySelectionState) {
+    if (state.showActiveOnly !== undefined) {
+      this._showActiveOnly.set(state.showActiveOnly);
+    }
+
+    const one = state.categoryOne;
+    const two = one ? state.categoryTwo : undefined;
+    const three = two ? state.categoryThree : undefined;
+    const four = three ? state.categoryFour : undefined;
+
+    this.categoryOne.set(one);
+    this.categoryTwo.set(two);
+    this.categoryThree.set(three);
+    this.categoryFour.set(four);
+
+    if (state.searchTerm !== undefined) {
+      this._searchTerm.set(state.searchTerm);
+    }
   }
 
   selectCatOne(cat: string) {
