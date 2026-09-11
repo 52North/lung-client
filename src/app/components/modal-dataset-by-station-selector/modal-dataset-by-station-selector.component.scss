@@ -21,3 +21,10 @@ mat-dialog-content {
         padding-top: 10px;
     }
 }
+
+.station-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}

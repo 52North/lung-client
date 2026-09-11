@@ -68,30 +68,37 @@ export class ParameterListSelectorComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   readonly onItemSelected = output<Phenomenon>();
-  readonly selectAllPhenomena = output();
   readonly selected = input<string>();
   readonly showOnlyActive = input.required<boolean>();
+  readonly searchTerm = input<string>('');
+  readonly searchTermChange = output<string>();
 
-  observedPropertyGroups: WritableSignal<Map<string, ObservedProperty[]>> =
+  protected observedPropertyGroups: WritableSignal<Map<string, ObservedProperty[]>> =
     signal(new Map());
-  items: WritableSignal<ObservedProperty[]> = signal([]);
-  loading: WritableSignal<boolean> = signal(false);
+  protected items: WritableSignal<ObservedProperty[]> = signal([]);
+  protected loading: WritableSignal<boolean> = signal(false);
 
   constructor() {
     effect(() => {
       this.showOnlyActive();
       this.loadItems();
     });
+
+    // Reacts to both typing and to the items arriving, so a search term that a
+    // share link restored before the request finished still takes effect.
+    effect(() => {
+      this.items();
+      this.parseIntoGroups(this.searchTerm());
+    });
   }
 
   ngOnInit() {
-    this.selectAllPhenomena.emit();
     this.loadItems();
   }
 
   protected onInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    this.parseIntoGroups(value);
+    this.searchTermChange.emit(value);
   }
 
   private _normalizeValue(value: string): string {
@@ -112,7 +119,6 @@ export class ParameterListSelectorComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.items.set(res.value);
-          this.parseIntoGroups('');
           this.loading.set(false);
         },
         error: (error) => {

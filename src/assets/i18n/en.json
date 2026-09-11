@@ -151,6 +151,7 @@
 	"notification.suppressed": "{{count}} further messages were not shown",
 	"permalink.copy-to-clipboard": "The link is copied to the clipboard",
 	"permalink.copy-to-clipboard-error": "An error occured, while creating the link",
+	"permalink.station-not-found": "The station given in the link could not be loaded",
 	"permalink.unknown-data-source": "The data source given in the link is not allowed, the default source is used instead",
 	"selection.no-results": "No entries found",
 	"selection.show-only-active": "Show only active timeseries",

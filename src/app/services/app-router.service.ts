@@ -58,6 +58,11 @@ export class AppRouterService {
   }
 
   toMapSelection() {
+    // Navigating onto the route we are already on would drop the query
+    // parameters of a share link before they have been read.
+    if (toPath(this.router.url) === MAP_SELECTION_ROUTE) {
+      return;
+    }
     if (this.router.url.indexOf(LIST_SELECTION_ROUTE) === -1) {
       this.router.navigate([MAP_SELECTION_ROUTE]);
     }

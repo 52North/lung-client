@@ -12,8 +12,9 @@
   <helgoland-common-parameter-list-selector
     [selected]="state.selectedPhenomenonId()"
     [showOnlyActive]="state.showActiveOnly()"
+    [searchTerm]="state.searchTerm()"
     (onItemSelected)="state.onPhenomenonSelected($event)"
-    (selectAllPhenomena)="state.selectAllPhenomena()"
+    (searchTermChange)="state.setSearchTerm($event)"
   >
   </helgoland-common-parameter-list-selector>
 </div>
@@ -26,4 +27,10 @@
   >
     {{ "selection.show-only-active" | translate }}
   </mat-slide-toggle>
+</div>
+
+<div class="share">
+  <helgoland-share-button
+    [generatedUrlFunction]="permalink.generatePermalink"
+  ></helgoland-share-button>
 </div>

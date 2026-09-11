@@ -1,5 +1,8 @@
-<h1 mat-dialog-title dataLanguage>
-  {{ station().label }} | {{ phenomenonLabel }}
+<h1 mat-dialog-title class="station-title">
+  <span dataLanguage>{{ station().label }} | {{ phenomenonLabel }}</span>
+  @if (shareUrlFunction(); as shareUrl) {
+    <helgoland-share-button [generatedUrlFunction]="shareUrl" />
+  }
 </h1>
 <mat-dialog-content>
   @if (counter) {

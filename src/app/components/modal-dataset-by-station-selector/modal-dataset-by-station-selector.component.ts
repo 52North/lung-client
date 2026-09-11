@@ -24,6 +24,7 @@ import { AppRouterService } from '../../services/app-router.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { DatasetsService } from '../../services/graph-datasets.service';
 import { TimeseriesService } from './../../services/timeseries-service.service';
+import { ShareButtonComponent } from '../share-button/share-button.component';
 import { DatasetListComponent } from './dataset-list/dataset-list.component';
 import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-dataset-list.component';
 import { DataLanguageDirective } from '../../helper/data-language.directive';
@@ -47,6 +48,7 @@ import { DataLanguageDirective } from '../../helper/data-language.directive';
     TranslateModule,
     GroupedDatasetListComponent,
     DatasetListComponent,
+    ShareButtonComponent,
   ],
 })
 export class ModalDatasetByStationSelectorComponent extends DatasetByStationSelectorComponent {
@@ -64,6 +66,12 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
   readonly filterProperty = input<
     { property: string; value: string } | undefined
   >();
+
+  /**
+   * Offers a share button in the dialog title. Only the map selection passes one
+   * - the dialog is modal, so its station cannot be shared from the sidebar.
+   */
+  readonly shareUrlFunction = input<(() => string) | undefined>();
 
   phenomenonLabel: string = 'Alle Phänomene';
 

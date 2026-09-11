@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +28,7 @@ import {
 import { DatasetsService } from '../../services/graph-datasets.service';
 import { SelectedDataSourceService } from '../../services/selected-data-source.service';
 import { MapSelectionStateService } from './map-selection-state.service';
+import { MapSelectionViewInitStateService } from './map-selection-view-permalink.service';
 import { StationMapSelectorComponent } from './station-map-selector/station-map-selector.component';
 
 interface MapSelectionAppConfig extends AppConfig {
@@ -56,6 +58,7 @@ export class MapSelectionComponent implements OnInit {
   private dialog = inject(MatDialog);
   private mapCache = inject(MapCache);
   protected state = inject(MapSelectionStateService);
+  private permalink = inject(MapSelectionViewInitStateService);
   private cdr = inject(ChangeDetectorRef);
 
   mapId = 'timeseries';
@@ -65,6 +68,16 @@ export class MapSelectionComponent implements OnInit {
   clusterConfig: MarkerClusterGroupOptions | undefined;
 
   cluster = true;
+
+  constructor() {
+    // The state a freshly entered map view starts from - a share link, applied
+    // right after, is allowed to override it.
+    this.state.resetSelection();
+    this.permalink
+      .applyFromUrl()
+      ?.pipe(takeUntilDestroyed())
+      .subscribe((station) => this.onStationSelected(station));
+  }
 
   ngOnInit() {
     this.clusterConfig =
@@ -96,8 +109,15 @@ export class MapSelectionComponent implements OnInit {
         'phenomenonId',
         this.state.selectedPhenomenonId(),
       );
+      dialogRef.componentRef?.setInput(
+        'shareUrlFunction',
+        this.permalink.generatePermalink,
+      );
+
+      this.state.setCurrentStationId(station.id);
 
       dialogRef.afterClosed().subscribe((newConf: MapConfig) => {
+        this.state.setCurrentStationId(undefined);
         if (newConf) {
           this.cluster = newConf.cluster;
           this.cdr.markForCheck();
