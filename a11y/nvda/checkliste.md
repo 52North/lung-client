@@ -32,6 +32,10 @@ protokolliert. Die Spalte hält fest, worin geprüft wurde.
 
 ## A — Start und Seitenstruktur (ohne geladene Daten, `/`)
 
+Bei jedem Laden mithören, ob nach dem Seitentitel „Zeitraum geändert von … bis …" kommt. Orca
+sagt es, ausgelöst vom Start selbst (`ACCESSIBILITY.md`, „Zurückgestellt"). Einmal ins Ergebnis
+von Schritt 1 schreiben, nicht bei jedem Schritt neu.
+
 | # | Schritt | Erwartung | Modus | Ergebnis |
 | - | ------- | --------- | ----- | -------- |
 | 1 | Seite laden | Titel „Kartenauswahl – Messdatenportal Umwelt", Sprache deutsch (keine englische Aussprache) | B | |
@@ -75,13 +79,14 @@ letzten Eintrag; er legt dort einen dritten Favoriten an, Block G bleibt davon u
 | # | Schritt | Erwartung | Modus | Ergebnis |
 | - | ------- | --------- | ----- | -------- |
 | 7 | Die Grafik erreichen | „Grafik: Liniendiagramm mit N Zeitreihen: … Die Messwerte selbst stehen in der Tabellenansicht." | B | |
-| 8 | Legendeneintrag ansteuern | „BSB5 - mg/l Fauler Graben - ZALA-2600 - n1007, Schalter, erweitert" — **nicht** zusätzlich „Zeitreihe verbergen Zeitreihe entfernen" (E5) | F | |
+| 8 | Legendeneintrag ansteuern | „BSB5 - mg/l Fauler Graben - ZALA-2600 - n1007, Schalter, erweitert" — **nicht** zusätzlich „Zeitreihe verbergen Zeitreihe entfernen" (E5). Bei einer Zeitreihe ohne Daten festhalten, ob „Keine Daten im ausgewählten Zeitraum verfügbar" **vorn** zusätzlich kommt (Orca: ja) | F | |
 | — | Sichtbarkeits-Button ansteuern (E5) | heißt je Zustand „Zeitreihe verbergen" bzw. „Zeitreihe anzeigen" | F | |
 | — | Zeitreihe verbergen (E5) | das Panel klappt zu, der Fokus landet auf dessen Kopfzeile | F | |
 | — | Zeitreihe ohne Daten im Zeitraum (E6) | der Name der Kopfzeile endet auf „… keine Daten im Zeitraum" | B | |
 | 15 | Zeitreihe laden | „Daten werden geladen" wird angesagt | B | |
 | 25 | Stern-Knopf am **letzten** Legendeneintrag ansteuern, `Leertaste` | vorher „Zu Favoriten hinzufügen, Schalter", danach „Aus Favoriten entfernen, Schalter" — der neue Name wird angesagt, ohne dass der Fokus wandert | F | |
-| 16 | Zeitreihe entfernen | „Zeitreihe entfernt: BSB5 @ Fauler Graben" wird **einmal** vorgelesen (nicht doppelt), Meldung verschwindet nach 5 s | B | |
+| 16 | Zeitreihe entfernen | „Zeitreihe entfernt: BSB5 @ Fauler Graben" wird **einmal** vorgelesen (nicht doppelt), Meldung verschwindet nach 5 s; der Fokus steht danach auf der Kopfzeile des nächsten Eintrags (beim letzten: des vorherigen) | B | |
+| — | „Entferne alle Zeitreihen" auslösen | „Alle Zeitreihen entfernt" einmal, der Fokus steht danach auf „Allgemeine Einstellungen, Schalter" | B | |
 
 ## E — Tabellenansicht
 

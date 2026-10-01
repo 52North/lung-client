@@ -39,6 +39,29 @@ braucht einen zweiten Favoriten, um den Fokus auf dem nächsten Löschen-Knopf z
 Schritt 25 eine Zeitreihe ohne Stern — mit nur einem, schon gesetzten Favoriten hätte der
 Knopf mit „Aus Favoriten entfernen" begonnen und die Erwartung umgedreht.
 
+## Orca-Vorlauf (2026-10-01)
+
+Gelaufen für die Schritte 8, 16, 17 und 22 gegen Playwrights Firefox auf `DISPLAY=:1`, Orca 46.1,
+gesteuert über Playwright statt über Tasten. Ergebnis: 16, 17 und 22 je **eine** Ansage, die
+wichtige Meldung bleibt stehen. Drei Befunde, eingetragen unter „Zurückgestellt" im
+Hauptdokument: Fokusverlust nach „Zeitreihe entfernen" (behoben), doppelte „keine
+Daten"-Warnung in Schritt 8 und die Ansage „Zeitraum geändert" bei jedem Laden.
+
+Zwei Fallen, falls jemand das wiederholt — beide ergeben scheinbar „keine Ansage", die nichts mit
+der App zu tun hat:
+
+- **Orca stumm schalten, nicht Sprache aus.** Mit `enableSpeech: false` gibt Orca Live-Regionen
+  gar nicht aus (`presentMessage` prüft die Einstellung), Fokuswechsel aber schon. Stumm wird es,
+  wenn die Sprache an bleibt und nur der Sprachserver fehlt: `orca.speech._initSpeechServer`
+  vor dem Start durch eine leere Funktion ersetzen. Jede Ansage steht dann als
+  `SPEECH OUTPUT` im Debug-Log (`--debug-file`).
+- **Das Testfenster muss das aktive sein.** Orca verwirft Ereignisse anderer Anwendungen („not
+  from active app"). Playwrights `bringToFront()` wechselt nur den Tab; das Fenster selbst ließ
+  sich über libwnck aktivieren (`Wnck.Window.activate`), im Lauf jede Sekunde neu.
+
+Das Debug-Log enthält alles, was auf dem Desktop passiert, also auch fremde Fenster — nach der
+Auswertung löschen.
+
 ## Entscheidung: manuell, nicht automatisiert
 
 Erwogen war `guidepup` (+ `@guidepup/playwright`), das NVDA fernsteuert und Ansagen als Strings

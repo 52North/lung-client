@@ -52,7 +52,7 @@
       @if (graphDatasetsSrvc.datasets().length) {
         <button
           mat-icon-button
-          (click)="this.graphDatasetsSrvc.deleteAllDatasets()"
+          (click)="deleteAllDatasets()"
           attr.aria-label="{{
             'diagram-view.remove-legend-entries.tooltip' | translate
           }}"
@@ -94,9 +94,7 @@
               [selected]="false"
               (selectDate)="jumpToDate($event)"
               (selectTimespan)="setTimespan($event)"
-              (datasetDeleted)="
-                this.graphDatasetsSrvc.deleteDataset(dataset.id, true)
-              "
+              (datasetDeleted)="deleteDataset(dataset.id, $index)"
             />
           }
         }

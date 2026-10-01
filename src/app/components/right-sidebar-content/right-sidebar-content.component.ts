@@ -1,4 +1,10 @@
-import { Component, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Injector,
+  afterNextRender,
+  inject,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -56,6 +62,8 @@ export class RightSidebarContentComponent {
   protected initStateService = inject(DiagramViewInitStateService);
   protected appRouter = inject(AppRouterService);
   private time = inject(Time);
+  private host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private injector = inject(Injector);
   private configSrvc = inject(
     ConfigurationService<AppConfig>,
   ) as ConfigurationService<AppConfig>;
@@ -66,6 +74,39 @@ export class RightSidebarContentComponent {
     dataset: SeriesGraphDataset<DatasetStyle> | LoadingDataset,
   ): dataset is LoadingDataset {
     return dataset instanceof LoadingDataset;
+  }
+
+  deleteDataset(id: string, index: number) {
+    this.graphDatasetsSrvc.deleteDataset(id, true);
+    this.focusAfterDelete(index);
+  }
+
+  deleteAllDatasets() {
+    this.graphDatasetsSrvc.deleteAllDatasets();
+    this.focusAfterDelete(0);
+  }
+
+  /**
+   * The remove button goes with its entry, and the browser drops the focus on
+   * the document. Move it to the next entry's header instead, or the previous
+   * one after the last entry, or to the settings button - always there - once
+   * the legend is empty (WCAG 2.4.3).
+   */
+  private focusAfterDelete(index: number) {
+    afterNextRender(
+      () => {
+        const headers = this.host.nativeElement.querySelectorAll<HTMLElement>(
+          'helgoland-dataset-legend-entry mat-expansion-panel-header',
+        );
+        const target =
+          headers[Math.min(index, headers.length - 1)] ??
+          this.host.nativeElement.querySelector<HTMLElement>(
+            'helgoland-modal-main-config-button button',
+          );
+        target?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 
   jumpToDate(date: Date) {
