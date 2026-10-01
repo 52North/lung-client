@@ -3,7 +3,7 @@
 Der Teil der Barrierefreiheitsprüfung, den kein Werkzeug ersetzt: das tatsächliche Vorlesen —
 Ansageverhalten, Lesemodus, Redundanz, Tempo. Der strukturelle Teil (Rollen, Namen, Zustände,
 Landmarks, Live-Regionen) ist am 2026-09-08 über den berechneten Accessibility-Tree geprüft;
-was ein Screenreader damit *macht*, steht noch aus. Siehe `ACCESSIBILITY.md`, Abschnitt
+was ein Screenreader damit *macht*, steht noch aus. Siehe im Hauptdokument den Abschnitt
 „NVDA-Durchgang (offen)".
 
 Dieser Ordner enthält die Vorbereitung, damit der Durchgang selbst nicht an Einrichtung und
@@ -91,9 +91,9 @@ Danach zurück ins Hauptdokument:
   auf das Durchgangsdatum umstellen,
 - einen Protokolleintrag anlegen (Datum, NVDA- und Browserversion, Synthesizer),
 - den Vorbehalt über 1.1.1, 1.3.1, 4.1.2 und 4.1.3 auflösen oder durch die gefundenen Befunde
-  ersetzen (`ACCESSIBILITY.md`, „Was diese Bewertung nicht leistet"),
+  ersetzen (Abschnitt „Was diese Bewertung nicht leistet"),
 - Punkt 1 der Freigabeliste streichen,
-- `BARRIEREFREIHEITSERKLAERUNG.md` nachziehen, falls Befunde dazukommen.
+- die Erklärung zur Barrierefreiheit nachziehen, falls Befunde dazukommen.
 
 ## Generierte Dateien
 

@@ -98,6 +98,16 @@ export class DatasetsService {
       'events.timespan-changed-to',
     )} ${this.timezoneSrvc.formatTzDate(ts.to)}`;
     this.la.announce(message);
+    this.applyTimespan(ts);
+  }
+
+  /**
+   * Sets the timespan without announcing it. Only for changes nobody asked for -
+   * the one on startup would otherwise be the first thing said after the page
+   * title, on every load. A timespan moved for being too old comes with its own
+   * important message.
+   */
+  private applyTimespan(ts: Timespan) {
     this._timespan = ts;
     this.timespanChanged.emit(ts);
     this.timeSrvc.saveTimespan(TIME_CACHE_PARAM, this._timespan);
@@ -247,16 +257,18 @@ export class DatasetsService {
 
   initTimespan(timespan?: Timespan) {
     if (timespan) {
-      this.timespan = this.validateTimespan(timespan);
+      this.applyTimespan(this.validateTimespan(timespan));
     } else {
       const localStoreTimespan = this.timeSrvc.loadTimespan(TIME_CACHE_PARAM);
       if (localStoreTimespan) {
-        this.timespan = this.validateTimespan(localStoreTimespan);
+        this.applyTimespan(this.validateTimespan(localStoreTimespan));
       } else {
-        this.timespan = this.timeSrvc.createByDurationWithEnd(
-          moment.duration(1, 'days'),
-          new Date(),
-          'day',
+        this.applyTimespan(
+          this.timeSrvc.createByDurationWithEnd(
+            moment.duration(1, 'days'),
+            new Date(),
+            'day',
+          ),
         );
       }
     }

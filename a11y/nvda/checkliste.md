@@ -1,6 +1,6 @@
 # NVDA-Durchgang — Arbeitsprotokoll
 
-Dieselben Prüfpunkte wie in `ACCESSIBILITY.md` („NVDA-Durchgang (offen)"), aber nach
+Dieselben Prüfpunkte wie im Hauptdokument („NVDA-Durchgang (offen)"), aber nach
 **Zustand** sortiert statt nach Nummer: jeder Zustandswechsel kostet mit Screenreader Minuten,
 die Nummernfolge springt sechsmal zwischen Karte, Liste und Diagramm hin und her. Die Spalte
 „#" verweist auf die Nummer im Hauptdokument, damit das Ergebnis zurückgetragen werden kann.
@@ -32,9 +32,10 @@ protokolliert. Die Spalte hält fest, worin geprüft wurde.
 
 ## A — Start und Seitenstruktur (ohne geladene Daten, `/`)
 
-Bei jedem Laden mithören, ob nach dem Seitentitel „Zeitraum geändert von … bis …" kommt. Orca
-sagt es, ausgelöst vom Start selbst (`ACCESSIBILITY.md`, „Zurückgestellt"). Einmal ins Ergebnis
-von Schritt 1 schreiben, nicht bei jedem Schritt neu.
+Nach dem Seitentitel darf **kein** „Zeitraum geändert von … bis …" kommen — beim Laden nicht und
+auch nicht in Schritt 17. Bis 2026-10-01 kam es bei jedem Laden.
+Angesagt wird es nur noch, wenn der Zeitraum selbst geändert wird, etwa mit „Zeitraum zurück
+springen". Einmal ins Ergebnis von Schritt 1 schreiben, nicht bei jedem Schritt neu.
 
 | # | Schritt | Erwartung | Modus | Ergebnis |
 | - | ------- | --------- | ----- | -------- |

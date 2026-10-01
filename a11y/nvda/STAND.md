@@ -25,7 +25,7 @@ und 17, Redundanz in Schritt 8), spricht aber anders als NVDA und taugt nicht al
 ## Was der Durchgang entscheidet
 
 - Die vier Kriterien, die heute unter Vorbehalt stehen: **1.1.1, 1.3.1, 4.1.2, 4.1.3**
-  (`ACCESSIBILITY.md`, „Was diese Bewertung nicht leistet"). Sie sind über den
+  (Hauptdokument, „Was diese Bewertung nicht leistet"). Sie sind über den
   Accessibility-Tree belegt, nicht über die Ansage.
 - **Punkt 1 der Freigabeliste** — nach der Umsetzung vom 2026-09-10 der einzige verbliebene
   Punkt, der echte Arbeit bedeutet.
@@ -45,7 +45,8 @@ Gelaufen für die Schritte 8, 16, 17 und 22 gegen Playwrights Firefox auf `DISPL
 gesteuert über Playwright statt über Tasten. Ergebnis: 16, 17 und 22 je **eine** Ansage, die
 wichtige Meldung bleibt stehen. Drei Befunde, eingetragen unter „Zurückgestellt" im
 Hauptdokument: Fokusverlust nach „Zeitreihe entfernen" (behoben), doppelte „keine
-Daten"-Warnung in Schritt 8 und die Ansage „Zeitraum geändert" bei jedem Laden.
+Daten"-Warnung in Schritt 8 und die Ansage „Zeitraum geändert" bei jedem Laden (behoben). Offen
+für NVDA bleibt davon allein die doppelte Warnung.
 
 Zwei Fallen, falls jemand das wiederholt — beide ergeben scheinbar „keine Ansage", die nichts mit
 der App zu tun hat:
