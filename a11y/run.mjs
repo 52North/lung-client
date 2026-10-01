@@ -139,6 +139,8 @@ try {
   for (const scenario of wanted) {
     process.stdout.write(`\n▸ ${scenario.name} — ${scenario.title}\n`);
     try {
+      // set every time, so a scenario with its own size does not leak into the next
+      await page.setViewportSize(scenario.viewport ?? VIEWPORT);
       await page.goto(server.url + scenario.path, {
         waitUntil: 'domcontentloaded',
       });

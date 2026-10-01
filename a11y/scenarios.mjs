@@ -37,6 +37,63 @@ export async function ensureBaseMenu(page) {
   }
 }
 
+/**
+ * Opens the station dialog the way a share link from the map does - the only
+ * way it carries a share button. Takes the first station the interface lists,
+ * which spares clicking through marker clusters.
+ */
+export async function openStationFromMap(page) {
+  const stationId = await page.evaluate(async () => {
+    const config = await fetch('./assets/app-config.json').then((res) =>
+      res.json(),
+    );
+    const url = `${config.defaultService.apiUrl}Locations?$top=1&$select=id`;
+    const locations = await fetch(url).then((res) => res.json());
+    return locations.value[0]['@iot.id'];
+  });
+  const link = new URL('/map-selection', page.url());
+  link.searchParams.set('station', stationId);
+  await page.goto(link.href, { waitUntil: 'domcontentloaded' });
+  // as in clear-storage-confirm: make sure the state is reached at all
+  await page
+    .locator('mat-dialog-container helgoland-share-button')
+    .waitFor({ timeout: 20000 });
+  await page.waitForTimeout(2500);
+}
+
+/**
+ * WCAG 1.4.10, which axe does not measure: the dialog has to stay inside the
+ * viewport, and its list must not shrink away to make room for the title.
+ */
+export async function assertStationDialogFits(page) {
+  const { overflow, list } = await page.evaluate(() => {
+    const surface = document
+      .querySelector('.mat-mdc-dialog-surface')
+      .getBoundingClientRect();
+    return {
+      overflow: Math.round(
+        Math.max(
+          0,
+          -surface.left,
+          -surface.top,
+          surface.right - innerWidth,
+          surface.bottom - innerHeight,
+        ),
+      ),
+      list: Math.round(
+        document.querySelector('mat-dialog-content').getBoundingClientRect()
+          .height,
+      ),
+    };
+  });
+  if (overflow > 0) {
+    throw new Error(`Dialog ragt ${overflow} px aus dem Viewport`);
+  }
+  if (list < 100) {
+    throw new Error(`Zeitreihenliste auf ${list} px zusammengeschrumpft`);
+  }
+}
+
 export const SCENARIOS = [
   {
     name: 'list-selection',
@@ -177,22 +234,7 @@ export const SCENARIOS = [
     title: 'Dialog „Zeitreihen einer Station" aus der Kartenauswahl',
     path: '/map-selection',
     setup: async (page) => {
-      const stationId = await page.evaluate(async () => {
-        const config = await fetch('./assets/app-config.json').then((res) =>
-          res.json(),
-        );
-        const url = `${config.defaultService.apiUrl}Locations?$top=1&$select=id`;
-        const locations = await fetch(url).then((res) => res.json());
-        return locations.value[0]['@iot.id'];
-      });
-      const link = new URL('/map-selection', page.url());
-      link.searchParams.set('station', stationId);
-      await page.goto(link.href, { waitUntil: 'domcontentloaded' });
-      // as in clear-storage-confirm: make sure the state is reached at all
-      await page
-        .locator('mat-dialog-container helgoland-share-button')
-        .waitFor({ timeout: 20000 });
-      await page.waitForTimeout(2500);
+      await openStationFromMap(page);
       // axe does not see this: the dialog takes its name from the heading, so a
       // button inside it ends up in the dialog name
       if (await page.locator('mat-dialog-container h1 button').count()) {
@@ -200,6 +242,33 @@ export const SCENARIOS = [
           'Button im Dialogtitel - er wird Teil des Dialognamens',
         );
       }
+    },
+  },
+  {
+    // 1.4.10 on a portrait phone: the dialog used to be 80vh wide and so wider
+    // than the screen - 592 px at 360 px, title and close button cut off.
+    name: 'station-dialog-portrait',
+    title: 'Dialog „Zeitreihen einer Station" auf einem Smartphone hochkant',
+    path: '/map-selection',
+    viewport: { width: 360, height: 740 },
+    setup: async (page) => {
+      await openStationFromMap(page);
+      await assertStationDialogFits(page);
+    },
+  },
+  {
+    // 1.4.10 at 400 % zoom: the dialog used to grow taller than the screen,
+    // and with the long station names of the list the title alone fills it.
+    name: 'station-dialog-zoom-400',
+    title: 'Dialog „Zeitreihen einer Station" bei 400 % Zoom',
+    path: '/list-selection',
+    viewport: { width: 320, height: 256 },
+    wait: 8000,
+    setup: async (page) => {
+      await page.locator('.station-entry').first().click();
+      await page.locator('mat-dialog-container h1').waitFor();
+      await page.waitForTimeout(3000);
+      await assertStationDialogFits(page);
     },
   },
   {

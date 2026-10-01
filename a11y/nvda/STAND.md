@@ -32,8 +32,7 @@ und 17, Redundanz in Schritt 8), spricht aber anders als NVDA und taugt nicht al
 
 Nicht Teil davon, davon unabhängig offen: die fehlende Rückfrage vor dem Löschen eines
 **einzelnen Favoriten** (`modal-favorite-list.component.ts:43`, letztes Stück von 3.3.4) und der
-Menüpunkt **„Hilfe"** mit `href="#"` (2.4.4, bewusst zurückgestellt), seit dem 2026-10-01 dazu
-die Mindestbreite des **Stationsdialogs**, der im Hochformat über den Bildschirm ragt (1.4.10).
+Menüpunkt **„Hilfe"** mit `href="#"` (2.4.4, bewusst zurückgestellt).
 
 Nachtrag 2026-10-01: mit der Teilen-Funktion sind die Schritte 22 und 23 dazugekommen
 (`checkliste.md`, Blöcke B und C).

@@ -3,10 +3,13 @@ mat-dialog-content {
     flex-direction: column;
     overflow: hidden;
 
-    min-width: 80vh;
-    min-height: 80vh;
-
-    flex-shrink: none;
+    // 80vh tall while there is room. On a low screen it gives way instead, so
+    // the title and the close button stay in view and the list scrolls inside -
+    // but not below 10rem: at 400 % zoom a long station name alone fills the
+    // dialog, and the list would shrink to nothing. Then the dialog scrolls.
+    flex: 1 1 80vh;
+    min-height: 10rem;
+    max-height: none;
 
     .full-height {
         flex: 1;

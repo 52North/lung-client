@@ -1,8 +1,10 @@
 <!-- The share button stays outside the heading: the dialog takes its name from
      the heading, and a button inside would become part of that name. -->
 <div class="station-title">
+  <!-- the span keeps the line break out of the text: after Material's
+       ::before it would show as a leading space -->
   <h1 mat-dialog-title dataLanguage>
-    {{ station().label }} | {{ phenomenonLabel }}
+    <span>{{ station().label }} | {{ phenomenonLabel }}</span>
   </h1>
   @if (shareUrlFunction(); as shareUrl) {
     <helgoland-share-button [generatedUrlFunction]="shareUrl" />

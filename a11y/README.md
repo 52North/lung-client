@@ -82,6 +82,7 @@ stillschweigend alles, was es gerade findet.
   needsData: true,          // braucht geladene Zeitreihen
   wait: 8000,               // Wartezeit nach dem Laden (Standard 6000)
   disableRules: ['region'], // einzelne axe-Regeln aussetzen, mit Kommentar warum
+  viewport: { width: 360, height: 740 }, // eigene Fenstergröße (Standard 1500 × 950)
   setup: async (page) => {  // Klickweg zum Zustand
     await page.locator('…').click();
   },

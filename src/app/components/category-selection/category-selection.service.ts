@@ -12,7 +12,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, of } from 'rxjs';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { SelectedDataSourceService } from '../../services/selected-data-source.service';
-import { ModalDatasetByStationSelectorComponent } from '../modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
+import {
+  ModalDatasetByStationSelectorComponent,
+  STATION_DIALOG_CONFIG,
+} from '../modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
 
 const CAT_ONE_PROP = 'gew_art';
 const CAT_TWO_PROP = 'kat1';
@@ -177,10 +180,7 @@ export class CategorySelectionService {
           const platform = new HelgolandPlatform(locId, label, []);
           const dialogRef = this.dialog.open(
             ModalDatasetByStationSelectorComponent,
-            {
-              minWidth: '80vh',
-              width: '80vh',
-            },
+            STATION_DIALOG_CONFIG,
           );
           dialogRef.componentRef?.setInput('station', platform);
           dialogRef.componentRef?.setInput('url', url);

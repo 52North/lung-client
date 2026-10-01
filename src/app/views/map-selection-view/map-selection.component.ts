@@ -18,7 +18,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MarkerClusterGroupOptions } from 'leaflet';
 
 import { LayersControlComponent } from '../../components/layers-control/layers-control.component';
-import { ModalDatasetByStationSelectorComponent } from '../../components/modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
+import {
+  ModalDatasetByStationSelectorComponent,
+  STATION_DIALOG_CONFIG,
+} from '../../components/modal-dataset-by-station-selector/modal-dataset-by-station-selector.component';
 import { MapConfig } from '../../components/modal-map-settings/modal-map-settings.component';
 import { AppRouterService } from '../../services/app-router.service';
 import {
@@ -98,10 +101,7 @@ export class MapSelectionComponent implements OnInit {
       this.cdr.markForCheck();
       const dialogRef = this.dialog.open(
         ModalDatasetByStationSelectorComponent,
-        {
-          minHeight: '80vh',
-          minWidth: '80vh',
-        },
+        STATION_DIALOG_CONFIG,
       );
       dialogRef.componentRef?.setInput('station', station);
       dialogRef.componentRef?.setInput('url', service.apiUrl);

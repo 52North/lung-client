@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -28,6 +28,19 @@ import { ShareButtonComponent } from '../share-button/share-button.component';
 import { DatasetListComponent } from './dataset-list/dataset-list.component';
 import { GroupedDatasetListComponent } from './grouped-dataset-list/grouped-dataset-list.component';
 import { DataLanguageDirective } from '../../helper/data-language.directive';
+
+/**
+ * How the map and the list selection open this dialog. It is meant to be 80vh
+ * wide and tall, which keeps it large and steady while its lists expand. As a
+ * plain min-width that value beat Material's own limit, so on a portrait screen
+ * the dialog grew wider than the viewport, on a low one taller, with its close
+ * button out of reach (WCAG 1.4.10). The caps keep it inside, with the 16px
+ * margin Material leaves on small screens; the height is set in the stylesheet.
+ */
+export const STATION_DIALOG_CONFIG: MatDialogConfig = {
+  minWidth: 'min(80vh, 100vw - 32px)',
+  maxHeight: 'calc(100vh - 32px)',
+};
 
 @Component({
   selector: 'helgoland-modal-dataset-by-station-selector',
