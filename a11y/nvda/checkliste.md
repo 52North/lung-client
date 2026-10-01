@@ -53,6 +53,7 @@ und muss neu eingespielt werden.
 | 9 | Einen Marker ansteuern und `Enter` | „Station 0111071404, Schalter"; der Dialog öffnet und wird vorgelesen | F | |
 | 10 | Ein Cluster ansteuern | „52 Messstationen in diesem Bereich, mit der Eingabetaste vergrößern" | F | |
 | 18 | Die Zoom-Buttons ansteuern | „Karte vergrößern, Schalter" und „Karte verkleinern, Schalter" | F | |
+| 23 | Eine Station öffnen (Marker oder Teilen-Link mit `?station=`) | Dialogname „Station … \| Alle Phänomene, Dialog" — **nicht** mit „Teile derzeitigen Stand" dahinter; der Fokus steht auf „Teile derzeitigen Stand, Schalter" | F | |
 
 ## C — Listenauswahl (`/list-selection`)
 
@@ -62,6 +63,7 @@ und muss neu eingespielt werden.
 | — | In der Liste `Pfeil runter` / `Pos1` / `Ende` (Roving-Tabindex, E2) | Fokus wandert innerhalb der Liste, ein einziger Tabstop führt wieder heraus | F | |
 | 11 | Eine Kategorie wählen | „Fließgewässer, Schalter, gedrückt", danach die Statusansage „563 Stationen gefunden" | F | |
 | 12 | Ins Suchfeld tippen | Trefferzahl wird angesagt („17 Stationen entsprechen der Suche") | F | |
+| 22 | „Listenauswahl teilen" auslösen | „Der Sharelink befindet sich in der Zwischenablage" wird **einmal** vorgelesen, Meldung verschwindet nach 5 s | B | |
 
 ## D — Diagramm und Legende (geseedeter Zustand, `/`)
 

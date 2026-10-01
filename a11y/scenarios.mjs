@@ -169,6 +169,40 @@ export const SCENARIOS = [
     },
   },
   {
+    // The same dialog, opened from the map: only then does it carry a share
+    // button. Opening it from the list - as above - never showed that button,
+    // so it went unscanned until 2026-10-01. The share link names the station,
+    // which spares clicking through marker clusters.
+    name: 'station-dialog-from-map',
+    title: 'Dialog „Zeitreihen einer Station" aus der Kartenauswahl',
+    path: '/map-selection',
+    setup: async (page) => {
+      const stationId = await page.evaluate(async () => {
+        const config = await fetch('./assets/app-config.json').then((res) =>
+          res.json(),
+        );
+        const url = `${config.defaultService.apiUrl}Locations?$top=1&$select=id`;
+        const locations = await fetch(url).then((res) => res.json());
+        return locations.value[0]['@iot.id'];
+      });
+      const link = new URL('/map-selection', page.url());
+      link.searchParams.set('station', stationId);
+      await page.goto(link.href, { waitUntil: 'domcontentloaded' });
+      // as in clear-storage-confirm: make sure the state is reached at all
+      await page
+        .locator('mat-dialog-container helgoland-share-button')
+        .waitFor({ timeout: 20000 });
+      await page.waitForTimeout(2500);
+      // axe does not see this: the dialog takes its name from the heading, so a
+      // button inside it ends up in the dialog name
+      if (await page.locator('mat-dialog-container h1 button').count()) {
+        throw new Error(
+          'Button im Dialogtitel - er wird Teil des Dialognamens',
+        );
+      }
+    },
+  },
+  {
     name: 'diagram-view',
     title: 'Diagrammansicht mit zwei Zeitreihen',
     path: '/',

@@ -25,6 +25,19 @@ mat-dialog-content {
 .station-title {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 8px;
+    flex-shrink: 0;
+    // the right padding the heading would otherwise have around the button
+    padding-right: 24px;
+
+    h1 {
+        flex: 1;
+        min-width: 0;
+    }
+
+    // Material removes the content's top padding only right after the title,
+    // which the wrapper is now.
+    + mat-dialog-content {
+        padding-top: 0;
+    }
 }

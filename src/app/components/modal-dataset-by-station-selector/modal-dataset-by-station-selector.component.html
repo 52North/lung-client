@@ -1,9 +1,13 @@
-<h1 mat-dialog-title class="station-title">
-  <span dataLanguage>{{ station().label }} | {{ phenomenonLabel }}</span>
+<!-- The share button stays outside the heading: the dialog takes its name from
+     the heading, and a button inside would become part of that name. -->
+<div class="station-title">
+  <h1 mat-dialog-title dataLanguage>
+    {{ station().label }} | {{ phenomenonLabel }}
+  </h1>
   @if (shareUrlFunction(); as shareUrl) {
     <helgoland-share-button [generatedUrlFunction]="shareUrl" />
   }
-</h1>
+</div>
 <mat-dialog-content>
   @if (counter) {
     <mat-progress-bar

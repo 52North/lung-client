@@ -40,7 +40,11 @@ const iconContrast = (page) =>
   });
 
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 1500, height: 950 } });
+const ctx = await browser.newContext({
+  viewport: { width: 1500, height: 950 },
+  // section 4 reads back what the share button copied
+  permissions: ['clipboard-read', 'clipboard-write'],
+});
 const page = await ctx.newPage();
 // Without an auth server the dev setup produces constant keycloak noise - not our concern.
 const IRRELEVANT = /keycloak|403|Failed to load resource|net::ERR/i;
@@ -221,6 +225,75 @@ if (remaining > 0) {
   await page.waitForTimeout(200);
 }
 await page.waitForTimeout(1500);
+
+// ---------- 4. share button ----------
+// It ran its own snack bar for 2 s plus a LiveAnnouncer call - the pattern E7
+// removed everywhere else, missed there because it never called notify().
+await page.goto(base + '/list-selection', { waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(7000);
+await snack(page).waitFor({ state: 'detached' }).catch(() => {});
+const share = page.getByRole('button', {
+  name: /Listenauswahl teilen|Share list selection/,
+});
+await share.click();
+await page.waitForTimeout(800);
+const shareText = (
+  await messages(page).first().textContent().catch(() => '')
+).trim();
+ok(
+  'Teilen-Bestätigung läuft über den Notifier',
+  /Zwischenablage|clipboard/i.test(shareText),
+  shareText.slice(0, 70),
+);
+const copied = await page.evaluate(() => navigator.clipboard.readText());
+ok(
+  'Teilen kopiert den Link',
+  copied.includes('/list-selection'),
+  copied.slice(0, 70),
+);
+const shareAnnounced = (
+  await page.evaluate(() => window.__announced ?? [])
+).filter((t) => /Zwischenablage|clipboard|Sharelink/i.test(t));
+ok(
+  'keine zweite Ansage der Teilen-Meldung',
+  shareAnnounced.length === 0,
+  `${shareAnnounced.length}× über LiveAnnouncer`,
+);
+await page.waitForTimeout(2200);
+ok(
+  'Teilen-Bestätigung nach 3 s noch sichtbar (alte Dauer war 2 s)',
+  (await messages(page).count()) >= 1,
+);
+await page.waitForTimeout(4000);
+ok(
+  'Teilen-Bestätigung nach 7 s ausgeblendet',
+  (await snack(page).count()) === 0,
+);
+
+// The failure is the message that carries information: without it nobody
+// learns that the clipboard still holds something else.
+await page.evaluate(() => {
+  document.execCommand = () => false;
+});
+await share.click();
+await page.waitForTimeout(800);
+ok(
+  'Teilen-Fehler erscheint als wichtige Meldung',
+  (await snack(page).locator('.important-icon').count()) === 1,
+  (await messages(page).first().textContent().catch(() => '')).trim().slice(0, 70),
+);
+await page.waitForTimeout(7000);
+ok(
+  'Teilen-Fehler bleibt nach 8 s stehen',
+  (await messages(page).count()) === 1,
+);
+// conditional, so a missing message shows up as failed checks, not a timeout
+const leftover = snack(page).locator('button');
+if (await leftover.count()) {
+  await leftover.first().click();
+  await page.waitForTimeout(1000);
+}
+
 ok(
   'keine Konsolenfehler (u. a. doppelte @for-Keys)',
   errors.length === 0,
