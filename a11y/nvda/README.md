@@ -12,7 +12,7 @@ Zustandsherstellung verbraucht wird.
 | Datei | wozu |
 | ----- | ---- |
 | `STAND.md` | Zwischenstand: was gilt, was entschieden ist, wo weiterzumachen ist |
-| `checkliste.md` | die 21 Prüfpunkte plus die Zusätze aus E2/E3/E5/E6, nach Zustand sortiert, mit Ergebnisspalte |
+| `checkliste.md` | die 25 Prüfpunkte plus die Zusätze aus E2/E3/E5/E6, nach Zustand sortiert, mit Ergebnisspalte |
 | `seed-localstorage.mjs` | stellt den Prüfzustand her und schreibt ihn als Konsolen-Snippet heraus |
 | `set-timespan-check.mjs` | schaltet `daysForOldTimespanCheck` ein und aus (Schritt 17) |
 
@@ -58,7 +58,7 @@ herstellen und mitnehmen:
 node a11y/nvda/seed-localstorage.mjs --base http://localhost:4200
 ```
 
-Schreibt `zustand-snippet.js` (2 Zeitreihen, 1 Favorit). Den Inhalt in der Konsole des
+Schreibt `zustand-snippet.js` (3 Zeitreihen, die ersten beiden als Favorit, die letzte ohne — siehe Block D und G der Checkliste). Den Inhalt in der Konsole des
 Prüfbrowsers einfügen, während die Anwendung offen ist — Firefox und Chrome verlangen dafür
 einmalig die **getippte** Eingabe `allow pasting`. Die Seite lädt danach selbst neu.
 

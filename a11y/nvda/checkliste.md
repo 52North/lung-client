@@ -67,7 +67,10 @@ und muss neu eingespielt werden.
 
 ## D — Diagramm und Legende (geseedeter Zustand, `/`)
 
-Vorher `zustand-snippet.js` einspielen (siehe README).
+Vorher `zustand-snippet.js` einspielen (siehe README). Der Zustand hat drei Zeitreihen, die
+ersten beiden sind Favoriten, die letzte nicht. An den ersten beiden beginnt der Stern-Knopf also
+mit „Aus Favoriten entfernen" — das ist der richtige Zustand, kein Befund. Schritt 25 deshalb am
+letzten Eintrag; er legt dort einen dritten Favoriten an, Block G bleibt davon unberührt.
 
 | # | Schritt | Erwartung | Modus | Ergebnis |
 | - | ------- | --------- | ----- | -------- |
@@ -77,7 +80,7 @@ Vorher `zustand-snippet.js` einspielen (siehe README).
 | — | Zeitreihe verbergen (E5) | das Panel klappt zu, der Fokus landet auf dessen Kopfzeile | F | |
 | — | Zeitreihe ohne Daten im Zeitraum (E6) | der Name der Kopfzeile endet auf „… keine Daten im Zeitraum" | B | |
 | 15 | Zeitreihe laden | „Daten werden geladen" wird angesagt | B | |
-| 25 | Stern-Knopf ansteuern, `Leertaste` | vorher „Zu Favoriten hinzufügen, Schalter", danach „Aus Favoriten entfernen, Schalter" | F | |
+| 25 | Stern-Knopf am **letzten** Legendeneintrag ansteuern, `Leertaste` | vorher „Zu Favoriten hinzufügen, Schalter", danach „Aus Favoriten entfernen, Schalter" — der neue Name wird angesagt, ohne dass der Fokus wandert | F | |
 | 16 | Zeitreihe entfernen | „Zeitreihe entfernt: BSB5 @ Fauler Graben" wird **einmal** vorgelesen (nicht doppelt), Meldung verschwindet nach 5 s | B | |
 
 ## E — Tabellenansicht
@@ -99,10 +102,14 @@ Ende der Tab-Reihenfolge (Protokoll 2026-09-10, „Was offen bleibt").
 
 ## G — Favoriten
 
+In dieser Reihenfolge: Schritt 24 löscht die Favoriten, die Schritt 19 braucht. Danach ist die
+Liste leer; für einen weiteren Versuch den Zustand neu einspielen.
+
 | # | Schritt | Erwartung | Modus | Ergebnis |
 | - | ------- | --------- | ----- | -------- |
 | 19 | In der Favoritenliste den Stift und dann das Eingabefeld ansteuern | „Namen ändern, Schalter", dann „Bezeichnung, Eingabefeld"; die beiden Schalter daneben „Änderung verwerfen" und „Namen übernehmen" | F | |
-| 24 | Einen Favoriten löschen | „Favorit löschen?, Dialog", die Folge mit dem Namen als Beschreibung, Fokus auf „Abbrechen"; nach „Löschen" Fokus auf dem nächsten Löschen-Knopf bzw. „Schließen" | F | |
+| 24 | Den **ersten** Favoriten löschen | „Favorit löschen?, Dialog", die Folge mit dem Namen als Beschreibung, Fokus auf „Abbrechen"; nach „Löschen" Fokus auf dem Löschen-Knopf des nächsten Favoriten | F | |
+| 24 | Die übrigen löschen, bis der letzte weg ist | nach dem letzten „Löschen" Fokus auf „Schließen" | F | |
 
 ## H — Sprache (zuletzt, stellt die ganze Oberfläche um)
 

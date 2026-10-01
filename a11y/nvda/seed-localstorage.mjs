@@ -12,7 +12,7 @@
  *
  *   node a11y/nvda/seed-localstorage.mjs                      # gegen localhost:4200
  *   node a11y/nvda/seed-localstorage.mjs --base http://…      # anderer Server
- *   node a11y/nvda/seed-localstorage.mjs --count 3            # mehr Zeitreihen
+ *   node a11y/nvda/seed-localstorage.mjs --count 4            # mehr Zeitreihen
  *   node a11y/nvda/seed-localstorage.mjs --headed             # zum Zusehen
  *
  * Braucht einen laufenden Dev-Server mit Netzzugang zur FROST-API - die
@@ -35,7 +35,12 @@ const option = (name, fallback) => {
 const flag = (name) => argv.includes(`--${name}`);
 
 const base = option('base', 'http://localhost:4200').replace(/\/$/, '');
-const count = Number(option('count', '2'));
+const count = Number(option('count', '3'));
+// Zwei Favoriten, damit Schritt 24 nach dem Löschen den Fokus auf dem nächsten
+// Löschen-Knopf prüfen kann und für Schritt 19 noch einer übrig bleibt. Die
+// letzte Zeitreihe bleibt ohne Stern: Schritt 25 braucht einen Knopf, der mit
+// „Zu Favoriten hinzufügen" beginnt.
+const favoriteCount = Math.min(2, count - 1);
 const today = new Date().toISOString().slice(0, 10);
 
 const browser = await chromium.launch({ headless: !flag('headed') });
@@ -52,18 +57,28 @@ await seedDatasets(page, base, count);
 await page.goto(base + '/', { waitUntil: 'domcontentloaded' });
 await page.waitForTimeout(8000);
 
+// Der Name wechselt beim Klick auf „Aus Favoriten entfernen", also trifft
+// `.first()` jedes Mal den nächsten Eintrag ohne Stern.
 const favoriteButton = page
-  .locator('button[aria-label*="Favoriten hinzufügen"]')
+  .locator('button[aria-label="Zu Favoriten hinzufügen"]')
   .first();
-let favorite = false;
-if (await favoriteButton.count()) {
+let favorites = 0;
+while (favorites < favoriteCount && (await favoriteButton.count())) {
   await favoriteButton.click();
   await page.waitForTimeout(2000);
-  favorite = true;
-} else {
+  favorites++;
+}
+if (favorites < favoriteCount) {
   console.warn(
-    'Kein Favoriten-Knopf gefunden - Schritt 19 (Bearbeiten-Modus) braucht ' +
-      'dann einen von Hand angelegten Favoriten.',
+    `Nur ${favorites} von ${favoriteCount} Favoriten angelegt - Schritt 24 ` +
+      'braucht zwei, Schritt 19 einen; die fehlenden von Hand anlegen.',
+  );
+}
+const unstarred = await favoriteButton.count();
+if (!unstarred) {
+  console.warn(
+    'Keine Zeitreihe ohne Stern übrig - Schritt 25 beginnt dann mit ' +
+      '„Aus Favoriten entfernen". Mit --count 3 oder mehr seeden.',
   );
 }
 
@@ -81,7 +96,7 @@ if (!keys.length) {
 const header = [
   '// Prüfzustand für den NVDA-Durchgang.',
   `// erzeugt am ${today} gegen ${base}: ${count} Zeitreihen, ` +
-    `${favorite ? '1 Favorit' : 'kein Favorit'}.`,
+    `davon ${favorites} als Favorit.`,
   '//',
   '// In die Konsole des Prüfbrowsers einfügen, während die Anwendung offen ist.',
   '// Firefox und Chrome verlangen dafür einmalig die getippte Eingabe:',

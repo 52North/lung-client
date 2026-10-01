@@ -1,6 +1,6 @@
 # Zwischenstand NVDA-Durchgang
 
-Stand **2026-09-11**, Branch `feature/nex-gen`. Zweck dieser Datei: nach einer Unterbrechung
+Stand **2026-10-01**, Branch `feature/nex-gen`. Zweck dieser Datei: nach einer Unterbrechung
 ohne erneutes Einlesen weiterarbeiten können.
 
 **Kurz: vorbereitet, nicht durchgeführt.** Der Durchgang selbst braucht Windows und hat noch
@@ -33,7 +33,11 @@ und 17, Redundanz in Schritt 8), spricht aber anders als NVDA und taugt nicht al
 Nicht Teil davon, davon unabhängig offen: der Menüpunkt **„Hilfe"** mit `href="#"` (2.4.4, bewusst zurückgestellt).
 
 Nachtrag 2026-10-01: mit der Teilen-Funktion sind die Schritte 22 und 23 dazugekommen
-(`checkliste.md`, Blöcke B und C).
+(`checkliste.md`, Blöcke B und C), am selben Tag die Schritte 24 und 25 (Blöcke G und D).
+Dafür seedet `seed-localstorage.mjs` jetzt drei Zeitreihen mit zwei Favoriten: Schritt 24
+braucht einen zweiten Favoriten, um den Fokus auf dem nächsten Löschen-Knopf zu prüfen, und
+Schritt 25 eine Zeitreihe ohne Stern — mit nur einem, schon gesetzten Favoriten hätte der
+Knopf mit „Aus Favoriten entfernen" begonnen und die Erwartung umgedreht.
 
 ## Entscheidung: manuell, nicht automatisiert
 
