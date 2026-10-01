@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>{{ "favorites.title" | translate }}</h1>
 <mat-dialog-content>
   <div style="max-height: 50vh; overflow: auto">
-    @for (item of singles; track item) {
+    @for (item of singles(); track item) {
       <mat-card appearance="outlined" style="margin-bottom: 10px">
         @if (!item.editMode) {
           <div class="fav-title">
@@ -33,6 +33,7 @@
         <div class="fav-actions">
           <button
             mat-icon-button
+            class="delete-favorite"
             (click)="deleteFav(item)"
             matTooltip="{{
               'favorites.single-favorite.remove-from-list' | translate

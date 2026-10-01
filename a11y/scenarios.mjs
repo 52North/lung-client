@@ -201,6 +201,31 @@ export const SCENARIOS = [
     },
   },
   {
+    // 3.3.4: deleting a single favorite asks first, with the same dialog as the
+    // reset. Needs a favorite, hence needsData.
+    name: 'favorite-delete-confirm',
+    title: 'Rückfrage vor dem Löschen eines Favoriten',
+    path: '/',
+    needsData: true,
+    wait: 8000,
+    setup: async (page) => {
+      await page
+        .locator('button[aria-label*="Favoriten hinzufügen"]')
+        .first()
+        .click();
+      await page.waitForTimeout(1500);
+      await page.locator('helgoland-modal-favorite-list-button button').click();
+      await page.waitForTimeout(2500);
+      await page
+        .locator('mat-dialog-container mat-card .fav-actions button')
+        .first()
+        .click();
+      // as in clear-storage-confirm: make sure the question is on screen
+      await page.locator('helgoland-modal-confirm-clear-storage').waitFor();
+      await page.waitForTimeout(1500);
+    },
+  },
+  {
     name: 'data-source-dialog',
     title: 'Dialog „Datenquelle wechseln"',
     path: '/',

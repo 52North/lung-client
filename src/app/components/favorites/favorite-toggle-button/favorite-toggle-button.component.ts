@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -21,7 +28,16 @@ export class FavoriteToggleButtonComponent implements OnInit {
 
   readonly dataset = input.required<SeriesGraphDataset>();
 
-  isFavorite = false;
+  // a signal: countChange fires outside any event handler, and without zone.js
+  // a plain field would leave icon and name on the old state
+  isFavorite = signal(false);
+
+  /** Named by what a click does, so the name carries the state (WCAG 4.1.2). */
+  protected labelKey = computed(() =>
+    this.isFavorite()
+      ? 'favorite-toggle-button.remove'
+      : 'favorite-toggle-button.tooltip',
+  );
   canBeFavorite = false;
 
   ngOnInit(): void {
@@ -33,17 +49,21 @@ export class FavoriteToggleButtonComponent implements OnInit {
   }
 
   private checkFavState() {
-    this.isFavorite = this.favSrvc.isFavorite(this.dataset()?.id);
+    this.isFavorite.set(this.favSrvc.isFavorite(this.dataset()?.id));
   }
 
   toggle() {
-    this.isFavorite ? this.removeFavorite() : this.createFavorite();
+    if (this.isFavorite()) {
+      this.removeFavorite();
+    } else {
+      this.createFavorite();
+    }
   }
 
   protected createFavorite() {
     const dataset = this.dataset();
     this.favSrvc.createFavorite(dataset);
-    this.isFavorite = true;
+    this.isFavorite.set(true);
     this.inform(
       `${this.translate.instant('events.add-favorite')}: ${
         dataset.description.phenomenonLabel
@@ -54,7 +74,7 @@ export class FavoriteToggleButtonComponent implements OnInit {
   protected removeFavorite() {
     const dataset = this.dataset();
     this.favSrvc.removeFavorite(dataset.id);
-    this.isFavorite = false;
+    this.isFavorite.set(false);
     this.inform(
       `${this.translate.instant('events.remove-favorite')}: ${
         dataset.description.phenomenonLabel

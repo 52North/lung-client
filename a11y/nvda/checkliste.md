@@ -77,6 +77,7 @@ Vorher `zustand-snippet.js` einspielen (siehe README).
 | — | Zeitreihe verbergen (E5) | das Panel klappt zu, der Fokus landet auf dessen Kopfzeile | F | |
 | — | Zeitreihe ohne Daten im Zeitraum (E6) | der Name der Kopfzeile endet auf „… keine Daten im Zeitraum" | B | |
 | 15 | Zeitreihe laden | „Daten werden geladen" wird angesagt | B | |
+| 25 | Stern-Knopf ansteuern, `Leertaste` | vorher „Zu Favoriten hinzufügen, Schalter", danach „Aus Favoriten entfernen, Schalter" | F | |
 | 16 | Zeitreihe entfernen | „Zeitreihe entfernt: BSB5 @ Fauler Graben" wird **einmal** vorgelesen (nicht doppelt), Meldung verschwindet nach 5 s | B | |
 
 ## E — Tabellenansicht
@@ -101,6 +102,7 @@ Ende der Tab-Reihenfolge (Protokoll 2026-09-10, „Was offen bleibt").
 | # | Schritt | Erwartung | Modus | Ergebnis |
 | - | ------- | --------- | ----- | -------- |
 | 19 | In der Favoritenliste den Stift und dann das Eingabefeld ansteuern | „Namen ändern, Schalter", dann „Bezeichnung, Eingabefeld"; die beiden Schalter daneben „Änderung verwerfen" und „Namen übernehmen" | F | |
+| 24 | Einen Favoriten löschen | „Favorit löschen?, Dialog", die Folge mit dem Namen als Beschreibung, Fokus auf „Abbrechen"; nach „Löschen" Fokus auf dem nächsten Löschen-Knopf bzw. „Schließen" | F | |
 
 ## H — Sprache (zuletzt, stellt die ganze Oberfläche um)
 
