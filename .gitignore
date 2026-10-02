@@ -54,8 +54,3 @@ a11y/report.json
 documentation
 
 versions.ts
-
-# Prüfzustand des NVDA-Durchgangs (an eine konkrete Datenlage gebunden)
-a11y/nvda/zustand.json
-a11y/nvda/zustand-snippet.js
-a11y/nvda/zustand-alter-zeitraum.js
