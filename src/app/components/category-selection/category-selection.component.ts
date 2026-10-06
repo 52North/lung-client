@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
@@ -21,7 +20,6 @@ import { DataLanguageDirective } from '../../helper/data-language.directive';
   styleUrls: ['./category-selection.component.scss'],
   imports: [
     DataLanguageDirective,
-    CommonModule,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,

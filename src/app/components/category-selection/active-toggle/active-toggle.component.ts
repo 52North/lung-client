@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   MatSlideToggleChange,
@@ -11,12 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'app-category-selection-active-toggle',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatSlideToggleModule,
-    MatTooltipModule,
-    TranslateModule,
-  ],
+  imports: [MatSlideToggleModule, MatTooltipModule, TranslateModule],
   templateUrl: './active-toggle.component.html',
   styleUrls: ['./active-toggle.component.scss'],
 })

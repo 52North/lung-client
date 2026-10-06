@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +29,6 @@ import { DataLanguageDirective } from '../../helper/data-language.directive';
   standalone: true,
   imports: [
     DataLanguageDirective,
-    CommonModule,
     MatIconModule,
     MatButton,
     MatIconButton,

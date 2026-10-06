@@ -6,7 +6,7 @@ import {
   Timespan,
 } from '@helgoland/core';
 import { Observable, of } from 'rxjs';
-import { filter, mergeMap, switchMap, take } from 'rxjs/operators';
+import { filter, mergeMap, take } from 'rxjs/operators';
 
 import { NotifierService } from '../../services/notifier.service';
 import { DATASET_STATE_SERVICE_INJECTION } from '../../services/service-interfaces';
@@ -42,8 +42,10 @@ export class DiagramViewInitStateService {
     return this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
       take(1),
-      switchMap(() => this.activatedRoute.queryParams),
-      mergeMap((params) => this.handleParams(params)),
+      // Read the permalink only once at startup
+      mergeMap(() =>
+        this.handleParams(this.activatedRoute.snapshot.queryParams),
+      ),
     );
   }
 
