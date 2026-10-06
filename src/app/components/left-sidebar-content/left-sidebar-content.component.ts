@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { StaInterfaceService } from '@helgoland/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -37,7 +37,7 @@ import { DataLanguageDirective } from '../../helper/data-language.directive';
     TranslateModule,
     MapSelectionMenuComponent,
     ListSelectionMenuComponent,
-    MatCardModule,
+    MatExpansionModule,
     MatDividerModule,
   ],
 })
