@@ -5,7 +5,7 @@ import {
   effect,
   inject,
   input,
-  output
+  output,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
