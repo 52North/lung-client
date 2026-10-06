@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectorRef,
   Component,
   computed,
   effect,
   inject,
   input,
-  output,
-  signal,
+  output
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,14 +27,14 @@ import {
 import { HelgolandLabelMapperModule } from '@helgoland/depiction';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { duration } from 'moment';
+import { DataLanguageDirective } from '../../helper/data-language.directive';
 import { DatasetsService } from '../../services/graph-datasets.service';
 import { DatasetMetadataComponent } from '../dataset-metadata/dataset-metadata.component';
 import { FavoriteToggleButtonComponent } from '../favorites/favorite-toggle-button/favorite-toggle-button.component';
 import { LoadingOverlayProgressBarComponent } from '../loading-overlay-progress-bar/loading-overlay-progress-bar.component';
 import { ModalEditTimeseriesOptionsComponent } from '../modal-edit-timeseries-options/modal-edit-timeseries-options.component';
 import { TimeseriesEntrySymbolComponent } from '../timeseries-entry-symbol/timeseries-entry-symbol.component';
-import { duration } from 'moment';
-import { DataLanguageDirective } from '../../helper/data-language.directive';
 
 let nextLegendEntryId = 0;
 
@@ -186,6 +184,8 @@ export class DatasetLegendEntryComponent {
           timespan,
           duration(1, 'hour').asMilliseconds(),
         );
+      } else {
+        timespan = this.timeSrvc.getBufferedTimespan(timespan, 0.05);
       }
       this.selectTimespan.emit(timespan);
     }
