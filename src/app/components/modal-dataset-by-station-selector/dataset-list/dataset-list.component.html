@@ -16,19 +16,25 @@
           matTooltip="{{ ds.parameters.phenomenon!.label }}"
         ></n52-label-mapper>
       </div>
-      <div matListItemLine>
-        {{ "map-selection-view.method" | translate }}:
-        <n52-label-mapper
-          dataLanguage
-          [label]="ds.additional.methode"
-          matTooltip="{{ ds.additional.methode }}"
-        ></n52-label-mapper>
-        @if (ds.additional.tiefe) {
-          |
+      @if (ds.additional.tiefenstufe) {
+        <div matListItemLine>
           {{ "map-selection-view.depth" | translate }}:
-          <n52-label-mapper [label]="ds.additional.tiefe"></n52-label-mapper>
-        }
-      </div>
+          <n52-label-mapper
+            dataLanguage
+            [label]="ds.additional.tiefenstufe"
+          ></n52-label-mapper>
+        </div>
+      }
+      @if (ds.additional.methode) {
+        <div matListItemLine>
+          {{ "map-selection-view.method" | translate }}:
+          <n52-label-mapper
+            dataLanguage
+            [label]="ds.additional.methode"
+            matTooltip="{{ ds.additional.methode }}"
+          ></n52-label-mapper>
+        </div>
+      }
       <div matListItemLine>
         <span>
           {{ "diagram-view.legend.entry.first-value-at" | translate }}:
