@@ -67,7 +67,7 @@ export function createDataTable(
           tiefenstufe: d.parameter?.['tiefenstufe'] || '',
           datum_uhrzeit: d.timestamp,
           tiefe_misch_von_m: d.parameter?.['tiefe_misch_von_m'] || '',
-          tiefe_misch_bis_m: d.parameter?.['tiefe_misch_bis_m']|| '',
+          tiefe_misch_bis_m: d.parameter?.['tiefe_misch_bis_m'] || '',
         });
       }
     });

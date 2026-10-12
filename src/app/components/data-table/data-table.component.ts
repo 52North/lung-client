@@ -178,7 +178,7 @@ export class DataTableComponent implements DoCheck, AfterViewChecked {
       sort: true,
       visible: true,
     },
-        {
+    {
       title: 'Mischtiefe bis',
       key: 'tiefe_misch_bis_m',
       sort: true,
