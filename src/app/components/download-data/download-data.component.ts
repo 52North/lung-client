@@ -77,6 +77,8 @@ export class DownloadDataComponent {
         Tiefe: d.tiefe,
         Tiefenstufe: d.tiefenstufe,
         Zeitstempel: d.datum_uhrzeit,
+        'Mischtiefe von' : d.tiefe_misch_von_m,
+        'Mischtiefe bis' : d.tiefe_misch_bis_m,
       };
     });
 

@@ -172,6 +172,18 @@ export class DataTableComponent implements DoCheck, AfterViewChecked {
       sort: true,
       visible: true,
     },
+    {
+      title: 'Mischtiefe von',
+      key: 'tiefe_misch_von_m',
+      sort: true,
+      visible: true,
+    },
+        {
+      title: 'Mischtiefe bis',
+      key: 'tiefe_misch_bis_m',
+      sort: true,
+      visible: true,
+    },
   ];
 
   dataSource: WritableSignal<MatTableDataSource<TableRow> | undefined> =

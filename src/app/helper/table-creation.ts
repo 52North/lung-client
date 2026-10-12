@@ -22,6 +22,8 @@ export interface TableRow {
   tiefe: string;
   tiefenstufe: string;
   datum_uhrzeit: number;
+  tiefe_misch_von_m: number;
+  tiefe_misch_bis_m: number;
 }
 
 export function createDataTable(
@@ -64,6 +66,8 @@ export function createDataTable(
           tiefe: d.parameter?.['tiefe'] || '',
           tiefenstufe: d.parameter?.['tiefenstufe'] || '',
           datum_uhrzeit: d.timestamp,
+          tiefe_misch_von_m: d.parameter?.['tiefe_misch_von_m'] || '',
+          tiefe_misch_bis_m: d.parameter?.['tiefe_misch_bis_m']|| '',
         });
       }
     });
