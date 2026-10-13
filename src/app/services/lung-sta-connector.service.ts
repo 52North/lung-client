@@ -52,7 +52,7 @@ export class LungStaApiConnector extends StaApiV1Connector {
       DatastreamExpandParams
     > = {
       $expand:
-        'Thing,Thing/Locations,ObservedProperty,Sensor,Observations($orderby=phenomenonTime desc;$top=1)',
+        'Observations($orderby=phenomenonTime desc;$top=1)',
       $select: { Observations: true, id: true },
     };
     const firstRequest = this.sta.getDatastream(
