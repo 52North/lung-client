@@ -228,16 +228,23 @@ export class CategorySelectionService {
     }
   }
 
+  //Selecting an entry clears the levels below it
   selectCatOne(cat: string) {
     this.categoryOne.set(cat);
+    this.categoryTwo.set(undefined);
+    this.categoryThree.set(undefined);
+    this.categoryFour.set(undefined);
   }
 
   selectCatTwo(cat: string) {
     this.categoryTwo.set(cat);
+    this.categoryThree.set(undefined);
+    this.categoryFour.set(undefined);
   }
 
   selectCatThree(cat: string) {
     this.categoryThree.set(cat);
+    this.categoryFour.set(undefined);
   }
 
   selectCatFour(cat: string) {
