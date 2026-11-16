@@ -16,6 +16,16 @@ helgoland-table-view {
     .table-content {
       flex: 1;
       overflow: auto;
+
+      .no-data-in-timespan {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+      }
     }
 
     .time-selection {

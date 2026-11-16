@@ -6,10 +6,17 @@
     </div>
   } @else {
     <div class="table-content">
-      <helgoland-data-table
-        [datasets]="graphDatasetsSrvc.datasets()"
-        [timespan]="graphDatasetsSrvc.timespan"
-      ></helgoland-data-table>
+      @if (graphDatasetsSrvc.hasNoDataInTimespan(false)) {
+        <div class="no-data-in-timespan" role="status">
+          <div>{{ "no-data-in-timespan.hint" | translate }}</div>
+          <div>{{ "no-data-in-timespan.adjust" | translate }}</div>
+        </div>
+      } @else {
+        <helgoland-data-table
+          [datasets]="graphDatasetsSrvc.datasets()"
+          [timespan]="graphDatasetsSrvc.timespan"
+        ></helgoland-data-table>
+      }
     </div>
     @if (graphDatasetsSrvc.timespan) {
       <div class="time-selection">
@@ -27,7 +34,7 @@
           attr.aria-label="{{
             'diagram-view.overview-description' | translate
           }}"
-          [datasets]="graphDatasetsSrvc.overviewDatasets()"
+          [datasets]="graphDatasetsSrvc.overviewDatasetsForDisplay()"
           [timespan]="graphDatasetsSrvc.overviewTimespan"
           [graphOptions]="overviewOptions"
           (timespanChanged)="graphDatasetsSrvc.timespan = $event"

@@ -209,5 +209,7 @@
 	"view.diagram.title": "Diagram view",
 	"view.list-selection.title": "List selection",
 	"view.map-selection.title": "Map selection",
-	"view.table.title": "Table view"
+	"view.table.title": "Table view",
+	"no-data-in-timespan.hint": "No datasets inside the selected timespan.",
+	"no-data-in-timespan.adjust": "Please adjust the time selection below."
 }

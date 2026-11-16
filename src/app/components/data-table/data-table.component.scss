@@ -16,3 +16,18 @@
 table {
   width: 100%;
 }
+
+/* Compact the table */
+.mat-mdc-header-cell,
+.mat-mdc-cell {
+  padding: 0 8px;
+}
+
+.mat-mdc-header-cell.compact-col,
+.mat-mdc-cell.compact-col {
+  width: 1%;
+}
+
+.mat-mdc-cell.compact-col {
+  white-space: nowrap;
+}

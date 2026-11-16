@@ -1,74 +1,23 @@
 import { Timespan } from '@helgoland/core';
 import { DatasetStyle, SeriesGraphDataset } from '@helgoland/d3';
+import { CellValue, columnDefsForMatrix, TableRow } from './table-columns';
 
-export interface TableRow {
-  gew_art: string;
-  bundesland: string;
-  mst_nr: string;
-  ort: string;
-  gewässername: string;
-  wb_cd: string;
-  wb_type_cd: string;
-  datum: string;
-  uhrzeit: string;
-  matrix: string;
-  methode: string;
-  param_kurz: string;
-  parameter: string;
-  param_gruppen: string;
-  vorzeichen: string;
-  wert_berechnet: number;
-  einheit: string;
-  tiefe: string;
-  tiefenstufe: string;
-  datum_uhrzeit: number;
-  tiefe_misch_von_m: number;
-  tiefe_misch_bis_m: number;
-}
+export type { TableRow } from './table-columns';
 
 export function createDataTable(
   datasets: SeriesGraphDataset<DatasetStyle>[],
   timespan: Timespan,
-) {
-  let data: TableRow[] = [];
+): TableRow[] {
+  const data: TableRow[] = [];
   datasets.forEach((ds) => {
+    const matrix: string = ds.description.additional?.['matrix'] || '';
+    const columns = columnDefsForMatrix(matrix);
     ds.data.forEach((d) => {
-      const additional = ds.description.additional;
-      const date = new Date(d.timestamp);
       if (d.timestamp >= timespan.from && d.timestamp <= timespan.to) {
-        const pg = additional?.['phenomenon_group'] || [];
-        const gruppen = pg.join('; ');
-        data.push({
-          gew_art: additional?.['gew_art'] || '',
-          bundesland: additional?.['location']['bundesland'] || '',
-          mst_nr: additional?.['mst_nr'] || '',
-          ort: additional?.['ort'] || '',
-          gewässername: additional?.['gew_name'] || '',
-          wb_cd: additional?.['wb_cd'] || '',
-          wb_type_cd: additional?.['wb_type_cd'] || '',
-          datum: date.toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          }),
-          uhrzeit: date.toLocaleTimeString('de-DE', {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-          matrix: additional?.['matrix'] || '',
-          methode: d.parameter?.methode || '',
-          param_kurz: ds.description.phenomenonLabel || '',
-          parameter: additional?.['observedProperty']?.definition || '',
-          param_gruppen: gruppen,
-          vorzeichen: d.parameter?.vorzeichen || '',
-          wert_berechnet: d.value,
-          einheit: ds.description.uom,
-          tiefe: d.parameter?.['tiefe'] || '',
-          tiefenstufe: d.parameter?.['tiefenstufe'] || '',
-          datum_uhrzeit: d.timestamp,
-          tiefe_misch_von_m: d.parameter?.['tiefe_misch_von_m'] || '',
-          tiefe_misch_bis_m: d.parameter?.['tiefe_misch_bis_m'] || '',
-        });
+        const date = new Date(d.timestamp);
+        const values: Record<string, CellValue> = {};
+        columns.forEach((col) => (values[col.key] = col.value(ds, d, date)));
+        data.push({ matrix, datum_uhrzeit: d.timestamp, values });
       }
     });
   });

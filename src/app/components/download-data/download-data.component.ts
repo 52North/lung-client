@@ -6,8 +6,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Timespan } from '@helgoland/core';
 import { SeriesGraphDataset } from '@helgoland/d3';
 import { TranslateModule } from '@ngx-translate/core';
-import moment from 'moment';
 import { utils, WorkBook, WorkSheet, writeFile } from 'xlsx';
+import { cellValue, columnsForRows } from '../../helper/table-columns';
 import { createDataTable } from '../../helper/table-creation';
 type xlsxExport = any[][];
 
@@ -50,37 +50,13 @@ export class DownloadDataComponent {
     const timespan = this.timespan();
     if (timespan === undefined) return;
 
-    let data: any[] = createDataTable(this.datasets(), timespan);
+    const rows = createDataTable(this.datasets(), timespan);
+    rows.sort((a, b) => a.datum_uhrzeit - b.datum_uhrzeit);
 
-    data.sort((a, b) => a.datum_uhrzeit - b.datum_uhrzeit);
-    data.forEach((e) => (e.datum_uhrzeit = moment(e.datum_uhrzeit).format()));
-
-    const mapped = data.map((d) => {
-      return {
-        Gewässerart: d.gew_art,
-        Bundesland: d.bundesland,
-        Messstelle: d.mst_nr,
-        Ort: d.ort,
-        Gewässername: d.gewässername,
-        'Wasserkörper-Code': d.wb_cd,
-        'Wasserkörper-Typ': d.wb_type_cd,
-        Datum: d.datum,
-        Uhrzeit: d.uhrzeit,
-        Matrix: d.matrix,
-        Methode: d.methode,
-        'Parameter-Kurz': d.param_kurz,
-        Parameter: d.parameter,
-        'Parameter-Gruppe': d.param_gruppen,
-        Vorzeichen: d.vorzeichen,
-        'Wert berechnet': d.wert_berechnet,
-        Einheit: d.einheit,
-        Tiefe: d.tiefe,
-        Tiefenstufe: d.tiefenstufe,
-        Zeitstempel: d.datum_uhrzeit,
-        'Mischtiefe von': d.tiefe_misch_von_m,
-        'Mischtiefe bis': d.tiefe_misch_bis_m,
-      };
-    });
+    const columns = columnsForRows(rows, { includeHidden: true });
+    const mapped = rows.map((row) =>
+      Object.fromEntries(columns.map((c) => [c.title, cellValue(row, c.key)])),
+    );
 
     this.downloadData(mapped, dwType);
   }
@@ -93,7 +69,6 @@ export class DownloadDataComponent {
     const wb: WorkBook = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Sheet1');
     /* save to file depending on download type */
-    this.fileName += '.' + dwType;
-    writeFile(wb, this.fileName);
+    writeFile(wb, `${this.fileName}.${dwType}`);
   }
 }
