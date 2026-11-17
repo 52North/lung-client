@@ -5,7 +5,7 @@ WORKDIR /usr/src/
 
 RUN git clone https://github.com/52North/helgoland-toolbox
 WORKDIR /usr/src/helgoland-toolbox
-RUN git checkout c5b9d44fd30eecf037262335b1ef8ba588e0328c
+RUN git checkout bab8cc0b614c6934767bd504d8283c87a79461f2
 
 RUN npm install
 RUN npm run lib:build
