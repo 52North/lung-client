@@ -281,13 +281,6 @@ export const COLUMNS: ColumnDef[] = [
     value: (_ds, d) => d.parameter?.['vorzeichen'] || '',
   },
   {
-    key: 'wert_berechnet',
-    title: 'Wert berechnet',
-    sort: true,
-    compact: true,
-    value: (_ds, d) => d.value,
-  },
-  {
     key: 'wert',
     title: 'Wert',
     sort: true,
@@ -355,13 +348,13 @@ const CHM_FGKGSG_KEYS: string[] = [
   'parameter',
   'param_gruppen',
   'vorzeichen',
-  'wert_berechnet',
+  'wert',
   'einheit',
   'tiefe',
   'tiefenstufe',
-  'zeitstempel',
   'tiefe_misch_von_m',
   'tiefe_misch_bis_m',
+  'zeitstempel',
 ];
 
 const BIOTA_FISH_KEYS: string[] = [
