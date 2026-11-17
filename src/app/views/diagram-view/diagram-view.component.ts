@@ -122,6 +122,24 @@ export class DiagramViewComponent implements OnInit {
 
   count = LIMIT_VISIBLE_DATASETS;
 
+  /** All warnings to show in the banner above the diagram, in display order. */
+  protected warnings(): { key: string; params?: object }[] {
+    const warnings: { key: string; params?: object }[] = [];
+    if (this.graphDatasetsSrvc.visibilityLimitReached()) {
+      warnings.push({
+        key: 'diagram-view.warning-visibility-limit-reached',
+        params: { count: this.count },
+      });
+    }
+    if (this.graphDatasetsSrvc.visibleDatasetCount() === 0) {
+      warnings.push({ key: 'diagram-view.warning-no-visible' });
+    } else if (this.graphDatasetsSrvc.hasNoDataInTimespan(true)) {
+      warnings.push({ key: 'no-data-in-timespan.hint' });
+      warnings.push({ key: 'no-data-in-timespan.adjust' });
+    }
+    return warnings;
+  }
+
   ngOnInit(): void {
     this.graphDatasetsSrvc.loadingVisibleDataStatus.subscribe((ld) => {
       this.visibleDataLoading = ld;

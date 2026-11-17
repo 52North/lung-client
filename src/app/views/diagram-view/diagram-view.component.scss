@@ -8,14 +8,22 @@ helgoland-diagram-view {
 
         .yellow-alert {
             background-color: var(--mat-sys-error-container);
-            ;
             color: #000 !important;
             font-size: 14px;
-            display: absolute;
             z-index: 1001;
             align-items: center;
             gap: 12px;
-            height: 5%;
+            flex: 0 0 auto;
+            height: auto;
+            min-height: 5%;
+            padding-block: 6px;
+
+            .warning-messages {
+                display: flex;
+                flex-direction: column;
+                white-space: normal;
+                line-height: 1.4;
+            }
         }
 
         .no-timeseries {
@@ -48,6 +56,14 @@ helgoland-diagram-view {
             }
 
             .diagram {
+                display: flex;
+                flex-direction: column;
+
+                .graph-wrapper {
+                    flex: 1;
+                    min-height: 0;
+                }
+
                 .local-settings-button {
                     position: absolute;
                     right: 5px;
