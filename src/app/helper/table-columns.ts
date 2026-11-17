@@ -373,6 +373,7 @@ const BIOTA_FISH_KEYS: string[] = [
   'wb_cd',
   'wb_type_cd',
   'datum',
+  'uhrzeit',
   'fisch_art', // art
   'organ_name',
   'anzahl_fische', // anzahl
@@ -387,6 +388,7 @@ const BIOTA_FISH_KEYS: string[] = [
   'vorzeichen',
   'wert', // wert
   'einheit',
+  'zeitstempel',
 ];
 
 const BIOTA_MUSCHEL_KEYS: string[] = [
@@ -398,6 +400,7 @@ const BIOTA_MUSCHEL_KEYS: string[] = [
   'wb_cd',
   'wb_type_cd',
   'datum',
+  'uhrzeit',
   'muschel_art', // art
   'anzahl_muscheln', // anzahl
   'laenge_min',
@@ -420,6 +423,7 @@ const BIOTA_MUSCHEL_KEYS: string[] = [
   'vorzeichen',
   'wert',
   'einheit',
+  'zeitstempel',
 ];
 
 /**
