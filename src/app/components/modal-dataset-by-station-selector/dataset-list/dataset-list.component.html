@@ -35,18 +35,37 @@
           ></n52-label-mapper>
         </div>
       }
-      <div matListItemLine>
-        <span>
-          {{ "diagram-view.legend.entry.first-value-at" | translate }}:
-          {{ ds.firstValue!.timestamp | tzDate: "L LT z" : null }}
-        </span>
-      </div>
-      <div matListItemLine>
-        {{ "diagram-view.legend.entry.last-value-at" | translate }}:
-        <span>
-          {{ ds.lastValue!.timestamp | tzDate: "L LT z" : null }}
-        </span>
-      </div>
+      @if (ds.additional.organ_name) {
+        <div matListItemLine>
+          {{ "map-selection-view.organ" | translate }}:
+          <n52-label-mapper
+            dataLanguage
+            [label]="ds.additional.organ_name"
+          ></n52-label-mapper>
+        </div>
+      }
+      @if (ds.additional.organ_name && ds.additional.uom) {
+        <div matListItemLine>
+          {{ "map-selection-view.unit" | translate }}:
+          {{ ds.additional.uom }}
+        </div>
+      }
+      @if (ds.firstValue) {
+        <div matListItemLine>
+          <span>
+            {{ "diagram-view.legend.entry.first-value-at" | translate }}:
+            {{ ds.firstValue!.timestamp | tzDate: "L LT z" : null }}
+          </span>
+        </div>
+      }
+      @if (ds.lastValue) {
+        <div matListItemLine>
+          {{ "diagram-view.legend.entry.last-value-at" | translate }}:
+          <span>
+            {{ ds.lastValue!.timestamp | tzDate: "L LT z" : null }}
+          </span>
+        </div>
+      }
     </mat-list-option>
     <mat-divider></mat-divider>
   }

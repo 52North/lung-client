@@ -45,11 +45,15 @@ export class SortPipe implements PipeTransform {
   constructor() {}
 
   transform(datasets: SelectableDataset[]): SelectableDataset[] {
-    return datasets.sort((a, b) => {
-      const labelA = a.label || '';
-      const labelB = b.label || '';
-      return labelA.localeCompare(labelB);
-    });
+    const sortKey = (ds: SelectableDataset) =>
+      [
+        ds.label,
+        ds.additional?.['tiefenstufe'],
+        ds.additional?.['methode'],
+        ds.additional?.['organ_name'],
+        ds.additional?.['uom'],
+      ].join(' ');
+    return datasets.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   }
 }
 

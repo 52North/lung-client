@@ -124,6 +124,8 @@
 	"map-selection-view.map.zoom-in": "Zoom in on the map",
 	"map-selection-view.map.zoom-out": "Zoom out on the map",
 	"map-selection-view.method": "Method",
+	"map-selection-view.organ": "Organ",
+	"map-selection-view.unit": "Unit",
 	"map-selection-view.phenomenon-selection-list": "List of phenomena",
 	"map-selection-view.search": "Search",
 	"map-selection-view.select-all": "Select all timeseries",

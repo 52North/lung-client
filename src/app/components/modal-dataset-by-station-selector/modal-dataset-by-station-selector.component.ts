@@ -120,7 +120,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
     this.staSrvc
       .getLocation(this.staUrl, this.station().id, {
         $select: 'id',
-        $expand: `Things($select=id),Things/Datastreams($top=1000;${dsMatrixFilter}$expand=ObservedProperty($select=id,description,name,properties);$select=id,phenomenonTime,properties${dsFilter})`,
+        $expand: `Things($select=id),Things/Datastreams($top=1000;${dsMatrixFilter}$expand=ObservedProperty($select=id,description,name,properties);$select=id,phenomenonTime,properties,unitOfMeasurement${dsFilter})`,
       })
       .subscribe((location) => {
         this.counter = location.Things?.length || 0;
@@ -155,6 +155,8 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
                   tiefe: ds.properties?.['tiefe'],
                   tiefenstufe: ds.properties?.['tiefenstufe'],
                   methode: ds.properties?.['methode'],
+                  organ_name: ds.properties?.['organ_name'],
+                  uom: ds.unitOfMeasurement?.symbol,
                   phenomenon_group:
                     ds.ObservedProperty?.properties?.['groups'] || [],
                 },

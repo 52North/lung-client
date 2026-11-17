@@ -119,6 +119,9 @@ export class DatasetLegendEntryComponent {
       if (additional?.['tiefenstufe']) {
         label += ` | Tiefenstufe: ${additional?.['tiefenstufe']}`;
       }
+      if (additional?.['organ_name']) {
+        label += ` | Organ: ${additional?.['organ_name']}`;
+      }
       return label;
     }
     return undefined;
