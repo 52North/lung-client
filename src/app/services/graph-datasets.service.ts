@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { Time, Timespan, TimezoneService } from '@helgoland/core';
-import { SeriesGraphDataset } from '@helgoland/d3';
+import { AxisSettings, LineStyle, SeriesGraphDataset } from '@helgoland/d3';
 import { TranslateService } from '@ngx-translate/core';
 import moment from 'moment';
 import { Subject } from 'rxjs';
@@ -90,6 +90,47 @@ export class DatasetsService {
   readonly datasets = computed(() => [
     ...this._datasets().filter((ds) => ds instanceof SeriesGraphDataset),
   ]);
+
+  /**
+   * placehold/dummy dataset to keep the overview diagram loaded
+   * previously the overview diagram would completely disappear and make interactions
+   like scrolling along the time axis impossible if no dataset is currently displayed
+   */
+  private readonly overviewPlaceholder = (() => {
+    const ds = new SeriesGraphDataset(
+      '__overview-placeholder__',
+      new LineStyle('transparent', 0, 0),
+      new AxisSettings(),
+      true,
+      false,
+      { uom: '' },
+    );
+    ds.setData([{ timestamp: 0, value: 0 }]);
+    return ds;
+  })();
+
+  /** Overview datasets, plus a placeholder if none of them could be drawn. */
+  readonly overviewDatasetsForDisplay = computed(() => {
+    const datasets = this.overviewDatasets();
+    const drawable = datasets.some((ds) => ds.visible && ds.hasData());
+    return drawable ? datasets : [...datasets, this.overviewPlaceholder];
+  });
+
+  /**
+   * True if no dataset has a value inside the selected timespan.
+   * Always false while data is still loading, so the hint does not flash.
+   * @param onlyVisible only consider datasets that are visible in the diagram
+   */
+  hasNoDataInTimespan(onlyVisible: boolean): boolean {
+    const ts = this._timespan;
+    if (!ts) return false;
+    if (this._datasets().some((ds) => ds.dataLoading)) return false;
+    return !this.datasets().some(
+      (ds) =>
+        (!onlyVisible || ds.visible) &&
+        ds.data.some((d) => d.timestamp >= ts.from && d.timestamp <= ts.to),
+    );
+  }
 
   set timespan(ts: Timespan) {
     const message = `${this.translate.instant(
