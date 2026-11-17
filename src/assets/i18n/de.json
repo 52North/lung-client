@@ -124,6 +124,7 @@
 	"map-selection-view.map.zoom-in": "Karte vergrößern",
 	"map-selection-view.map.zoom-out": "Karte verkleinern",
 	"map-selection-view.method": "Methode",
+	"map-selection-view.art": "Art",
 	"map-selection-view.organ": "Organ",
 	"map-selection-view.unit": "Einheit",
 	"map-selection-view.phenomenon-selection-list": "Phänomenliste",

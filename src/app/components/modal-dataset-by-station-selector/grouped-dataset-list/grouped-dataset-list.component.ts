@@ -51,6 +51,7 @@ export class SortPipe implements PipeTransform {
         ds.additional?.['tiefenstufe'],
         ds.additional?.['methode'],
         ds.additional?.['organ_name'],
+        ds.additional?.['art'],
         ds.additional?.['uom'],
       ].join(' ');
     return datasets.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));

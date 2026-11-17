@@ -156,6 +156,7 @@ export class ModalDatasetByStationSelectorComponent extends DatasetByStationSele
                   tiefenstufe: ds.properties?.['tiefenstufe'],
                   methode: ds.properties?.['methode'],
                   organ_name: ds.properties?.['organ_name'],
+                  art: ds.properties?.['art'],
                   uom: ds.unitOfMeasurement?.symbol,
                   phenomenon_group:
                     ds.ObservedProperty?.properties?.['groups'] || [],

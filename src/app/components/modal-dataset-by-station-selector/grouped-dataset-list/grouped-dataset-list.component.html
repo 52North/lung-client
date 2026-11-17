@@ -59,6 +59,15 @@
                   ></n52-label-mapper>
                 </div>
               }
+              @if (ds.additional.art) {
+                <div matListItemLine>
+                  {{ "map-selection-view.art" | translate }}:
+                  <n52-label-mapper
+                    dataLanguage
+                    [label]="ds.additional.art"
+                  ></n52-label-mapper>
+                </div>
+              }
               @if (ds.additional.organ_name) {
                 <div matListItemLine>
                   {{ "map-selection-view.organ" | translate }}:
@@ -68,7 +77,7 @@
                   ></n52-label-mapper>
                 </div>
               }
-              @if (ds.additional.organ_name && ds.additional.uom) {
+              @if ((ds.additional.organ_name || ds.additional.art) && ds.additional.uom) {
                 <div matListItemLine>
                   {{ "map-selection-view.unit" | translate }}:
                   {{ ds.additional.uom }}
